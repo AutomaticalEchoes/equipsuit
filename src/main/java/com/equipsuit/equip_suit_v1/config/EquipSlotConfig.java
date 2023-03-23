@@ -3,6 +3,8 @@ package com.equipsuit.equip_suit_v1.config;
 import net.minecraft.core.NonNullList;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -13,7 +15,7 @@ public class EquipSlotConfig {
     static {
         BUILDER.push("equip slot config");
         Predicate<Object> Integers= integers -> (Integer)integers >= 0 && (Integer)integers < 64;
-        NonNullList<Integer> EquipSlotNum = NonNullList.of(64,39,38,37,36);
+        List<Integer> EquipSlotNum = Arrays.asList(39, 38, 37, 36);
         EQUIP_SLOT_LIST=BUILDER.comment("add your custom slot nums,make sure the number exists in your inventory slots list,\nrange:[0,64)").defineList("equip list", EquipSlotNum ,Integers);
         BUILDER.pop();
         SPEC=BUILDER.build();
