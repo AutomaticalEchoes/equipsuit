@@ -8,28 +8,29 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 
 public interface EquipSuit<T extends EquipSuit<T>> {
-    NonNullList<? extends Integer> SLOTS_NUMS =(NonNullList<? extends Integer>) EquipSlotConfig.EQUIP_SLOT_LIST.get();
-    NonNullList<ItemStack> slotItems =NonNullList.withSize(SLOTS_NUMS.size(),ItemStack.EMPTY);
-    CompoundTag save();
-    T read();
+    NonNullList<Integer> SLOTS_NUMS =(NonNullList<Integer>) EquipSlotConfig.EQUIP_SLOT_LIST.get();
+    NonNullList<ItemStack> SLOT_ITEMS =NonNullList.withSize(SLOTS_NUMS.size(),ItemStack.EMPTY);
+    void save();
+    void build();
     static EquipSuitImpl defaultEquipSuit(CompoundTag tag){
         return new EquipSuitImpl(tag);
     }
 
+    default NonNullList<Integer> getSlotsNums(){return SLOTS_NUMS;}
     default NonNullList<ItemStack> getSlotItems() {
-        return slotItems;
+        return SLOT_ITEMS;
     }
 
     default CompoundTag defaultSave(CompoundTag tag){
         CompoundTag armorsTag= tag.contains("equips") ? tag.getCompound("equips") : new CompoundTag();
-        ContainerHelper.saveAllItems(armorsTag,slotItems);
+        ContainerHelper.saveAllItems(armorsTag,SLOT_ITEMS);
         tag.put("equips",armorsTag);
         return tag;
     }
 
     default T defaultRead(CompoundTag tag){
         if(tag.contains("equips")){
-            ContainerHelper.loadAllItems(tag.getCompound("equips"),slotItems);
+            ContainerHelper.loadAllItems(tag.getCompound("equips"),SLOT_ITEMS);
         }
         return (T)this;
     }

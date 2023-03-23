@@ -10,7 +10,7 @@ public class EquipSuitImpl implements EquipSuit<EquipSuitImpl> {
 
     public EquipSuitImpl(CompoundTag tag) {
         this.tag = tag;
-        this.read();
+        this.build();
     }
 
     public CompoundTag getTag() {
@@ -18,13 +18,13 @@ public class EquipSuitImpl implements EquipSuit<EquipSuitImpl> {
     }
 
     @Override
-    public CompoundTag save() {
-        return this.defaultSave(tag);
+    public void save() {
+        this.defaultSave(tag);
     }
 
     @Override
-    public EquipSuitImpl read() {
-        return this.defaultRead(tag);
+    public void build() {
+         this.defaultRead(tag);
     }
 
 
