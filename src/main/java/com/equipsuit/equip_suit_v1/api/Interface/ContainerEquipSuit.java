@@ -1,4 +1,4 @@
-package com.equipsuit.equip_suit_v1.modInterface;
+package com.equipsuit.equip_suit_v1.api.Interface;
 
 
 import net.minecraft.core.NonNullList;

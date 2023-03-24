@@ -1,9 +1,7 @@
-package com.equipsuit.equip_suit_v1.config;
+package com.equipsuit.equip_suit_v1.api.config;
 
-import net.minecraft.core.NonNullList;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;

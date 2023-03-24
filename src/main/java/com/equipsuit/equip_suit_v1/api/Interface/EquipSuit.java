@@ -1,6 +1,6 @@
-package com.equipsuit.equip_suit_v1.modInterface;
+package com.equipsuit.equip_suit_v1.api.Interface;
 
-import com.equipsuit.equip_suit_v1.config.EquipSlotConfig;
+import com.equipsuit.equip_suit_v1.api.config.EquipSlotConfig;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;

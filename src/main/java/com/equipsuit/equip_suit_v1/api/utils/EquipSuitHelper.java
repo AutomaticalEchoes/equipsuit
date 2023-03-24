@@ -1,6 +1,6 @@
-package com.equipsuit.equip_suit_v1.utils;
+package com.equipsuit.equip_suit_v1.api.utils;
 
-import com.equipsuit.equip_suit_v1.modInterface.EquipSuit;
+import com.equipsuit.equip_suit_v1.api.Interface.EquipSuit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
