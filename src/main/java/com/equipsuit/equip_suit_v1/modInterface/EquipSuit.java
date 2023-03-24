@@ -16,15 +16,19 @@ public interface EquipSuit<T extends EquipSuit<T>> {
     static EquipSuitImpl defaultEquipSuit(CompoundTag tag){
         return new EquipSuitImpl(tag);
     }
+
     static ContainerEquipSuit containerEquipSuit(Container container ,NonNullList<Integer> integers){
         return new ContainerEquipSuit(container,sizeCheck(integers));
     }
+
     static ContainerEquipSuit containerEquipSuit(Container container , Integer...integers) {
         return new ContainerEquipSuit(container,sizeCheck(integers));
     }
+
     static NonNullList<Integer> sizeCheck(Integer...integers){
        return sizeCheck( NonNullList.of(64,integers))  ;
     }
+
     static NonNullList<Integer> sizeCheck(NonNullList<Integer> integers){
         if(integers.size() < EquipSuit.SIZE){
             return NonNullList.withSize(EquipSuit.SIZE,64);
