@@ -1,7 +1,6 @@
 package com.equipsuit.equip_suit_v1.utils;
 
 import com.equipsuit.equip_suit_v1.modInterface.EquipSuit;
-import com.equipsuit.equip_suit_v1.modInterface.impl.ContainerEquipSuit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -29,7 +28,5 @@ public class EquipSuitHelper{
         }
        suit.save();
     }
-
-
 
 }
