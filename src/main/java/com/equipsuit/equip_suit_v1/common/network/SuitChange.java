@@ -1,0 +1,22 @@
+package com.equipsuit.equip_suit_v1.common.network;
+
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
+
+public class SuitChange {
+    public static void encode(SuitChange msg, FriendlyByteBuf packetBuffer) {}
+    public static SuitChange decode(FriendlyByteBuf packetBuffer) {
+        return new SuitChange();
+    }
+    static void onMessage(SuitChange msg, Supplier<NetworkEvent.Context> contextSupplier) {
+        NetworkEvent.Context context = contextSupplier.get();
+        context.enqueueWork(() -> msg.handleMessage(msg,context.getSender()));
+        context.setPacketHandled(true);
+    }
+
+    public void handleMessage(SuitChange msg, ServerPlayer sender) {
+    }
+}
