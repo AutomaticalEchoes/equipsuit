@@ -1,23 +1,29 @@
-package com.equipsuit.equip_suit_v1.api.Interface;
+package com.equipsuit.equip_suit_v1.api.equipsuit;
 
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 
 
-public class ContainerEquipSuit implements EquipSuit<ContainerEquipSuit> {
+public class ContainerEquipSuitImpl implements ContainerEquipSuit<ContainerEquipSuitImpl> {
     private Container container;
     private NonNullList<Integer> ContainerSlotNums ;
 
   
 
-    protected ContainerEquipSuit(Container container ,NonNullList<Integer> nonNullList) {
+    protected ContainerEquipSuitImpl(Container container , NonNullList<Integer> nonNullList) {
         this.container = container;
         this.ContainerSlotNums=nonNullList;
         this.build();
     }
 
+    public void setContainerSlotNums(NonNullList<Integer> containerSlotNums) {
+        ContainerSlotNums = containerSlotNums;
+    }
 
+    public NonNullList<Integer> getContainerSlotNums() {
+        return ContainerSlotNums;
+    }
 
     @Override
     public void save() {

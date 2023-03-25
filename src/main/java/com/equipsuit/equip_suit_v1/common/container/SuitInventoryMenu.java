@@ -1,6 +1,6 @@
 package com.equipsuit.equip_suit_v1.common.container;
 
-import com.equipsuit.equip_suit_v1.api.Interface.EquipSuit;
+import com.equipsuit.equip_suit_v1.api.equipsuit.EquipSuit;
 import com.equipsuit.equip_suit_v1.common.registry.ContainerRegister;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
@@ -46,10 +46,11 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
         for(int k = 0; k < EquipSuit.SIZE; ++k) {
             final int k1=k;
             final int i= (int) Math.ceil(k/4);
+            final SuitInventoryMenu suitInventoryMenu=this;
             this.addSlot(new Slot(suitContainer,  k, 95 + i * 18, 8 + (k % 3) * 18) {
                 public void set(ItemStack p_219985_) {
                     super.set(p_219985_);
-                    suitContainer.Save();
+                    suitInventoryMenu.slotsChanged(suitContainer);
                 }
                 public int getMaxStackSize() {
                     return 1;

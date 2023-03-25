@@ -1,4 +1,4 @@
-package com.equipsuit.equip_suit_v1.api.Interface;
+package com.equipsuit.equip_suit_v1.api.equipsuit;
 
 import com.equipsuit.equip_suit_v1.api.config.EquipSlotConfig;
 import net.minecraft.core.NonNullList;
@@ -6,6 +6,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.Arrays;
 
 public interface EquipSuit<T extends EquipSuit<T>> {
     NonNullList<Integer> SLOTS_NUMS =(NonNullList<Integer>) EquipSlotConfig.EQUIP_SLOT_LIST.get();
@@ -16,27 +18,6 @@ public interface EquipSuit<T extends EquipSuit<T>> {
     static EquipSuitImpl defaultEquipSuit(CompoundTag tag){
         return new EquipSuitImpl(tag);
     }
-
-    static ContainerEquipSuit containerEquipSuit(Container container ,NonNullList<Integer> integers){
-        return new ContainerEquipSuit(container,sizeCheck(integers));
-    }
-
-    static ContainerEquipSuit containerEquipSuit(Container container , Integer...integers) {
-        return new ContainerEquipSuit(container,sizeCheck(integers));
-    }
-
-    static NonNullList<Integer> sizeCheck(Integer...integers){
-       return sizeCheck( NonNullList.of(64,integers))  ;
-    }
-
-    static NonNullList<Integer> sizeCheck(NonNullList<Integer> integers){
-        if(integers.size() < EquipSuit.SIZE){
-            return NonNullList.withSize(EquipSuit.SIZE,64);
-        }else {
-            return integers;
-        }
-    }
-
     default NonNullList<Integer> getSlotsNums(){
         return SLOTS_NUMS;
     }

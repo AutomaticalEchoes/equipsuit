@@ -1,4 +1,4 @@
-package com.equipsuit.equip_suit_v1.mixin;
+package com.equipsuit.equip_suit_v1.api.mixin;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;

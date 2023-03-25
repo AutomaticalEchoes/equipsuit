@@ -1,4 +1,4 @@
-package com.equipsuit.equip_suit_v1.api.Interface;
+package com.equipsuit.equip_suit_v1.api.equipsuit;
 
 import net.minecraft.nbt.CompoundTag;
 
