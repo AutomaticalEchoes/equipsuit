@@ -1,17 +1,16 @@
-package com.equipsuit.equip_suit_v1.api.equipsuit;
+package com.equipsuit.equip_suit_v1.api.ModInterfcae.equipsuit;
 
 import com.equipsuit.equip_suit_v1.api.config.EquipSlotConfig;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Arrays;
+import java.util.List;
 
 public interface EquipSuit<T extends EquipSuit<T>> {
-    NonNullList<Integer> SLOTS_NUMS =(NonNullList<Integer>) EquipSlotConfig.EQUIP_SLOT_LIST.get();
-    NonNullList<ItemStack> SLOT_ITEMS =NonNullList.withSize(SLOTS_NUMS.size(),ItemStack.EMPTY);
+    NonNullList<Integer> SLOTS_NUMS = toList( EquipSlotConfig.EQUIP_SLOT_LIST.get());
+    NonNullList<ItemStack> SLOT_ITEMS = NonNullList.withSize(SLOTS_NUMS.size(),ItemStack.EMPTY);
     int SIZE =SLOTS_NUMS.size();
     void save();
     void build();
@@ -40,5 +39,13 @@ public interface EquipSuit<T extends EquipSuit<T>> {
     }
     default int getSize(){
         return SIZE;
+    }
+
+    private static NonNullList<Integer> toList(List<? extends Integer> list){
+        NonNullList<Integer> nonNullList = NonNullList.withSize(list.size(), 64);
+        for (int i = 0; i < list.size(); i++) {
+            nonNullList.set(i,list.get(i));
+        }
+        return nonNullList;
     }
 }

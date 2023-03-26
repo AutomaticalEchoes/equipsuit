@@ -13,6 +13,7 @@ public class FocusSuitHUD extends Screen implements Widget {
     public static FocusSuitHUD Create(PoseStack matrixStack){
         return new FocusSuitHUD(FOCUS_SUIT_HUD,matrixStack);
     }
+
     protected FocusSuitHUD(Component p_96550_, PoseStack matrixStack) {
         super(p_96550_);
     }

@@ -1,4 +1,4 @@
-package com.equipsuit.equip_suit_v1.api.equipsuit;
+package com.equipsuit.equip_suit_v1.api.ModInterfcae.equipsuit;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
@@ -11,14 +11,14 @@ public interface ContainerEquipSuit<T extends EquipSuit<T>> extends EquipSuit<T>
     static ContainerEquipSuitImpl build(Container container){
         return new ContainerEquipSuitImpl(container,NonNullList.withSize(SIZE,64));
     }
-    static ContainerEquipSuitImpl build(Container container , NonNullList<Integer> integers){
+    static ContainerEquipSuitImpl buildNonnullList(Container container , NonNullList<Integer> integers){
         return new ContainerEquipSuitImpl(container,sizeCheck(integers));
     }
 
-    static ContainerEquipSuitImpl build(Container container , Integer...integers) {
+    static ContainerEquipSuitImpl buildInteger(Container container , Integer...integers) {
         return new ContainerEquipSuitImpl(container,sizeCheck(integers));
     }
-    static ContainerEquipSuitImpl build(Container container , int...integers) {
+    static ContainerEquipSuitImpl buildInt(Container container , int...integers) {
         return new ContainerEquipSuitImpl(container,sizeCheck(integers));
     }
 

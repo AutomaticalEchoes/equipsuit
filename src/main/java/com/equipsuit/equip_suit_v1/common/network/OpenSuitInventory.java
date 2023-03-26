@@ -1,6 +1,6 @@
 package com.equipsuit.equip_suit_v1.common.network;
 
-import com.equipsuit.equip_suit_v1.common.container.SuitInventoryMenu;
+import com.equipsuit.equip_suit_v1.api.ModInterfcae.player.IPlayerInterface;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -9,7 +9,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
-import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -31,15 +32,18 @@ public class OpenSuitInventory {
     }
 
     private static void handleMessage(OpenSuitInventory msg, ServerPlayer sender) {
-        sender.openMenu(new MenuProvider() {
+        NetworkHooks.openScreen(sender, new MenuProvider() {
             @Override
-            public @NotNull Component getDisplayName() {
-                    return Component.translatable("Inventory");
+            public Component getDisplayName() {
+                return Component.translatable("");
             }
+
+            @Nullable
             @Override
             public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
-                return new SuitInventoryMenu(sender.getInventory(),14);
-            }});
+                return ((IPlayerInterface)sender).getSuitInventoryMenu();
+            }
+        });
     }
 
 

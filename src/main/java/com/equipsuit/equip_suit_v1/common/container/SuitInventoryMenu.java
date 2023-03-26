@@ -1,6 +1,6 @@
 package com.equipsuit.equip_suit_v1.common.container;
 
-import com.equipsuit.equip_suit_v1.api.equipsuit.EquipSuit;
+import com.equipsuit.equip_suit_v1.api.ModInterfcae.equipsuit.EquipSuit;
 import com.equipsuit.equip_suit_v1.common.registry.ContainerRegister;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
