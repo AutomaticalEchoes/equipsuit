@@ -3,18 +3,19 @@ package com.equipsuit.equip_suit_v1.api.ModInterfcae.equipsuit;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 
 
 public class ContainerEquipSuitImpl implements ContainerEquipSuit<ContainerEquipSuitImpl> {
     private Container container;
     private NonNullList<Integer> ContainerSlotNums ;
+    NonNullList<ItemStack> SLOT_ITEMS = NonNullList.withSize(getSize(),ItemStack.EMPTY);
 
   
 
     protected ContainerEquipSuitImpl(Container container , NonNullList<Integer> nonNullList) {
         this.container = container;
         this.ContainerSlotNums=nonNullList;
-        this.build();
     }
 
     public void setContainerSlotNums(NonNullList<Integer> containerSlotNums) {
@@ -34,11 +35,17 @@ public class ContainerEquipSuitImpl implements ContainerEquipSuit<ContainerEquip
     }
 
     @Override
-    public void build() {
+    public ContainerEquipSuitImpl build() {
         for(int i=0;i<ContainerSlotNums.size();i++){
             int num = this.ContainerSlotNums.get(i);
             this.getSlotItems().set(i,container.getItem(num));
         }
+        return this;
+    }
+
+    @Override
+    public NonNullList<ItemStack> getSlotItems() {
+        return SLOT_ITEMS;
     }
 
 

@@ -4,6 +4,7 @@ import com.equipsuit.equip_suit_v1.api.ModInterfcae.equipsuit.ContainerEquipSuit
 import com.equipsuit.equip_suit_v1.api.ModInterfcae.player.IPlayerInterface;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 

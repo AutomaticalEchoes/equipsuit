@@ -13,5 +13,4 @@ public interface IPlayerInterface {
     void setFocus(Integer integer);
     SuitContainer getSuitContainer();
     void suiChange();
-    SuitInventoryMenu getSuitInventoryMenu();
 }

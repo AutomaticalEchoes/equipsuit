@@ -10,33 +10,24 @@ import java.util.List;
 
 public interface EquipSuit<T extends EquipSuit<T>> {
     NonNullList<Integer> SLOTS_NUMS = toList( EquipSlotConfig.EQUIP_SLOT_LIST.get());
-    NonNullList<ItemStack> SLOT_ITEMS = NonNullList.withSize(SLOTS_NUMS.size(),ItemStack.EMPTY);
     int SIZE =SLOTS_NUMS.size();
     void save();
-    void build();
+    T build();
     static EquipSuitImpl defaultEquipSuit(CompoundTag tag){
         return new EquipSuitImpl(tag);
     }
     default NonNullList<Integer> getSlotsNums(){
         return SLOTS_NUMS;
     }
-    default NonNullList<ItemStack> getSlotItems() {
-        return SLOT_ITEMS;
-    }
+    NonNullList<ItemStack> getSlotItems() ;
 
     default CompoundTag defaultSave(CompoundTag tag){
         CompoundTag armorsTag= tag.contains("equips") ? tag.getCompound("equips") : new CompoundTag();
-        ContainerHelper.saveAllItems(armorsTag,SLOT_ITEMS);
+        ContainerHelper.saveAllItems(armorsTag,getSlotItems());
         tag.put("equips",armorsTag);
         return tag;
     }
 
-    default T defaultRead(CompoundTag tag){
-        if(tag.contains("equips")){
-            ContainerHelper.loadAllItems(tag.getCompound("equips"),SLOT_ITEMS);
-        }
-        return (T)this;
-    }
     default int getSize(){
         return SIZE;
     }
