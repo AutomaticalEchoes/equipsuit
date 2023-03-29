@@ -1,13 +1,12 @@
 package com.equipsuit.equip_suit_v1.client;
 
-import com.equipsuit.equip_suit_v1.api.ModInterfcae.gui.FocusSuitHud;
-import com.equipsuit.equip_suit_v1.api.ModInterfcae.player.IPlayerInterface;
+import com.equipsuit.equip_suit_v1.api.modInterfcae.gui.FocusSuitHud;
+import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.client.gui.FocusSuitHUD;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.network.OpenSuitInventory;
 import com.equipsuit.equip_suit_v1.common.network.SuitChange;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
@@ -33,8 +32,5 @@ public class ClientEvents {
         }
        focusSuitHUD.render(((IPlayerInterface)(Minecraft.getInstance().player)).getFocus().toString());
     }
-
-
-
 
 }

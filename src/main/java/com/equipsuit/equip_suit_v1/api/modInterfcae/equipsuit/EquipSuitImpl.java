@@ -1,4 +1,4 @@
-package com.equipsuit.equip_suit_v1.api.ModInterfcae.equipsuit;
+package com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

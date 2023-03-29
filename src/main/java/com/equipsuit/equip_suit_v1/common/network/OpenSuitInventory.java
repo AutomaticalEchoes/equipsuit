@@ -1,6 +1,5 @@
 package com.equipsuit.equip_suit_v1.common.network;
 
-import com.equipsuit.equip_suit_v1.api.ModInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.common.container.SuitInventoryMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -33,18 +32,18 @@ public class OpenSuitInventory {
     }
 
     private static void handleMessage(OpenSuitInventory msg, ServerPlayer sender) {
-        NetworkHooks.openScreen(sender, new MenuProvider() {
-            @Override
-            public Component getDisplayName() {
-                return Component.translatable("");
-            }
+       sender.openMenu(new MenuProvider() {
+           @Override
+           public Component getDisplayName() {
+               return Component.translatable("");
+           }
 
-            @Nullable
-            @Override
-            public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
-                return new SuitInventoryMenu(((Player)(Object)this).getInventory(),p_39954_);
-            }
-        });
+           @Nullable
+           @Override
+           public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
+               return new SuitInventoryMenu(p_39955_,p_39954_);
+           }
+       });
     }
 
 

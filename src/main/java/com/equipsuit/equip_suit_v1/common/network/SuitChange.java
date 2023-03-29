@@ -1,10 +1,9 @@
 package com.equipsuit.equip_suit_v1.common.network;
 
-import com.equipsuit.equip_suit_v1.api.ModInterfcae.equipsuit.ContainerEquipSuit;
-import com.equipsuit.equip_suit_v1.api.ModInterfcae.player.IPlayerInterface;
+import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.ContainerEquipSuit;
+import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -22,11 +21,6 @@ public class SuitChange {
     }
 
     public void handleMessage(SuitChange msg, ServerPlayer sender) {
-        for(int i=0;i<4;i++){
-            ContainerEquipSuit containerEquipSuit = ((IPlayerInterface) sender).getSuitList().get(i);
-            containerEquipSuit.setContainerSlotNums(NonNullList.of(i*4,i*4+1,i*4+2,i*4+3));
-            ((IPlayerInterface)sender).getSuitList().set(i,containerEquipSuit);
-        }
         ((IPlayerInterface)sender).suiChange();
     }
 }

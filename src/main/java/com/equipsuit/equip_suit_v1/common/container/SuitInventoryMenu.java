@@ -1,6 +1,7 @@
 package com.equipsuit.equip_suit_v1.common.container;
 
-import com.equipsuit.equip_suit_v1.api.ModInterfcae.equipsuit.EquipSuit;
+import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.EquipSuit;
+import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.common.registry.ContainerRegister;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceLocation;
@@ -33,46 +34,27 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
 
     public SuitInventoryMenu(Inventory inventory, int p_38852_) {
         super(ContainerRegister.SUIT_INVENTORY_MENU.get(), p_38852_);
-        this.inventory=inventory;
-        this.owner=inventory.player;
-        this.suitContainer=new SuitContainer();
-        initContainer();
+        this.inventory = inventory;
+        this.owner = inventory.player;
+        this.suitContainer = ((IPlayerInterface)owner).getSuitContainer();
         initInventory();
+        initContainer();
     }
 
 
-
     private void initContainer(){
-        for(int k = 0; k < EquipSuit.SIZE; ++k) {
-            final int k1=k;
-            final int i= (int) Math.ceil(k/4);
-            final SuitInventoryMenu suitInventoryMenu=this;
-            this.addSlot(new Slot(suitContainer,  k, 95 + i * 18, 8 + (k % 3) * 18) {
-                public void set(ItemStack p_219985_) {
-                    super.set(p_219985_);
-                    suitInventoryMenu.slotsChanged(suitContainer);
-                }
+        for(int k = 0; k < 36; k++) {
+            final int i= (int) Math.ceil(k / 4);
+            this.addSlot(new Slot(suitContainer,  k, -((4 -( k % 4)) * 18 + 4), (int) (8 + Math.ceil(k / 4) * 19)){
                 public int getMaxStackSize() {
-                    return 1;
+                    return 1 ;
                 }
 
                 public boolean mayPlace(ItemStack p_39746_) {
-                    return p_39746_.getItem() instanceof ArmorItem armorItem && armorItem.getSlot() == SLOT_IDS[k1];
+                    return p_39746_.getItem() instanceof ArmorItem || slotRule();
                 }
-
-                public boolean mayPickup(Player p_39744_) {
-                    ItemStack itemstack = this.getItem();
-                    return (itemstack.isEmpty() || p_39744_.isCreative() || !EnchantmentHelper.hasBindingCurse(itemstack)) && super.mayPickup(p_39744_);
-                }
-
-                public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                    return Pair.of(BLOCK_ATLAS, TEXTURE_EMPTY_SLOTS[i]);
-                }
-
             });
         }
-
-
     }
 
     private void initInventory(){
@@ -183,6 +165,10 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
         return itemstack;
     }
 
+    private boolean slotRule(){
+        return false;
+    }
+
     public boolean canTakeItemForPickAll(ItemStack p_39716_, Slot p_39717_) {
         return  super.canTakeItemForPickAll(p_39716_, p_39717_);
     }
@@ -192,4 +178,6 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
     public boolean stillValid(Player p_38874_) {
         return true;
     }
+
+
 }
