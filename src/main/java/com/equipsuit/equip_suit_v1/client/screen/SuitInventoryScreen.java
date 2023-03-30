@@ -29,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
@@ -67,8 +68,8 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.blit(p_97787_, i, j, 0, 0, this.imageWidth, this.imageHeight);
         renderEntityInInventory(i + 51, j + 75, 30, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.minecraft.player);
         renderSuitInventory(p_97787_,p_97790_);
-        HashMap<Integer, int[]> suitList = ((IPlayerInterface) Minecraft.getInstance().player).getSuitList();
-        suitList.forEach((integer, ints) -> Arrays.stream(ints).forEach(num -> markSlot( num, p_97787_)));
+        ArrayList<int[]> suitList = ((IPlayerInterface) Minecraft.getInstance().player).getSuitList();
+        suitList.forEach((ints) -> Arrays.stream(ints).forEach(num -> markSlot( num, p_97787_)));
 
     }
     protected void renderSuitInventory(PoseStack p_97787_, int p_97790_){

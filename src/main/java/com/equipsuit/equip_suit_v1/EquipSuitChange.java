@@ -2,6 +2,7 @@ package com.equipsuit.equip_suit_v1;
 
 import com.equipsuit.equip_suit_v1.api.config.EquipSlotConfig;
 import com.equipsuit.equip_suit_v1.common.registry.ContainerRegister;
+import com.equipsuit.equip_suit_v1.common.registry.EntityDataRegister;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -27,6 +28,7 @@ public class EquipSuitChange
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         // Register the commonSetup method for modloading
         ContainerRegister.REGISTRY.register(modEventBus);
+        EntityDataRegister.REGISTRY.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EquipSlotConfig.SPEC,"equip-slot-config.toml");
