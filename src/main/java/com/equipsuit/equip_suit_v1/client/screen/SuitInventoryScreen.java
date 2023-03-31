@@ -3,7 +3,10 @@ package com.equipsuit.equip_suit_v1.client.screen;
 import com.equipsuit.equip_suit_v1.EquipSuitChange;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.ContainerEquipSuit;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
+import com.equipsuit.equip_suit_v1.common.CommonEvents;
+import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.container.SuitInventoryMenu;
+import com.equipsuit.equip_suit_v1.common.network.SuitChange;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,50 +15,77 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.LockIconButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
-    private static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
     private final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
     private float xMouse;
     private float yMouse;
+    private Button.OnPress IPress;
     private boolean buttonClicked;
-    public SuitInventoryScreen(SuitInventoryMenu p_97741_, Inventory p_97742_, Component p_97743_) {
-        super(p_97741_, p_97742_, p_97743_);
+    private final TradeOfferButton[] tradeOfferButtons = new TradeOfferButton[4];
+    public SuitInventoryScreen(SuitInventoryMenu p_97741_, Inventory p_97742_ ,Component p_97743_) {
+        super(p_97741_, p_97742_, Component.translatable(""));
         this.passEvents = true;
         this.titleLabelX = 97;
+        this.IPress = p_93751_ -> {
+            if(p_93751_ instanceof TradeOfferButton tradeOfferButton){
+                CommonModEvents.NetWork.sendToServer(new SuitChange(tradeOfferButton.index));
+            }
+        };
+
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        for(int i=0 ;i<4;i++){
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(this.leftPos-100, this.topPos + 10 + i * 20, i,IPress);
+            tradeOfferButtons[i] = tradeOfferButton;
+            this.addRenderableWidget(tradeOfferButton);
+        }
     }
 
     @Override
     public void render(PoseStack p_97795_, int p_97796_, int p_97797_, float p_97798_) {
+        this.renderBackground(p_97795_);
         super.render(p_97795_, p_97796_, p_97797_, p_97798_);
         this.renderTooltip(p_97795_, p_97796_,p_97797_);
         this.xMouse = (float)p_97796_;
         this.yMouse = (float)p_97797_;
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        Arrays.stream(tradeOfferButtons).forEach(tradeOfferButton -> {
+            tradeOfferButton.active = tradeOfferButton.index !=  ((IPlayerInterface) Minecraft.getInstance().player).getFocus();
+        });
     }
 
     @Override
@@ -131,11 +161,11 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     }
 
     private void markSlot(int num , PoseStack poseStack ){
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-        this.blit(poseStack,this.leftPos-((4 -( num % 4)) * 18 + 4), (int) (this.topPos +  ( 7 + Math.ceil(num / 4) * 19)), 0,22, 18, 18);
+//        RenderSystem.enableBlend();
+//        RenderSystem.defaultBlendFunc();
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
+//        this.blit(poseStack,this.leftPos-((4 -( num % 4)) * 18 + 4), (int) (this.topPos +  ( 7 + Math.ceil(num / 4) * 19)), 4,24, 18, 18);
     }
 
 
@@ -143,6 +173,62 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
         GuiComponent.blit(p_194036_, p_194037_, p_194038_, p_194039_, (float)p_194040_.x, (float)p_194040_.y, p_194040_.w, p_194040_.h, 128, 128);
+    }
+
+    @Override
+    public boolean mouseClicked(double p_97748_, double p_97749_, int p_97750_) {
+        Slot slot = this.IFindSlot(p_97748_, p_97749_);
+        if(slot!=null){
+            Minecraft.getInstance().player.sendSystemMessage(Component.translatable(String.valueOf(slot.index)));
+        }
+        return super.mouseClicked(p_97748_, p_97749_, p_97750_);
+    }
+    private Slot IFindSlot(double p_97748_, double p_97749_){
+        for(int i = 0; i < this.menu.slots.size(); ++i) {
+            Slot slot = this.menu.slots.get(i);
+            if (this.isHovering(slot.x,slot.y,16,16,p_97748_, p_97749_) && slot.isActive()) {
+                return slot;
+            }
+        }
+        return null;
+    }
+    @OnlyIn(Dist.CLIENT)
+    class TradeOfferButton extends Button {
+        final int index;
+
+        public TradeOfferButton(int p_99205_, int p_99206_, int p_99207_, Button.OnPress p_99208_) {
+            super(p_99205_, p_99206_, 20, 20, Component.translatable(String.valueOf(p_99207_+1)), p_99208_);
+            this.index = p_99207_;
+            this.visible = true;
+        }
+
+        @Override
+        public boolean isActive() {
+            return super.isActive() &&  ((IPlayerInterface) Minecraft.getInstance().player).getFocus() != this.index;
+        }
+
+        public int getIndex() {
+            return this.index;
+        }
+
+
+        public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
+//            if (this.isHovered && MerchantScreen.this.menu.getOffers().size() > this.index + this.scrollOff) {
+//                if (p_99212_ < this.x + 20) {
+//                    ItemStack itemstack = MerchantScreen.this.menu.getOffers().get(this.index + MerchantScreen.this.scrollOff).getCostA();
+//                    MerchantScreen.this.renderTooltip(p_99211_, itemstack, p_99212_, p_99213_);
+//                } else if (p_99212_ < this.x + 50 && p_99212_ > this.x + 30) {
+//                    ItemStack itemstack2 = MerchantScreen.this.menu.getOffers().get(this.index + MerchantScreen.this.scrollOff).getCostB();
+//                    if (!itemstack2.isEmpty()) {
+//                        MerchantScreen.this.renderTooltip(p_99211_, itemstack2, p_99212_, p_99213_);
+//                    }
+//                } else if (p_99212_ > this.x + 65) {
+//                    ItemStack itemstack1 = MerchantScreen.this.menu.getOffers().get(this.index + MerchantScreen.this.scrollOff).getResult();
+//                    MerchantScreen.this.renderTooltip(p_99211_, itemstack1, p_99212_, p_99213_);
+//                }
+//            }
+
+        }
     }
 
     @OnlyIn(Dist.CLIENT)

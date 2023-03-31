@@ -47,14 +47,31 @@ public class EquipSuitHelper{
     }
 
 
-    public static void suiChange(Player player) {
+    public static boolean SuitUpdate(Player player) {
         IPlayerInterface player1 = (IPlayerInterface) player;
-        ArrayList<int[]> suitArrayList = player1.getSuitList();
         int focus = player1.getFocus();
-        SuitContainer suitContainer= player1.getSuitContainer();
-        EquipSuitHelper.SuitChangeWithoutOff(player, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(focus)).build());
-        EquipSuitHelper.SuitChangeWithoutOff(player,ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get((focus + 1) % 4)).build());
-        (player1).setFocus((focus + 1) % 4);
+        return SuitUpdate(player,focus,focus + 1);
+    }
+
+    public static boolean SuitUpdate(Player player, int targetNum){
+        IPlayerInterface player1 = (IPlayerInterface) player;
+        int focus = player1.getFocus();
+        return SuitUpdate(player,focus,targetNum);
+    }
+
+    public static boolean SuitUpdate(Player player , int oldNum , int targetNum) {
+        try {
+            targetNum = targetNum < 4 ? targetNum : (targetNum+1) % 4 ;
+            IPlayerInterface player1 = (IPlayerInterface) player;
+            ArrayList<int[]> suitArrayList = player1.getSuitList();
+            SuitContainer suitContainer= player1.getSuitContainer();
+            EquipSuitHelper.SuitChangeWithoutOff(player, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(oldNum)).build());
+            EquipSuitHelper.SuitChangeWithoutOff(player,ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(targetNum)).build());
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
 }

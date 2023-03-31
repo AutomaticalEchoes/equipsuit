@@ -5,7 +5,7 @@ import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.client.gui.FocusSuitHUD;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.network.OpenSuitInventory;
-import com.equipsuit.equip_suit_v1.common.network.SuitChange;
+import com.equipsuit.equip_suit_v1.common.network.SuitUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -19,7 +19,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onKeyboardInput(InputEvent.Key event) {
         if (ClientModEvents.SUIT_CHANGE.consumeClick()) {
-            CommonModEvents.NetWork.sendToServer(new SuitChange());
+            CommonModEvents.NetWork.sendToServer(new SuitUpdate());
         }
         if(ClientModEvents.CALL_SUIT_INVENTORY_KEY.consumeClick()){
               CommonModEvents.NetWork.sendToServer(new OpenSuitInventory());

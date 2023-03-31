@@ -52,8 +52,6 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
                 int[] intArray = suitTag.getIntArray(String.valueOf(i));
                 suitStack.setSuitSlotNums(i,intArray);
             }
-            EquipSuitChange.LOGGER.info("comTag"+compoundTag.toString());
-            EquipSuitChange.LOGGER.info("suitTag"+suitTag.toString());
         }
         this.entityData.set(SUIT_STACK,suitStack);
 
@@ -77,7 +75,6 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
             int[] ints = this.suitStack.getSuitArrayList().get(i);
             compoundtag.putIntArray(String.valueOf(i),ints);
         }
-        EquipSuitChange.LOGGER.info("saveTag:"+compoundtag);
         return compoundtag;
     }
 
@@ -90,8 +87,16 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     }
 
     public void setFocus(Integer integer) {
-        this.focus = integer;
-        this.entityData.set(FOCUS,integer);
+        if(EquipSuitHelper.SuitUpdate((Player) (Object)this,integer)){
+            this.focus = integer;
+            this.entityData.set(FOCUS,integer);
+        }
+    }
+    public void updateFocus(){
+        if(EquipSuitHelper.SuitUpdate((Player) (Object)this)){
+            this.focus = (focus+1)%4;
+            this.entityData.set(FOCUS,focus);
+        }
     }
 
     public SuitContainer getSuitContainer() {

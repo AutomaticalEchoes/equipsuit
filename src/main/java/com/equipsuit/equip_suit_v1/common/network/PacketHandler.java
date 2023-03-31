@@ -21,7 +21,12 @@ public class PacketHandler {
                 .decoder(OpenSuitInventory::decode)
                 .consumerMainThread(OpenSuitInventory::onMessage)
                 .add();
-        INSTANCE.messageBuilder(SuitChange.class,1)
+        INSTANCE.messageBuilder(SuitUpdate.class,1)
+                .encoder(SuitUpdate::encode)
+                .decoder(SuitUpdate::decode)
+                .consumerMainThread(SuitUpdate::onMessage)
+                .add();
+        INSTANCE.messageBuilder(SuitChange.class,2)
                 .encoder(SuitChange::encode)
                 .decoder(SuitChange::decode)
                 .consumerMainThread(SuitChange::onMessage)
