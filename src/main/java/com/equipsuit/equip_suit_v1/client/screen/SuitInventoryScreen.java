@@ -43,10 +43,11 @@ import java.util.Arrays;
 @OnlyIn(Dist.CLIENT)
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
-    private final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
+    private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
+    private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/slot_mark.png");
     private float xMouse;
     private float yMouse;
-    private Button.OnPress IPress;
+    private final Button.OnPress IPress;
     private boolean buttonClicked;
     private final TradeOfferButton[] tradeOfferButtons = new TradeOfferButton[4];
     public SuitInventoryScreen(SuitInventoryMenu p_97741_, Inventory p_97742_ ,Component p_97743_) {
@@ -99,7 +100,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         renderEntityInInventory(i + 51, j + 75, 30, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.minecraft.player);
         renderSuitInventory(p_97787_,p_97790_);
         ArrayList<int[]> suitList = ((IPlayerInterface) Minecraft.getInstance().player).getSuitList();
-        suitList.forEach((ints) -> Arrays.stream(ints).forEach(num -> markSlot( num, p_97787_)));
+        suitList.forEach((ints) -> Arrays.stream(ints).forEach(num -> markSlot(  p_97787_ ,num , suitList.indexOf(ints))));
 
     }
     protected void renderSuitInventory(PoseStack p_97787_, int p_97790_){
@@ -160,12 +161,14 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         Lighting.setupFor3DItems();
     }
 
-    private void markSlot(int num , PoseStack poseStack ){
-//        RenderSystem.enableBlend();
-//        RenderSystem.defaultBlendFunc();
-//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-//        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-//        this.blit(poseStack,this.leftPos-((4 -( num % 4)) * 18 + 4), (int) (this.topPos +  ( 7 + Math.ceil(num / 4) * 19)), 4,24, 18, 18);
+    private void markSlot(PoseStack poseStack ,int num , int suit ){
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, SLOT_MARK);
+        int x = this.leftPos-((4 -( num % 4)) * 18 + 4);
+        int y =(int) (this.topPos +  ( 7 + Math.ceil(num / 4) * 19));
+        this.blit(poseStack, x , y , 0,0, 24, 24);
     }
 
 
