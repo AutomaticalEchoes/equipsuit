@@ -44,7 +44,7 @@ import java.util.Arrays;
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
     private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
-    private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/slot_mark.png");
+    private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/mark.png");
     private float xMouse;
     private float yMouse;
     private final Button.OnPress IPress;
@@ -162,8 +162,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     }
 
     private void markSlot(PoseStack poseStack ,int num , int suit ){
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, SLOT_MARK);
         int x = this.leftPos-((4 -( num % 4)) * 18 + 4);
