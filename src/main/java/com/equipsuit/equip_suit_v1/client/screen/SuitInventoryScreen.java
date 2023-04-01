@@ -1,12 +1,16 @@
 package com.equipsuit.equip_suit_v1.client.screen;
 
 import com.equipsuit.equip_suit_v1.EquipSuitChange;
+import com.equipsuit.equip_suit_v1.api.config.EquipSlotConfig;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.ContainerEquipSuit;
+import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.EquipSuit;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
+import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
 import com.equipsuit.equip_suit_v1.common.CommonEvents;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.container.SuitInventoryMenu;
 import com.equipsuit.equip_suit_v1.common.network.SuitChange;
+import com.equipsuit.equip_suit_v1.common.network.SuitStackUpdate;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -29,6 +33,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -36,27 +41,44 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.widget.ScrollPanel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @OnlyIn(Dist.CLIENT)
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET = new ResourceLocation("item/empty_armor_slot_helmet");
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_CHESTPLATE = new ResourceLocation("item/empty_armor_slot_chestplate");
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_LEGGINGS = new ResourceLocation("item/empty_armor_slot_leggings");
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS = new ResourceLocation("item/empty_armor_slot_boots");
+    public static final ResourceLocation EMPTY_ARMOR_SLOT_SHIELD = new ResourceLocation("item/empty_armor_slot_shield");
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
+    private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
+    private static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
     private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
     private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/mark.png");
+    private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 1;
+    private static int ChangeIndex = 0;
     private float xMouse;
     private float yMouse;
-    private final Button.OnPress IPress;
-    private boolean buttonClicked;
-    private final TradeOfferButton[] tradeOfferButtons = new TradeOfferButton[4];
+    private final Button.OnPress IndexPress , SlotUpdatePress;
+    private boolean buttonClicked =false;
+    private final TradeOfferButton[] suitIndexButtons = new TradeOfferButton[4];
+    private final TradeOfferButton[] slotIndexButtons = new TradeOfferButton[4];
     public SuitInventoryScreen(SuitInventoryMenu p_97741_, Inventory p_97742_ ,Component p_97743_) {
         super(p_97741_, p_97742_, Component.translatable(""));
         this.passEvents = true;
         this.titleLabelX = 97;
-        this.IPress = p_93751_ -> {
+        this.IndexPress = p_93751_ -> {
             if(p_93751_ instanceof TradeOfferButton tradeOfferButton){
                 CommonModEvents.NetWork.sendToServer(new SuitChange(tradeOfferButton.index));
+            }
+        };
+        this.SlotUpdatePress = p_93751_ -> {
+            if(p_93751_ instanceof TradeOfferButton tradeOfferButton){
+                buttonClicked = ! buttonClicked;
+                ChangeIndex = buttonClicked?tradeOfferButton.index : -1;
             }
         };
 
@@ -65,11 +87,19 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     @Override
     protected void init() {
         super.init();
+        int x = this.leftPos - 80;
+        int y = this.topPos ;
         for(int i=0 ;i<4;i++){
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(this.leftPos-100, this.topPos + 10 + i * 20, i,IPress);
-            tradeOfferButtons[i] = tradeOfferButton;
+            TradeOfferButton tradeOfferButton = new TradeOfferButton( x  + i * 20, y - 20, i,IndexPress ,20, 20);
+            suitIndexButtons[i] = tradeOfferButton;
             this.addRenderableWidget(tradeOfferButton);
         }
+        for (int i=0;i<EquipSuit.SIZE;i++){
+            TradeOfferButton tradeOfferButton = new TradeOfferButton( x  -20 , y + 10 + i*20, i,SlotUpdatePress ,20, 20);
+            slotIndexButtons[i] = tradeOfferButton;
+            this.addRenderableWidget(tradeOfferButton);
+        }
+
     }
 
     @Override
@@ -79,14 +109,16 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.renderTooltip(p_97795_, p_97796_,p_97797_);
         this.xMouse = (float)p_97796_;
         this.yMouse = (float)p_97797_;
+        if(buttonClicked) renderTooltip(p_97795_,Component.translatable("Click SLOT OR UNDO"),p_97796_,p_97797_);
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
-        Arrays.stream(tradeOfferButtons).forEach(tradeOfferButton -> {
-            tradeOfferButton.active = tradeOfferButton.index !=  ((IPlayerInterface) Minecraft.getInstance().player).getFocus();
+        Arrays.stream(suitIndexButtons).forEach(tradeOfferButton -> {
+            tradeOfferButton.active = tradeOfferButton.index !=  ((IPlayerInterface) Minecraft.getInstance().player).getFocus() && !buttonClicked;
         });
+        Arrays.stream(slotIndexButtons).forEach(tradeOfferButton -> tradeOfferButton.active = !buttonClicked || tradeOfferButton.index == ChangeIndex);
     }
 
     @Override
@@ -101,8 +133,8 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         renderSuitInventory(p_97787_,p_97790_);
         ArrayList<int[]> suitList = ((IPlayerInterface) Minecraft.getInstance().player).getSuitList();
         suitList.forEach((ints) -> Arrays.stream(ints).forEach(num -> markSlot(  p_97787_ ,num , suitList.indexOf(ints))));
-
     }
+
     protected void renderSuitInventory(PoseStack p_97787_, int p_97790_){
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -162,11 +194,12 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     }
 
     private void markSlot(PoseStack poseStack ,int num , int suit ){
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, SLOT_MARK);
         int x = this.leftPos-((4 -( num % 4)) * 18 + 4);
         int y =(int) (this.topPos +  ( 7 + Math.ceil(num / 4) * 19));
-        this.blit(poseStack, x , y , 0,0, 24, 24);
+        this.blit(poseStack, x , y + suit * 4, getBlitOffset() ,0,suit * 4, 2, 3,4,16);
     }
 
 
@@ -178,12 +211,19 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
 
     @Override
     public boolean mouseClicked(double p_97748_, double p_97749_, int p_97750_) {
-        Slot slot = this.IFindSlot(p_97748_, p_97749_);
-        if(slot!=null){
-            Minecraft.getInstance().player.sendSystemMessage(Component.translatable(String.valueOf(slot.index)));
+        if(buttonClicked){
+            Slot slot = this.IFindSlot(p_97748_, p_97749_);
+            if(slot!=null && slot.index > INVENTORY_SIZE - 1 ){
+                IPlayerInterface player = (IPlayerInterface) Minecraft.getInstance().player;
+                int[] ints = player.getSuitList().get(player.getFocus());
+                ints[ChangeIndex] = slot.index - INVENTORY_SIZE;
+                CommonModEvents.NetWork.sendToServer(new SuitStackUpdate(player.getFocus(),ints));
+                buttonClicked = ! buttonClicked;
+            }
         }
         return super.mouseClicked(p_97748_, p_97749_, p_97750_);
     }
+
     private Slot IFindSlot(double p_97748_, double p_97749_){
         for(int i = 0; i < this.menu.slots.size(); ++i) {
             Slot slot = this.menu.slots.get(i);
@@ -193,12 +233,13 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         }
         return null;
     }
+
     @OnlyIn(Dist.CLIENT)
     class TradeOfferButton extends Button {
         final int index;
 
-        public TradeOfferButton(int p_99205_, int p_99206_, int p_99207_, Button.OnPress p_99208_) {
-            super(p_99205_, p_99206_, 20, 20, Component.translatable(String.valueOf(p_99207_+1)), p_99208_);
+        public TradeOfferButton(int p_99205_, int p_99206_, int p_99207_, Button.OnPress p_99208_,int width, int height) {
+            super(p_99205_, p_99206_, width, height, Component.translatable(EquipSuitHelper.SUIT_TAG[p_99207_]), p_99208_);
             this.index = p_99207_;
             this.visible = true;
         }

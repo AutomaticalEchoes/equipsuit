@@ -10,6 +10,7 @@ public interface IPlayerInterface {
     ArrayList<int[]> getSuitList();
     Integer getFocus();
     void setFocus(Integer integer);
-    public void updateFocus();
+    void updateFocus();
+    boolean setSuitArray(int num, int... ints);
     SuitContainer getSuitContainer();
 }

@@ -92,6 +92,17 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
             this.entityData.set(FOCUS,integer);
         }
     }
+
+    public boolean setSuitArray(int num, int... ints) {
+        try {
+            this.suitStack.getSuitArrayList().set(num,ints);
+            this.entityData.set(SUIT_STACK,suitStack);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
     public void updateFocus(){
         if(EquipSuitHelper.SuitUpdate((Player) (Object)this)){
             this.focus = (focus+1)%4;

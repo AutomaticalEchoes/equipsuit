@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EquipSuitHelper{
+    public static final String[] SUIT_TAG = {"I","II","III","IV"};
     public static void SuitChange(Player player, EquipSuit suit){
         List<ItemStack> list=List.copyOf(suit.getSlotItems());
         for(int i=0;i<list.size();i++){
@@ -23,6 +24,7 @@ public class EquipSuitHelper{
         }
         suit.save();
     }
+
     public static void SuitChangeWithoutOff(Player player, EquipSuit suit){
         List<ItemStack> list=List.copyOf(suit.getSlotItems());
         for(int i=0;i<list.size();i++){
@@ -34,6 +36,7 @@ public class EquipSuitHelper{
         }
        suit.save();
     }
+
     public static void ResetChangeWithoutOff(Player player, EquipSuit suit){
         List<ItemStack> list=List.copyOf(suit.getSlotItems());
         for(int i=0;i<list.size();i++){
@@ -50,7 +53,7 @@ public class EquipSuitHelper{
     public static boolean SuitUpdate(Player player) {
         IPlayerInterface player1 = (IPlayerInterface) player;
         int focus = player1.getFocus();
-        return SuitUpdate(player,focus,focus + 1);
+        return SuitUpdate(player,focus,(focus + 1) % 4);
     }
 
     public static boolean SuitUpdate(Player player, int targetNum){
@@ -61,7 +64,7 @@ public class EquipSuitHelper{
 
     public static boolean SuitUpdate(Player player , int oldNum , int targetNum) {
         try {
-            targetNum = targetNum < 4 ? targetNum : (targetNum+1) % 4 ;
+            targetNum = targetNum < 4 ? targetNum : 0 ;
             IPlayerInterface player1 = (IPlayerInterface) player;
             ArrayList<int[]> suitArrayList = player1.getSuitList();
             SuitContainer suitContainer= player1.getSuitContainer();
