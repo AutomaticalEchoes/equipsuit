@@ -41,6 +41,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.BundleTooltip;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -54,11 +55,13 @@ import java.util.Optional;
 @OnlyIn(Dist.CLIENT)
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
-    private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
     public static final String[] SLOT_TAG ={"H","B","L","F"};
+    public static final String[] SLOT_NAME_TAG ={"HELMET","BODY","LEG","FEET"};
+    public static final List<Component> COMPONENTS = new ArrayList<>();
+    private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
     private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
     private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/mark.png");
-    private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 1;
+    private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 6;
     private static int ChangeIndex = 0;
     private float xMouse;
     private float yMouse;
@@ -80,9 +83,11 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.SlotUpdatePress = p_93751_ -> {
             if(p_93751_ instanceof TradeOfferButton tradeOfferButton){
                 buttonClicked = ! buttonClicked;
+                canEdit = buttonClicked;
                 ChangeIndex = buttonClicked?tradeOfferButton.index : -1;
             }
         };
+        COMPONENTS.add(Component.translatable("CLICK SLOT OR UNDO"));
 
     }
 
@@ -96,13 +101,27 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         int x = this.leftPos - 100;
         int y = this.topPos ;
         for(int i=0 ;i<4;i++){
-            TradeOfferButton tradeOfferButton = new TradeOfferButton( x + i * 15, y - 12, i,Component.translatable(EquipSuitHelper.SUIT_TAG[i]),IndexPress ,14, 14);
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 15, y - 12, i, Component.translatable(EquipSuitHelper.SUIT_TAG[i]), IndexPress, 14, 14) {
+                @Override
+                public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
+                    if (this.isHovered) {
+                        renderTooltip(p_99211_,renderTooltip,optional,(int)xMouse,(int)yMouse);
+                    }
+                }
+            };
             suitIndexButtons[i] = tradeOfferButton;
             this.addRenderableWidget(tradeOfferButton);
         }
-        this.addRenderableWidget(new Button(x+3 , y +4 ,14,14,Component.translatable("⚙") ,p_93751_ -> canEdit =!canEdit));
+        this.addRenderableWidget(new Button(x+3 , y +4 ,14,14,Component.translatable("⚙") ,p_93751_ -> {canEdit =!canEdit; buttonClicked=false;}));
         for (int i=0;i<EquipSuit.SIZE;i++){
-            TradeOfferButton tradeOfferButton = new TradeOfferButton( x + 3 , y + 19 + i*15, i,Component.translatable(SLOT_TAG[i]),SlotUpdatePress ,14, 14);
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 3, y + 19 + i * 15, i, Component.translatable(SLOT_TAG[i]), SlotUpdatePress, 14, 14) {
+                @Override
+                public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
+                    if (this.isHovered) {
+                        renderTooltip(p_99211_,Component.translatable(SLOT_NAME_TAG[index]),(int)xMouse,(int)yMouse);
+                    }
+                }
+            };
             slotIndexButtons[i] = tradeOfferButton;
             this.addRenderableWidget(tradeOfferButton);
         }
@@ -116,14 +135,14 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.renderTooltip(p_97795_, p_97796_,p_97797_);
         this.xMouse = (float)p_97796_;
         this.yMouse = (float)p_97797_;
-        if(buttonClicked) renderTooltip(p_97795_,Component.translatable("Click SLOT OR UNDO"),p_97796_,p_97797_);
+        if(buttonClicked) renderTooltip(p_97795_,COMPONENTS.get(0),p_97796_,p_97797_);
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
         Arrays.stream(suitIndexButtons).forEach(tradeOfferButton -> {
-            tradeOfferButton.active = tradeOfferButton.index !=  ((IPlayerInterface) Minecraft.getInstance().player).getFocus() && !buttonClicked;
+            tradeOfferButton.active = tradeOfferButton.index !=  ((IPlayerInterface) Minecraft.getInstance().player).getFocus() && !buttonClicked && !canEdit;
         });
         Arrays.stream(slotIndexButtons).forEach(tradeOfferButton -> tradeOfferButton.active = canEdit &&(!buttonClicked || tradeOfferButton.index == ChangeIndex));
     }
@@ -246,7 +265,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     }
 
     @OnlyIn(Dist.CLIENT)
-    class TradeOfferButton extends Button {
+    abstract class TradeOfferButton extends Button {
         final int index;
         final List<Component> renderTooltip =new ArrayList<>();
         final Optional optional;
@@ -254,10 +273,10 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             super(p_99205_, p_99206_, width, height, component, p_99208_);
             this.index = p_99207_;
             this.visible = true;
-            renderTooltip.add(Component.translatable("Num " + index +1));
+            renderTooltip.add(component);
             IPlayerInterface player = (IPlayerInterface) Minecraft.getInstance().player;
             ContainerEquipSuitImpl build = ContainerEquipSuit.buildInt(player.getSuitContainer(), player.getSuitList().get(index)).build();
-            optional= Optional.of(new BundleTooltip( build.getSlotItems(),1));
+            optional = Optional.of(new BundleTooltip( build.getSlotItems(),1));
 
         }
 
@@ -271,12 +290,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         }
 
 
-        public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
-            if (this.isHovered) {
-
-                renderTooltip(p_99211_,renderTooltip,optional,(int)xMouse,(int)yMouse);
-            }
-        }
+        public abstract void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) ;
     }
 
     @OnlyIn(Dist.CLIENT)

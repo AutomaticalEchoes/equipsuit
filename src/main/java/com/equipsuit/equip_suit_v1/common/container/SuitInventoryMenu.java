@@ -4,16 +4,25 @@ import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.EquipSuit;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.common.registry.ContainerRegister;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
+
+import java.util.Optional;
 
 public class SuitInventoryMenu extends AbstractContainerMenu {
     public static final ResourceLocation BLOCK_ATLAS = new ResourceLocation("textures/atlas/blocks.png");
@@ -24,6 +33,8 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
     public static final ResourceLocation EMPTY_ARMOR_SLOT_SHIELD = new ResourceLocation("item/empty_armor_slot_shield");
     private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
     private static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
+    private final CraftingContainer craftSlots = new CraftingContainer(this, 2, 2);
+    private final ResultContainer resultSlots = new ResultContainer();
     private final Inventory inventory;
     private final SuitContainer suitContainer;
     private final Player owner;
@@ -36,10 +47,20 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
         this.inventory = inventory;
         this.owner = inventory.player;
         this.suitContainer = ((IPlayerInterface)owner).getSuitContainer();
+        initCraftSlot(inventory);
         initInventory();
         initContainer();
     }
 
+    private void initCraftSlot(Inventory p_39706_){
+        this.addSlot(new ResultSlot(p_39706_.player, this.craftSlots, this.resultSlots, 0, 154, 28));
+
+        for(int i = 0; i < 2; ++i) {
+            for(int j = 0; j < 2; ++j) {
+                this.addSlot(new Slot(this.craftSlots, j + i * 2, 98 + j * 18, 18 + i * 18));
+            }
+        }
+    }
 
     private void initContainer(){
         for(int k = 0; k < 36; k++) {
@@ -102,6 +123,30 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
         });
     }
 
+    public void fillCraftSlotsStackedContents(StackedContents p_39714_) {
+        this.craftSlots.fillStackedContents(p_39714_);
+    }
+
+    public void clearCraftingContent() {
+        this.resultSlots.clearContent();
+        this.craftSlots.clearContent();
+    }
+
+    public boolean recipeMatches(Recipe<? super CraftingContainer> p_39719_) {
+        return p_39719_.matches(this.craftSlots, this.owner.level);
+    }
+
+    public void slotsChanged(Container p_39710_) {
+        slotChangedCraftingGrid(this, this.owner.level, this.owner, this.craftSlots, this.resultSlots);
+    }
+
+    public void removed(Player p_39721_) {
+        super.removed(p_39721_);
+        this.resultSlots.clearContent();
+        if (!p_39721_.level.isClientSide) {
+            this.clearContainer(p_39721_, this.craftSlots);
+        }
+    }
 
     @Override
     public ItemStack quickMoveStack(Player p_39723_, int p_39724_) {
@@ -169,15 +214,36 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
     }
 
     public boolean canTakeItemForPickAll(ItemStack p_39716_, Slot p_39717_) {
-        return  super.canTakeItemForPickAll(p_39716_, p_39717_);
+        return p_39717_.container != this.resultSlots && super.canTakeItemForPickAll(p_39716_, p_39717_);
     }
 
+    public int getResultSlotIndex() {
+        return 0;
+    }
 
     @Override
     public boolean stillValid(Player p_38874_) {
         return true;
     }
 
+
+    protected static void slotChangedCraftingGrid(AbstractContainerMenu p_150547_, Level p_150548_, Player p_150549_, CraftingContainer p_150550_, ResultContainer p_150551_) {
+        if (!p_150548_.isClientSide) {
+            ServerPlayer serverplayer = (ServerPlayer)p_150549_;
+            ItemStack itemstack = ItemStack.EMPTY;
+            Optional<CraftingRecipe> optional = p_150548_.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, p_150550_, p_150548_);
+            if (optional.isPresent()) {
+                CraftingRecipe craftingrecipe = optional.get();
+                if (p_150551_.setRecipeUsed(p_150548_, serverplayer, craftingrecipe)) {
+                    itemstack = craftingrecipe.assemble(p_150550_);
+                }
+            }
+
+            p_150551_.setItem(0, itemstack);
+            p_150547_.setRemoteSlot(0, itemstack);
+            serverplayer.connection.send(new ClientboundContainerSetSlotPacket(p_150547_.containerId, p_150547_.incrementStateId(), 0, itemstack));
+        }
+    }
 
 
 }
