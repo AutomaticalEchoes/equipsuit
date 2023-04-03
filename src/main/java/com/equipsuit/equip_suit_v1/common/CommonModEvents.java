@@ -13,10 +13,8 @@ public class CommonModEvents {
     @SubscribeEvent
     public static  void commonSetup(final FMLCommonSetupEvent event)
     {
-
         event.enqueueWork(()->{
             NetWork= PacketHandler.RegisterPacket();
-
         });
     }
 
