@@ -34,6 +34,8 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -101,7 +103,9 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         int x = this.leftPos - 100;
         int y = this.topPos ;
         for(int i=0 ;i<4;i++){
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 15, y - 12, i, Component.translatable(EquipSuitHelper.SUIT_TAG[i]), IndexPress, 14, 14) {
+            MutableComponent translatable = Component.translatable(EquipSuitHelper.SUIT_TAG[i]);
+            translatable.setStyle(Style.EMPTY.withColor(EquipSuitHelper.COLORS[i]));
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 15, y - 12, i,translatable, IndexPress, 14, 14) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
                     if (this.isHovered) {
@@ -277,7 +281,11 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             IPlayerInterface player = (IPlayerInterface) Minecraft.getInstance().player;
             ContainerEquipSuitImpl build = ContainerEquipSuit.buildInt(player.getSuitContainer(), player.getSuitList().get(index)).build();
             optional = Optional.of(new BundleTooltip( build.getSlotItems(),1));
+        }
 
+        @Override
+        public boolean isHoveredOrFocused() {
+            return super.isHoveredOrFocused();
         }
 
         @Override
