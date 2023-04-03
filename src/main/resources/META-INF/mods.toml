@@ -43,14 +43,20 @@ authors="AutomaticalEchoes" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 #This mod defines four sets of equipment that can be quickly switched
+
 #Use it by press c , you also can open the suit inventory edit your sets by press b
-——————————————————————————————————————————————
+—————————————————————————
 #Choes the number of suit and wear your equip ,your suit is done.
+
 #if you want to add the same equipment to different suits. you can edit the slot num map(read next)
-——————————————————————————————————————————————
-#Defaultly, the first equipment set (I) maps to slots num 1 to 4 in the suit inventory, the second set (II) maps 5 to 8, and III IV so on , all slots were marked by different colors with different suits.
+—————————————————————————
+#By default, the first equipment set (I) maps to slots num 1 to 4 in the suit inventory, the second set (II) maps 5 to 8, and III IV so on , all slots were marked by different colors with different suits.
+
 #Choes the set in the suit inventory , click the edit button (⚙) ,chose witch part you want to change, and then click the slot in suit inventory,it will be mark if succeed.
-#make sure the target slot without any item before you make it map to your suits
+
+#make sure the target slot without any item before you make it map to your suits.
+
+#this is my first mod ,hope you enjoy it or give me some advice. email:1121665965@qq.com.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.equipsuit]] #optional

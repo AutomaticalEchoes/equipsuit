@@ -1,6 +1,5 @@
 package com.equipsuit.equip_suit_v1.common.container;
 
-import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.EquipSuit;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.common.registry.ContainerRegister;
 import com.mojang.datafixers.util.Pair;

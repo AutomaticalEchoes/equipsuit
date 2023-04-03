@@ -1,13 +1,11 @@
 package com.equipsuit.equip_suit_v1.client.gui;
 
-import com.equipsuit.equip_suit_v1.EquipSuitChange;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.gui.FocusSuitHud;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

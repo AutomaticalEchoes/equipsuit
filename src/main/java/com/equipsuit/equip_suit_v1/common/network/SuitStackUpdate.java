@@ -1,10 +1,6 @@
 package com.equipsuit.equip_suit_v1.common.network;
 
-import com.equipsuit.equip_suit_v1.api.config.EquipSlotConfig;
-import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.EquipSuit;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
-import com.equipsuit.equip_suit_v1.common.CommonEvents;
-import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;

@@ -1,8 +1,6 @@
 package com.equipsuit.equip_suit_v1.api.modInterfcae.player;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class SuitStackImpl implements SuitStack{
     private ArrayList<int[]> suitArrayList = new ArrayList<>();

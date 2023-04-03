@@ -1,15 +1,12 @@
 package com.equipsuit.equip_suit_v1.api.mixin;
 
-import com.equipsuit.equip_suit_v1.EquipSuitChange;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
-import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.ContainerEquipSuit;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.SuitStack;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.SuitStackImpl;
 import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
 import com.equipsuit.equip_suit_v1.common.container.SuitContainer;
 import com.equipsuit.equip_suit_v1.common.registry.EntityDataRegister;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -17,7 +14,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 @Mixin(Player.class)
