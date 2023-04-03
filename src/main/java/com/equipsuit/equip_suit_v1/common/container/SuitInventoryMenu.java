@@ -27,7 +27,6 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
     private final Inventory inventory;
     private final SuitContainer suitContainer;
     private final Player owner;
-    private int focus;
     public static SuitInventoryMenu Create(int p_38852_, Inventory inventory) {
         return new SuitInventoryMenu(inventory,p_38852_);
     }
@@ -178,6 +177,7 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
     public boolean stillValid(Player p_38874_) {
         return true;
     }
+
 
 
 }
