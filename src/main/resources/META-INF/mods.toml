@@ -50,7 +50,7 @@ description='''
 
 #if you want to add the same equipment to different suits. you can edit the slot num map(read next)
 —————————————————————————
-#By default, the first equipment set (I) maps to slots num 1 to 4 in the suit inventory, the second set (II) maps 5 to 8, and III IV so on , all slots were marked by different colors with different suits.
+#By default, the first equipment set (I) maps to slots num 1 to 4 in the suit inventory, the second set (II) maps 5 to 8, and III IV so on , all slots were marked with different colors of different suits.
 
 #Choes the set in the suit inventory , click the edit button (⚙) ,chose witch part you want to change, and then click the slot in suit inventory,it will be mark if succeed.
 
