@@ -239,6 +239,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 ints[ChangeIndex] = slot.index - INVENTORY_SIZE;
                 CommonModEvents.NetWork.sendToServer(new SuitStackUpdate(player.getFocus(),ints));
                 buttonClicked = ! buttonClicked;
+                canEdit = false;
             }
         }
         return super.mouseClicked(p_97748_, p_97749_, p_97750_);
