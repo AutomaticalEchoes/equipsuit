@@ -44,7 +44,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
     public static final String[] SLOT_TAG ={"H","B","L","F"};
     public static final String[] SLOT_NAME_TAG ={"HELMET","BODY","LEG","FEET"};
-    public static final List<Component> COMPONENTS = new ArrayList<>();
     private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
     private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
     private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/mark.png");
@@ -74,7 +73,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 ChangeIndex = buttonClicked?tradeOfferButton.index : -1;
             }
         };
-        COMPONENTS.add(Component.translatable("CLICK SLOT OR UNDO"));
 
     }
 
@@ -124,7 +122,10 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.renderTooltip(p_97795_, p_97796_,p_97797_);
         this.xMouse = (float)p_97796_;
         this.yMouse = (float)p_97797_;
-        if(buttonClicked) renderTooltip(p_97795_,COMPONENTS.get(0),p_97796_,p_97797_);
+        if(buttonClicked) renderTooltip(p_97795_,Component
+                .translatable("Editing:" +
+                                        "suit " + EquipSuitHelper.SUIT_TAG[((IPlayerInterface) Minecraft.getInstance().player).getFocus()] +"," +
+                                        "part " + SLOT_NAME_TAG[ChangeIndex]),leftPos -30,topPos-2);
     }
 
     @Override

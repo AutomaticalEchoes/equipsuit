@@ -19,16 +19,16 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
 @Mod.EventBusSubscriber(modid = EquipSuitChange.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public  class ClientModEvents {
-    public static final KeyMapping CALL_SUIT_INVENTORY_KEY = new KeyMapping("open suit menu",
+    public static final KeyMapping CALL_SUIT_INVENTORY_KEY = new KeyMapping("key.category.equipsuit.suitinvetory",
                 KeyConflictContext.IN_GAME,
-                KeyModifier.CONTROL,
+                KeyModifier.NONE,
                 InputConstants.getKey(InputConstants.KEY_B,0 ),
-                "key");
-    public static final KeyMapping SUIT_CHANGE = new KeyMapping("change focus suit",
+                "key.equipsuit");
+    public static final KeyMapping SUIT_CHANGE = new KeyMapping("key.category.equipsuit.suitchange",
             KeyConflictContext.IN_GAME,
-            KeyModifier.CONTROL,
-            InputConstants.getKey(InputConstants.KEY_C,0 ),
-            "key");
+            KeyModifier.NONE,
+            InputConstants.getKey(InputConstants.KEY_R,0 ),
+            "key.equipsuit");
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event)
     {
