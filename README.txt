@@ -1,5 +1,5 @@
 #这是一个装备套装快速切换模组,我定义了四套可以快速切换的套装
-#游戏时你可以按C进行套装之间的快速切换，也可以按B打开套装库存编辑套装
+#游戏中你可以按下R键进行套装之间的快速切换，也可以按下B键打开套装库存编辑套装
 —————————————————————————
 
 —————————————————————————
@@ -11,7 +11,7 @@
 如果你发现了什么问题或者有什么建议,可以发邮箱给我.email:1121665965@qq.com.
 ==========================================================================
 #This mod defines four sets of equipment that can be quickly switched
-#Use it by press c , you also can open the suit inventory edit your sets by press b
+#Update focus suit by press R  , you also can open the suit inventory edit your sets by press b
 —————————————————————————
 #Choes the suit number and wear your equip ,your suit is done.
 #if you want to add the same equipment to different suits. you can edit the slot num map(read next)
