@@ -240,9 +240,12 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 CommonModEvents.NetWork.sendToServer(new SuitStackUpdate(player.getFocus(),ints));
                 buttonClicked = ! buttonClicked;
                 canEdit = false;
+                return true;
             }
+            return false;
+        }else{
+            return super.mouseClicked(p_97748_, p_97749_, p_97750_);
         }
-        return super.mouseClicked(p_97748_, p_97749_, p_97750_);
     }
 
     private Slot IFindSlot(double p_97748_, double p_97749_){
