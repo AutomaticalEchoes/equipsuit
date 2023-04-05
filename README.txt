@@ -15,20 +15,20 @@
 按下设置按钮(⚙)后部位选择按钮将会被激活(分别是H、B、L、F,即Helmet,Body,Leg,Feet).
 选择你要编辑的部位,然后单击想要映射的装备格,当对应标签变更至该格子就说明设置成功拉.
 使用此方法,你可以将不同套装映射到相同的格子,比如我把所有套装的头部映射至1号格,此时我切换至任何套装我的头部装备也不会变更.
-### 注意: 映射表只能映射至界面左侧装备物品栏中的36个格子,不能映射到原版物品栏中的36个格子.
-编辑映射状态时,点击其他地方会没有正常反馈.你可以再次点击部位选择按钮或者设置按钮取消编辑操作.
+**注意: 映射表只能映射至界面左侧装备物品栏中的36个格子,不能映射到原版物品栏中的36个格子.
+编辑映射状态时,点击其他地方会没有正常反馈.你可以再次点击部位选择按钮或者设置按钮取消编辑操作.**
 —————————————————————————
-### 我是个萌新moder,这是我的第一个模组,大家多多海涵.如果你发现了什么问题或者有什么建议,可以发邮箱给我.email:1121665965@qq.com.
+**我是个萌新moder,这是我的第一个模组,大家多多海涵.如果你发现了什么问题或者有什么建议,可以发邮箱给我.email:1121665965@qq.com.**
 
 ==========================================================================
-#This mod defines four sets of equipment that can be quickly switched
-#Update focus suit by press R  , you also can open the suit inventory edit your sets by press b
+This mod defines four sets of equipment that can be quickly switched
+Update focus suit by press R  , you also can open the suit inventory edit your sets by press b
 —————————————————————————
-#Choes the suit number and wear your equip ,your suit is done.
-#if you want to add the same equipment to different suits. you can edit the slot num map(read next)
+Choes the suit number and wear your equip ,your suit is done.
+if you want to add the same equipment to different suits. you can edit the slot num map(read next)
 —————————————————————————
-#By default, the first equipment set (I) maps to slots num 1 to 4 in the suit inventory, the second set (II) maps 5 to 8, and III IV so on , all slots were marked with different colors of different suits.
-#Choes the set in the suit inventory , click the edit button (⚙) ,chose which part you want to change, and then click the slot in suit inventory,it will be mark if succeed.
-#make sure the target slot without any item before you make it map to your suits.
+By default, the first equipment set (I) maps to slots num 1 to 4 in the suit inventory, the second set (II) maps 5 to 8, and III IV so on , all slots were marked with different colors of different suits.
+Chose the set in the suit inventory , click the edit button (⚙) ,chose which part you want to change, and then click the slot in suit inventory,it will be mark if succeed.
+make sure the target slot without any item before you make it map to your suits.
 
-#this is my first mod ,hope you enjoy it or give me some advice. email:1121665965@qq.com.
+this is my first mod ,hope you enjoy it or give me some advice. email:1121665965@qq.com.
