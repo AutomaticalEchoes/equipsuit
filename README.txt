@@ -24,7 +24,7 @@
 This mod defines four sets of equipment that can be quickly switched
 Update focus suit by press R  , you also can open the suit inventory edit your sets by press b
 —————————————————————————
-Choes the suit number and wear your equip ,your suit is done.
+Chose the suit number and wear your equip ,your suit is done.
 if you want to add the same equipment to different suits. you can edit the slot num map(read next)
 —————————————————————————
 By default, the first equipment set (I) maps to slots num 1 to 4 in the suit inventory, the second set (II) maps 5 to 8, and III IV so on , all slots were marked with different colors of different suits.
