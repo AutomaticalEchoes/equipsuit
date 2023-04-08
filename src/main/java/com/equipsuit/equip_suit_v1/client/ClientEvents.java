@@ -5,7 +5,7 @@ import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
 import com.equipsuit.equip_suit_v1.client.gui.FocusSuitHUD;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
-import com.equipsuit.equip_suit_v1.common.network.OpenSuitInventory;
+import com.equipsuit.equip_suit_v1.common.network.OpenOrCloseSuitInventory;
 import com.equipsuit.equip_suit_v1.common.network.SuitChangeNext;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,7 +23,7 @@ public class ClientEvents {
             CommonModEvents.NetWork.sendToServer(new SuitChangeNext());
         }
         if(ClientModEvents.CALL_SUIT_INVENTORY_KEY.consumeClick()){
-              CommonModEvents.NetWork.sendToServer(new OpenSuitInventory());
+            CommonModEvents.NetWork.sendToServer(new OpenOrCloseSuitInventory());
         }
     }
     @SubscribeEvent

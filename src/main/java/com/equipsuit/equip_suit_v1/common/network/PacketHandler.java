@@ -16,10 +16,10 @@ public class PacketHandler {
                 .networkProtocolVersion(()->PROTOCOL_VERSION)
                 .simpleChannel();
         CommonModEvents.NetWork=INSTANCE;
-        INSTANCE.messageBuilder(OpenSuitInventory.class,0)
-                .encoder(OpenSuitInventory::encode)
-                .decoder(OpenSuitInventory::decode)
-                .consumerMainThread(OpenSuitInventory::onMessage)
+        INSTANCE.messageBuilder(OpenOrCloseSuitInventory.class,0)
+                .encoder(OpenOrCloseSuitInventory::encode)
+                .decoder(OpenOrCloseSuitInventory::decode)
+                .consumerMainThread(OpenOrCloseSuitInventory::onMessage)
                 .add();
         INSTANCE.messageBuilder(SuitChangeNext.class,1)
                 .encoder(SuitChangeNext::encode)

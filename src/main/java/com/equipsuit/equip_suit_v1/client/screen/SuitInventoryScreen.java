@@ -6,10 +6,13 @@ import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.ContainerEquipSuit
 import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.EquipSuit;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
+import com.equipsuit.equip_suit_v1.client.ClientEvents;
+import com.equipsuit.equip_suit_v1.client.ClientModEvents;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.container.SuitInventoryMenu;
 import com.equipsuit.equip_suit_v1.common.network.SuitChange;
 import com.equipsuit.equip_suit_v1.common.network.SuitStackUpdate;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -246,6 +249,16 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         }else{
             return super.mouseClicked(p_97748_, p_97749_, p_97750_);
         }
+    }
+
+    @Override
+    public boolean keyPressed(int p_97765_, int p_97766_, int p_97767_) {
+        InputConstants.Key mouseKey = InputConstants.getKey(p_97765_, p_97766_);
+        if(ClientModEvents.CALL_SUIT_INVENTORY_KEY.getKey().equals(mouseKey)){
+            this.onClose();
+            return true;
+        }
+        return super.keyPressed(p_97765_, p_97766_, p_97767_);
     }
 
     private Slot IFindSlot(double p_97748_, double p_97749_){
