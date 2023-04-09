@@ -9,6 +9,7 @@ import com.equipsuit.equip_suit_v1.api.utils.IPlayerInvWrapper;
 import com.equipsuit.equip_suit_v1.api.utils.PlayerSuitContainerWrapper;
 import com.equipsuit.equip_suit_v1.common.container.SuitContainer;
 import com.equipsuit.equip_suit_v1.common.registry.EntityDataRegister;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -19,12 +20,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 
@@ -46,7 +52,6 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     }
     @Inject(method = {"readAdditionalSaveData"},at = {@At("RETURN")})
     public void readAdditionalSaveData(CompoundTag compoundTag,CallbackInfo callbackInfo){
-        EquipSuitChange.LOGGER.info(compoundTag.toString());
         if(compoundTag.contains("SuitStack")){
             CompoundTag suitTag = compoundTag.getCompound("SuitStack");
             for(int i=0;i<4;i++){
@@ -137,4 +142,20 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     private final net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandler>
             playerJoinedHandler = net.minecraftforge.common.util.LazyOptional.of(
             () -> new IPlayerInvWrapper(((Player)(Object)this).getInventory(),suitContainer));
+
+    @Inject(method = "getCapability",at = {@At("HEAD")},remap = false)
+    public  void getCapability(net.minecraftforge.common.capabilities.Capability<?> capability, @Nullable Direction facing , CallbackInfoReturnable<net.minecraftforge.common.util.LazyOptional<?>> callbackInfoReturnable){
+        if (this.isAlive() && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            if (facing == null){
+                callbackInfoReturnable.setReturnValue(playerJoinedHandler.cast());
+            } else if (facing.getAxis().isVertical()) {
+                callbackInfoReturnable.setReturnValue(playerMainHandler.cast());
+            } else if (facing.getAxis().isHorizontal()){
+                callbackInfoReturnable.setReturnValue(playerEquipmentHandler.cast());
+            }
+        }
+        callbackInfoReturnable.setReturnValue(super.getCapability(capability, facing)) ;
+    }
+
+
 }
