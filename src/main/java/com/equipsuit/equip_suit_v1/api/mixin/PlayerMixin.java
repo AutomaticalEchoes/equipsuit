@@ -1,5 +1,6 @@
 package com.equipsuit.equip_suit_v1.api.mixin;
 
+import com.equipsuit.equip_suit_v1.EquipSuitChange;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.SuitStack;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.SuitStackImpl;
@@ -14,6 +15,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,6 +43,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     }
     @Inject(method = {"readAdditionalSaveData"},at = {@At("RETURN")})
     public void readAdditionalSaveData(CompoundTag compoundTag,CallbackInfo callbackInfo){
+        EquipSuitChange.LOGGER.info(compoundTag.toString());
         if(compoundTag.contains("SuitStack")){
             CompoundTag suitTag = compoundTag.getCompound("SuitStack");
             for(int i=0;i<4;i++){
@@ -49,7 +52,6 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
             }
         }
         this.entityData.set(SUIT_STACK,suitStack);
-
         ListTag containerTag = compoundTag.getList("EquipInventory", 10);
         suitContainer.load(containerTag);
         focus = compoundTag.getInt("Focus");
@@ -62,6 +64,13 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
         p_36265_.put("EquipInventory", this.suitContainer.save(new ListTag()));
         p_36265_.putInt("Focus",this.entityData.get(FOCUS));
         p_36265_.put("SuitStack",saveSuitArray());
+    }
+
+    @Inject(method = {"dropEquipment"} ,at = {@At("RETURN")})
+    public void dropEquipment(CallbackInfo callbackInfo){
+        if (!this.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            this.suitContainer.dropAll((Player) (Object)this);
+        }
     }
 
     private CompoundTag saveSuitArray(){

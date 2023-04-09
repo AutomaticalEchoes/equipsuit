@@ -8,6 +8,8 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+
 public class SuitContainer implements Container {
     public final NonNullList<ItemStack> items = NonNullList.withSize(36, ItemStack.EMPTY);
 
@@ -83,6 +85,15 @@ public class SuitContainer implements Container {
                 }
             }
         }
+
+    }
+
+    public void dropAll(Player player) {
+        items.stream().forEach(itemStack -> {
+            if (!itemStack.isEmpty()) {
+                player.drop(itemStack, true, false);
+            }
+        });
 
     }
 }
