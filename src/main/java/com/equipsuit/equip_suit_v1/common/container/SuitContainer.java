@@ -12,7 +12,11 @@ import java.util.List;
 
 public class SuitContainer implements Container {
     public final NonNullList<ItemStack> items = NonNullList.withSize(36, ItemStack.EMPTY);
+    public Player player;
 
+    public SuitContainer(Player player) {
+        this.player = player;
+    }
 
     @Override
     public int getContainerSize() {

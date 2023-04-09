@@ -5,6 +5,8 @@ import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.SuitStack;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.SuitStackImpl;
 import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
+import com.equipsuit.equip_suit_v1.api.utils.IPlayerInvWrapper;
+import com.equipsuit.equip_suit_v1.api.utils.PlayerSuitContainerWrapper;
 import com.equipsuit.equip_suit_v1.common.container.SuitContainer;
 import com.equipsuit.equip_suit_v1.common.registry.EntityDataRegister;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,7 +30,7 @@ import java.util.ArrayList;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity implements IPlayerInterface {
-    private final SuitContainer suitContainer = new SuitContainer();
+    private final SuitContainer suitContainer = new SuitContainer((Player) (Object)this);
     private SuitStack suitStack = new SuitStackImpl();
     private int focus;
     private static final EntityDataAccessor<Integer> FOCUS = SynchedEntityData.defineId(Player.class, EntityDataSerializers.INT);
@@ -117,4 +120,21 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     public SuitContainer getSuitContainer() {
         return suitContainer;
     }
+
+    private final net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandler>
+            playerMainHandler = net.minecraftforge.common.util.LazyOptional.of(
+            () -> new CombinedInvWrapper(
+                    new net.minecraftforge.items.wrapper.PlayerMainInvWrapper(((Player)(Object)this).getInventory()),
+                    new PlayerSuitContainerWrapper(suitContainer)));
+
+    private final net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandler>
+            playerEquipmentHandler = net.minecraftforge.common.util.LazyOptional.of(
+            () -> new net.minecraftforge.items.wrapper.CombinedInvWrapper(
+                    new net.minecraftforge.items.wrapper.PlayerArmorInvWrapper(((Player)(Object)this).getInventory()),
+                    new net.minecraftforge.items.wrapper.PlayerOffhandInvWrapper(((Player)(Object)this).getInventory()),
+                    new PlayerSuitContainerWrapper(suitContainer)));
+
+    private final net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandler>
+            playerJoinedHandler = net.minecraftforge.common.util.LazyOptional.of(
+            () -> new IPlayerInvWrapper(((Player)(Object)this).getInventory(),suitContainer));
 }
