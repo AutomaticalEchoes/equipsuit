@@ -122,40 +122,15 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
         }
     }
 
+    public void restore(Player player){
+        this.focus = player.getEntityData().get(FOCUS);
+        this.suitStack = player.getEntityData().get(SUIT_STACK);
+        this.entityData.set(FOCUS,player.getEntityData().get(FOCUS));
+        this.entityData.set(SUIT_STACK,player.getEntityData().get(SUIT_STACK));
+    }
+
     public SuitContainer getSuitContainer() {
         return suitContainer;
     }
-
-    private final net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandler>
-            playerMainHandler = net.minecraftforge.common.util.LazyOptional.of(
-            () -> new CombinedInvWrapper(
-                    new net.minecraftforge.items.wrapper.PlayerMainInvWrapper(((Player)(Object)this).getInventory()),
-                    new PlayerSuitContainerWrapper(suitContainer)));
-
-    private final net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandler>
-            playerEquipmentHandler = net.minecraftforge.common.util.LazyOptional.of(
-            () -> new net.minecraftforge.items.wrapper.CombinedInvWrapper(
-                    new net.minecraftforge.items.wrapper.PlayerArmorInvWrapper(((Player)(Object)this).getInventory()),
-                    new net.minecraftforge.items.wrapper.PlayerOffhandInvWrapper(((Player)(Object)this).getInventory()),
-                    new PlayerSuitContainerWrapper(suitContainer)));
-
-    private final net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandler>
-            playerJoinedHandler = net.minecraftforge.common.util.LazyOptional.of(
-            () -> new IPlayerInvWrapper(((Player)(Object)this).getInventory(),suitContainer));
-
-    @Inject(method = "getCapability",at = {@At("HEAD")},remap = false)
-    public  void getCapability(net.minecraftforge.common.capabilities.Capability<?> capability, @Nullable Direction facing , CallbackInfoReturnable<net.minecraftforge.common.util.LazyOptional<?>> callbackInfoReturnable){
-        if (this.isAlive() && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == null){
-                callbackInfoReturnable.setReturnValue(playerJoinedHandler.cast());
-            } else if (facing.getAxis().isVertical()) {
-                callbackInfoReturnable.setReturnValue(playerMainHandler.cast());
-            } else if (facing.getAxis().isHorizontal()){
-                callbackInfoReturnable.setReturnValue(playerEquipmentHandler.cast());
-            }
-        }
-        callbackInfoReturnable.setReturnValue(super.getCapability(capability, facing)) ;
-    }
-
 
 }

@@ -6,7 +6,8 @@
   "refmap": "mod.refmap.json",
   "plugin": "com.equipsuit.equip_suit_v1.api.mixin.MixinPlugin",
   "mixins": [
-    "PlayerMixin"
+    "PlayerMixin",
+    "ServerPlayerMixin"
   ],
   "client": [
   ],

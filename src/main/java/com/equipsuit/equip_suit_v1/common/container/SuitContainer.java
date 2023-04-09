@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,6 +17,12 @@ public class SuitContainer implements Container {
 
     public SuitContainer(Player player) {
         this.player = player;
+    }
+
+    public void replaceWith(SuitContainer p_36007_) {
+        for(int i = 0; i < this.getContainerSize(); ++i) {
+            this.setItem(i, p_36007_.getItem(i));
+        }
     }
 
     @Override
