@@ -29,6 +29,32 @@ public  class ClientModEvents {
             KeyModifier.NONE,
             InputConstants.getKey(InputConstants.KEY_R,0 ),
             "key.equipsuit");
+    public static final KeyMapping MODE_CHANGE = new KeyMapping("key.category.equipsuit.modechange",
+            KeyConflictContext.IN_GAME,
+            KeyModifier.CONTROL,
+            InputConstants.getKey(InputConstants.KEY_R,0 ),
+            "key.equipsuit");
+    public static final KeyMapping SELECT_SUIT_CHANGE_I = new KeyMapping("key.category.equipsuit.suitchange.select_1",
+            KeyConflictContext.IN_GAME,
+            KeyModifier.CONTROL,
+            InputConstants.getKey(InputConstants.KEY_1,0 ),
+            "key.equipsuit");
+    public static final KeyMapping SELECT_SUIT_CHANGE_II = new KeyMapping("key.category.equipsuit.suitchange.select_2",
+            KeyConflictContext.IN_GAME,
+            KeyModifier.CONTROL,
+            InputConstants.getKey(InputConstants.KEY_2,0 ),
+            "key.equipsuit");
+    public static final KeyMapping SELECT_SUIT_CHANGE_III = new KeyMapping("key.category.equipsuit.suitchange.select_3",
+            KeyConflictContext.IN_GAME,
+            KeyModifier.CONTROL,
+            InputConstants.getKey(InputConstants.KEY_3,0 ),
+            "key.equipsuit");
+    public static final KeyMapping SELECT_SUIT_CHANGE_IV = new KeyMapping("key.category.equipsuit.suitchange.select_4",
+            KeyConflictContext.IN_GAME,
+            KeyModifier.CONTROL,
+            InputConstants.getKey(InputConstants.KEY_4,0 ),
+            "key.equipsuit");
+
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event)
     {
@@ -41,6 +67,10 @@ public  class ClientModEvents {
     public static void registerKeyBinding(RegisterKeyMappingsEvent event){
         event.register(CALL_SUIT_INVENTORY_KEY);
         event.register(SUIT_CHANGE);
+        event.register(SELECT_SUIT_CHANGE_I);
+        event.register(SELECT_SUIT_CHANGE_II);
+        event.register(SELECT_SUIT_CHANGE_III);
+        event.register(SELECT_SUIT_CHANGE_IV);
     }
 
 }

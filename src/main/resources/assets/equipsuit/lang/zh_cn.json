@@ -1,5 +1,10 @@
 {
   "key.equipsuit": "装备套装",
   "key.category.equipsuit.suitinvetory": "装备背包栏",
-  "key.category.equipsuit.suitchange": "套装切换"
+  "key.category.equipsuit.suitchange": "套装切换",
+  "key.category.equipsuit.suitchange.select_1": "快速切换_I",
+  "key.category.equipsuit.suitchange.select_2": "快速切换_II",
+  "key.category.equipsuit.suitchange.select_3": "快速切换_III",
+  "key.category.equipsuit.suitchange.select_4": "快速切换_IV",
+  "key.category.equipsuit.modechange": "模式切换"
 }

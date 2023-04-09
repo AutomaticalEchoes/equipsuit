@@ -1,5 +1,10 @@
 {
   "key.equipsuit": "EquipSuit",
   "key.category.equipsuit.suitinvetory": "open suit inventory",
-  "key.category.equipsuit.suitchange": "change focus suit "
+  "key.category.equipsuit.suitchange": "change focus suit ",
+  "key.category.equipsuit.suitchange.select_1": "quick change I",
+  "key.category.equipsuit.suitchange.select_2": "quick change II",
+  "key.category.equipsuit.suitchange.select_3": "quick change III",
+  "key.category.equipsuit.suitchange.select_4": "quick change IV",
+  "key.category.equipsuit.modechange": "mode change"
 }

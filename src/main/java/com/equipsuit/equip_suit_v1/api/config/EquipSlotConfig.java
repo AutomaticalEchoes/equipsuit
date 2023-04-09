@@ -14,7 +14,7 @@ public class EquipSlotConfig {
         BUILDER.push("equip slot config");
         Predicate<Object> Integers= integers -> (Integer)integers >= 0 && (Integer)integers < 64;
         List<Integer> EquipSlotNum = Arrays.asList(39, 38, 37, 36);
-        EQUIP_SLOT_LIST=BUILDER.comment("add your custom slot nums,make sure the number exists in your inventory slots list,\nrange:[0,64)").defineList("equip list", EquipSlotNum ,Integers);
+        EQUIP_SLOT_LIST = BUILDER.comment("add your custom slot nums,make sure the number exists in your inventory slots list,\nrange:[0,{your inventory size, default:64})").defineList("equip list", EquipSlotNum ,Integers);
         BUILDER.pop();
         SPEC=BUILDER.build();
     }
