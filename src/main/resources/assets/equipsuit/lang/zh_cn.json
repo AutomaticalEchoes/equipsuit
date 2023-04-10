@@ -1,5 +1,8 @@
 {
   "key.equipsuit": "装备套装",
+  "message.equipsuit.mod_tag" : "模式",
+  "message.equipsuit.mod_sequence " : "顺序切换",
+  "message.equipsuit.mod_quickselect" : "快速选定切换",
   "key.category.equipsuit.suitinvetory": "装备背包栏",
   "key.category.equipsuit.suitchange": "套装切换",
   "key.category.equipsuit.suitchange.select_1": "快速切换_I",

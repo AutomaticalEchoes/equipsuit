@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EquipSuitHelper{
-    public static final String[] SUIT_TAG = {"I","II","III","IV"};
-    public static final int[] COLORS={1898002,16136466,1223670,16184082};
+
     public static void SuitChange(Player player, EquipSuit suit){
         List<ItemStack> list=List.copyOf(suit.getSlotItems());
         for(int i=0;i<list.size();i++){

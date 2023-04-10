@@ -1,5 +1,8 @@
 {
   "key.equipsuit": "EquipSuit",
+  "message.equipsuit.mod_tag" : "Mode",
+  "message.equipsuit.mod_sequence " : "Sequence",
+  "message.equipsuit.mod_quickselect" : "Quick Select",
   "key.category.equipsuit.suitinvetory": "open suit inventory",
   "key.category.equipsuit.suitchange": "change focus suit ",
   "key.category.equipsuit.suitchange.select_1": "quick change I",

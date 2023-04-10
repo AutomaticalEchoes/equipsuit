@@ -1,11 +1,13 @@
 package com.equipsuit.equip_suit_v1.client.screen;
 
 import com.equipsuit.equip_suit_v1.EquipSuitChange;
+import com.equipsuit.equip_suit_v1.api.config.EquipSuitClientConfig;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.ContainerEquipSuit;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.ContainerEquipSuitImpl;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.EquipSuit;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
+import com.equipsuit.equip_suit_v1.api.utils.Messages;
 import com.equipsuit.equip_suit_v1.client.ClientEvents;
 import com.equipsuit.equip_suit_v1.client.ClientModEvents;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
@@ -89,8 +91,8 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         int x = this.leftPos - 100;
         int y = this.topPos ;
         for(int i=0 ;i<4;i++){
-            MutableComponent translatable = Component.translatable(EquipSuitHelper.SUIT_TAG[i]);
-            translatable.setStyle(Style.EMPTY.withColor(EquipSuitHelper.COLORS[i]));
+            MutableComponent translatable = Component.translatable(Messages.SUIT_TAG[i]);
+            translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_TAG_COLORS[i]));
             TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 15, y - 12, i,translatable, IndexPress, 14, 14) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
@@ -125,10 +127,11 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.renderTooltip(p_97795_, p_97796_,p_97797_);
         this.xMouse = (float)p_97796_;
         this.yMouse = (float)p_97797_;
+        drawString(p_97795_, font,Component.translatable(Messages.MODE_TAG +Messages.MODE_NAME[EquipSuitClientConfig.CHANGE_MODE.get()])  ,leftPos,topPos+170, 0xFFFFFF);
         if(buttonClicked) renderTooltip(p_97795_,Component
                 .translatable("Editing:" +
-                                        "suit " + EquipSuitHelper.SUIT_TAG[((IPlayerInterface) Minecraft.getInstance().player).getFocus()] +"," +
-                                        "part " + SLOT_NAME_TAG[ChangeIndex]),leftPos -30,topPos-2);
+                                        "suit " + Messages.SUIT_TAG[((IPlayerInterface) Minecraft.getInstance().player).getFocus()] +"," +
+                                        "part " + SLOT_NAME_TAG[ChangeIndex]), p_97796_,p_97797_);
     }
 
     @Override

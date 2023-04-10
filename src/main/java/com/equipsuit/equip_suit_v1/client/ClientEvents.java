@@ -4,6 +4,7 @@ import com.equipsuit.equip_suit_v1.api.config.EquipSuitClientConfig;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.gui.FocusSuitHud;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
+import com.equipsuit.equip_suit_v1.api.utils.Messages;
 import com.equipsuit.equip_suit_v1.client.gui.FocusSuitHUD;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.network.OpenOrCloseSuitInventory;
@@ -44,7 +45,7 @@ public class ClientEvents {
         if(focusSuitHUD == null) {
             focusSuitHUD=FocusSuitHUD.Create(event.getPoseStack());
         }
-       focusSuitHUD.render(EquipSuitHelper.SUIT_TAG[((IPlayerInterface)(Minecraft.getInstance().player)).getFocus()]);
+       focusSuitHUD.render(Messages.SUIT_TAG[((IPlayerInterface)(Minecraft.getInstance().player)).getFocus()]);
     }
 
 }
