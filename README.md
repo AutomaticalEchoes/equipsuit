@@ -1,3 +1,7 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="https://dev.fandom.com/wiki/Heimu?action=raw&ctype=text/css" />
+</head>
+
 # 装备套装/装备快速切换(EquipSuit)
 [![Build Status](https://img.shields.io/badge/MinecraftForge-1.19.x-brightgreen)](https://github.com/MinecraftForge/MinecraftForge?branch=1.19.x)
 ## 介绍
@@ -38,6 +42,3 @@
 **我是个萌新moder,这是我的第一个模组,望大家多多海涵.  
 如果你发现了什么问题或者有什么建议,可以发邮件给我.~~回不回复随缘~~  
 email:1121665965@qq.com.**
-<head>
-    <link rel="stylesheet" type="text/css" href="https://dev.fandom.com/wiki/Heimu?action=raw&ctype=text/css">
-</head>
