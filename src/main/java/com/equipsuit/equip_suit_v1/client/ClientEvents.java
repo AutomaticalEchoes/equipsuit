@@ -11,6 +11,8 @@ import com.equipsuit.equip_suit_v1.common.network.OpenOrCloseSuitInventory;
 import com.equipsuit.equip_suit_v1.common.network.SuitChange;
 import com.equipsuit.equip_suit_v1.common.network.SuitChangeNext;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
@@ -29,6 +31,7 @@ public class ClientEvents {
             int i =EquipSuitClientConfig.CHANGE_MODE.get()==0?1:0;
             EquipSuitClientConfig.CHANGE_MODE.set(i);
             focusSuitHUD.setMode(i);
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
         if(EquipSuitClientConfig.CHANGE_MODE.get().equals(0)){
             if (ClientModEvents.SUIT_CHANGE.consumeClick()) CommonModEvents.NetWork.sendToServer(new SuitChangeNext());
@@ -45,7 +48,7 @@ public class ClientEvents {
         if(focusSuitHUD == null) {
             focusSuitHUD=FocusSuitHUD.Create(event.getPoseStack());
         }
-       focusSuitHUD.render(Messages.SUIT_TAG[((IPlayerInterface)(Minecraft.getInstance().player)).getFocus()]);
+       focusSuitHUD.render(Messages.SUIT_NUM[((IPlayerInterface)(Minecraft.getInstance().player)).getFocus()]);
     }
 
 }

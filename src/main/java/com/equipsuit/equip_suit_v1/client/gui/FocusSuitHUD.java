@@ -40,7 +40,7 @@ public class FocusSuitHUD extends Screen implements Widget, FocusSuitHud {
         MutableComponent translatable = Component.translatable(s);
         this.renderTooltip(matrixStack,translatable,leftPos,topPos);
         if(time > 0){
-            drawString(matrixStack, font,Component.translatable(Messages.MODE_TAG +Messages.MODE_NAME[mode])  ,leftPos+10,topPos-28, 0xFFFFFF);
+            drawString(matrixStack, font,Component.translatable(Messages.TAG_MODE +Messages.MODE_NAME[mode])  ,leftPos+10,topPos-28, 0xFFFFFF);
             time--;
         }
 

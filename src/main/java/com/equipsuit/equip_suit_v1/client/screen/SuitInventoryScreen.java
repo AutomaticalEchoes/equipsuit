@@ -47,12 +47,14 @@ import java.util.Optional;
 @OnlyIn(Dist.CLIENT)
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
-    public static final String[] SLOT_TAG ={"H","B","L","F"};
-    public static final String[] SLOT_NAME_TAG ={"HELMET","BODY","LEG","FEET"};
+
     private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
     private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
     private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/mark.png");
     private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 6;
+    private static final List<Component> EDITING_MESSAGE = new ArrayList<>();
+    public static final Component WARNING_MESSAGE = Component.translatable(Messages.TAG_WARNING+Messages.NO_CLICK_RESULT).withStyle(Style.EMPTY.withColor(16184082));
+    private static Button EDIT_BUTTON;
     private static int ChangeIndex = 0;
     private float xMouse;
     private float yMouse;
@@ -76,6 +78,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 buttonClicked = ! buttonClicked;
                 canEdit = buttonClicked;
                 ChangeIndex = buttonClicked?tradeOfferButton.index : -1;
+                if(buttonClicked) resetEditingMessage();
             }
         };
 
@@ -90,13 +93,15 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         super.init();
         int x = this.leftPos - 100;
         int y = this.topPos ;
+        EDIT_BUTTON = new Button(x+3 , y +4 ,14,14,Component.translatable("⚙") ,p_93751_ -> {canEdit =!canEdit; buttonClicked=false;});
+        this.addRenderableWidget(EDIT_BUTTON);
         for(int i=0 ;i<4;i++){
-            MutableComponent translatable = Component.translatable(Messages.SUIT_TAG[i]);
-            translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_TAG_COLORS[i]));
+            MutableComponent translatable = Component.translatable(Messages.SUIT_NUM[i]);
+            translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_NUM_COLORS[i]));
             TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 15, y - 12, i,translatable, IndexPress, 14, 14) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
-                    if (this.isHovered) {
+                    if (this.isHovered && !buttonClicked) {
                         renderTooltip(p_99211_,renderTooltip,optional,(int)xMouse,(int)yMouse);
                     }
                 }
@@ -104,13 +109,13 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             suitIndexButtons[i] = tradeOfferButton;
             this.addRenderableWidget(tradeOfferButton);
         }
-        this.addRenderableWidget(new Button(x+3 , y +4 ,14,14,Component.translatable("⚙") ,p_93751_ -> {canEdit =!canEdit; buttonClicked=false;}));
+
         for (int i=0;i<EquipSuit.SIZE;i++){
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 3, y + 19 + i * 15, i, Component.translatable(SLOT_TAG[i]), SlotUpdatePress, 14, 14) {
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 3, y + 19 + i * 15, i, Component.translatable(Messages.PART[i]), SlotUpdatePress, 14, 14) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
-                    if (this.isHovered) {
-                        renderTooltip(p_99211_,Component.translatable(SLOT_NAME_TAG[index]),(int)xMouse,(int)yMouse);
+                    if (this.isHovered && !buttonClicked) {
+                        renderTooltip(p_99211_,Component.translatable(Messages.PART_NAME[index]),(int)xMouse,(int)yMouse);
                     }
                 }
             };
@@ -124,14 +129,16 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     public void render(PoseStack p_97795_, int p_97796_, int p_97797_, float p_97798_) {
         this.renderBackground(p_97795_);
         super.render(p_97795_, p_97796_, p_97797_, p_97798_);
-        this.renderTooltip(p_97795_, p_97796_,p_97797_);
+        if(buttonClicked){
+            renderComponentTooltip(p_97795_,EDITING_MESSAGE, p_97796_,p_97797_);
+            renderTooltip(p_97795_,WARNING_MESSAGE,this.leftPos-10 ,this.topPos );
+        }else {
+            this.renderTooltip(p_97795_, p_97796_,p_97797_);
+        }
         this.xMouse = (float)p_97796_;
         this.yMouse = (float)p_97797_;
-        drawString(p_97795_, font,Component.translatable(Messages.MODE_TAG +Messages.MODE_NAME[EquipSuitClientConfig.CHANGE_MODE.get()])  ,leftPos,topPos+170, 0xFFFFFF);
-        if(buttonClicked) renderTooltip(p_97795_,Component
-                .translatable("Editing:" +
-                                        "suit " + Messages.SUIT_TAG[((IPlayerInterface) Minecraft.getInstance().player).getFocus()] +"," +
-                                        "part " + SLOT_NAME_TAG[ChangeIndex]), p_97796_,p_97797_);
+        drawString(p_97795_, font,Component.translatable(Messages.TAG_MODE +Messages.MODE_NAME[EquipSuitClientConfig.CHANGE_MODE.get()])  ,leftPos,topPos+170, 0xFFFFFF);
+
     }
 
     @Override
@@ -248,7 +255,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 canEdit = false;
                 return true;
             }
-            return false;
+            return slotIndexButtons[ChangeIndex].mouseClicked(p_97748_,p_97749_,p_97750_)|| EDIT_BUTTON.mouseClicked(p_97748_,p_97749_,p_97750_);
         }else{
             return super.mouseClicked(p_97748_, p_97749_, p_97750_);
         }
@@ -272,6 +279,13 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             }
         }
         return null;
+    }
+
+    public void resetEditingMessage(){
+        EDITING_MESSAGE.clear();
+        EDITING_MESSAGE.add(Component.translatable(Messages.TAG_EDITING ));
+        EDITING_MESSAGE.add(Component.translatable(Messages.TAG_SUIT + Messages.SUIT_NUM[((IPlayerInterface) Minecraft.getInstance().player).getFocus()]));
+        EDITING_MESSAGE.add(Component.translatable(Messages.TAG_PART + Messages.PART_NAME[ChangeIndex]));
     }
 
     @OnlyIn(Dist.CLIENT)
