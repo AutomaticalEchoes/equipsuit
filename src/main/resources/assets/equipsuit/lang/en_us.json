@@ -9,7 +9,7 @@
   "text.message.equipsuit.part_name_4" : "FEET",
   "text.message.equipsuit.mode_sequence" : "Sequence",
   "text.message.equipsuit.mode_quickselect" : "Quick Select",
-  "text.message.equipsuit.no_click_result " : "Click no result while editing. Cancel or finish editing to restore normal",
+  "text.message.equipsuit.no_click_result " : "Click no result while editing. Recovered after cancel or finish editing ",
   "text.tag.equipsuit.mode" : "Mode",
   "text.tag.equipsuit.suit" : "Suit",
   "text.tag.equipsuit.editing" : "Editing",
