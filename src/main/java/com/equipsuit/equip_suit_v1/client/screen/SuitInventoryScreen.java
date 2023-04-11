@@ -53,7 +53,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/mark.png");
     private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 6;
     private static final List<Component> EDITING_MESSAGE = new ArrayList<>();
-    public static final Component WARNING_MESSAGE = Component.translatable(Messages.TAG_WARNING+Messages.NO_CLICK_RESULT).withStyle(Style.EMPTY.withColor(16184082));
+    private static final  List<Component> WARNING_MESSAGE = new ArrayList<>();
     private static Button EDIT_BUTTON;
     private static int ChangeIndex = 0;
     private float xMouse;
@@ -84,15 +84,14 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
 
     }
 
-    @Override
-    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
-    }
+
 
     @Override
     protected void init() {
         super.init();
         int x = this.leftPos - 100;
         int y = this.topPos ;
+        initWarningMessage();
         EDIT_BUTTON = new Button(x+3 , y +4 ,14,14,Component.translatable("⚙") ,p_93751_ -> {canEdit =!canEdit; buttonClicked=false;});
         this.addRenderableWidget(EDIT_BUTTON);
         for(int i=0 ;i<4;i++){
@@ -131,7 +130,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         super.render(p_97795_, p_97796_, p_97797_, p_97798_);
         if(buttonClicked){
             renderComponentTooltip(p_97795_,EDITING_MESSAGE, p_97796_,p_97797_);
-            renderTooltip(p_97795_,WARNING_MESSAGE,this.leftPos-10 ,this.topPos );
+            renderComponentTooltip(p_97795_,WARNING_MESSAGE,this.leftPos-10 ,this.topPos-40 );
         }else {
             this.renderTooltip(p_97795_, p_97796_,p_97797_);
         }
@@ -286,6 +285,12 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         EDITING_MESSAGE.add(Component.translatable(Messages.TAG_EDITING ));
         EDITING_MESSAGE.add(Component.translatable(Messages.TAG_SUIT + Messages.SUIT_NUM[((IPlayerInterface) Minecraft.getInstance().player).getFocus()]));
         EDITING_MESSAGE.add(Component.translatable(Messages.TAG_PART + Messages.PART_NAME[ChangeIndex]));
+    }
+    public void initWarningMessage(){
+        WARNING_MESSAGE.clear();
+        WARNING_MESSAGE.add(Component.translatable(Messages.TAG_WARNING).withStyle(Style.EMPTY.withColor(16184082)));
+        WARNING_MESSAGE.add(Component.translatable(Messages.NO_CLICK_RESULT).withStyle(Style.EMPTY.withColor(16184082)));
+        WARNING_MESSAGE.add(Component.translatable(Messages.NO_CLICK_RESULT_1).withStyle(Style.EMPTY.withColor(16184082)));
     }
 
     @OnlyIn(Dist.CLIENT)

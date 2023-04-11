@@ -15,7 +15,8 @@ public class Messages {
             I18n.get("text.message.equipsuit.part_name_2"),
             I18n.get("text.message.equipsuit.part_name_3"),
             I18n.get("text.message.equipsuit.part_name_4")};;
-    public static final String NO_CLICK_RESULT =I18n.get("text.message.equipsuit.no_click_result ");
+    public static final String NO_CLICK_RESULT =I18n.get("text.message.equipsuit.no_click_result");
+    public static final String NO_CLICK_RESULT_1 =I18n.get("text.message.equipsuit.no_click_result_1");
     public static final int[] SUIT_NUM_COLORS={1898002,16136466,1223670,16184082};
     public static final String TAG_MODE = MessageTag("text.tag.equipsuit.mode");
     public static final String TAG_SUIT = MessageTag("text.tag.equipsuit.suit");
