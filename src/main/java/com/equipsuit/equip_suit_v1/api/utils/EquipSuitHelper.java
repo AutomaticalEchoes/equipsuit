@@ -4,75 +4,71 @@ import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.ContainerEquipSuit
 import com.equipsuit.equip_suit_v1.api.modInterfcae.equipsuit.EquipSuit;
 import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.common.container.SuitContainer;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.IntPredicate;
 
 public class EquipSuitHelper{
-
-    public static void SuitChange(Player player, EquipSuit suit){
-        List<ItemStack> list=List.copyOf(suit.getSlotItems());
+    public static void EquipChange(Container container, EquipSuit equipSuit ,@Nullable int... exceptNums){
+        List<ItemStack> list=List.copyOf(equipSuit.getSlotItems());
         for(int i=0;i<list.size();i++){
-            int slotNum= (int) suit.getSlotsNums().get(i);
-            ItemStack playerItemStack=player.getInventory().getItem(slotNum);
-            suit.getSlotItems().set(i,playerItemStack);
-            player.getInventory().setItem(slotNum, list.get(i));
+            int slotNum= (int) equipSuit.getSlotsNums().get(i);
+            int finalI = i;
+            if(exceptNums !=null && exceptNums.length != 0  && Arrays.stream(exceptNums).anyMatch(value -> value == finalI)) continue;
+            ItemStack playerItemStack=container.getItem(slotNum);
+            equipSuit.getSlotItems().set(i,playerItemStack);
+            container.setItem(slotNum, list.get(i));
         }
-        suit.save();
+        equipSuit.save();
     }
 
-    public static void SuitChangeWithoutOff(Player player, EquipSuit suit){
-        List<ItemStack> list=List.copyOf(suit.getSlotItems());
-        for(int i=0;i<list.size();i++){
-            int slotNum = (int)suit.getSlotsNums().get(i);
-            if(slotNum == 40) continue;
-            ItemStack playerItemStack=player.getInventory().getItem(slotNum);
-            suit.getSlotItems().set(i,playerItemStack);
-            player.getInventory().setItem(slotNum, list.get(i));
-        }
-       suit.save();
+    public static void EquipChange(Player player, EquipSuit suit, @Nullable int... exceptNums){
+        EquipChange(player.getInventory(),suit,exceptNums);
     }
 
-    public static void ResetChangeWithoutOff(Player player, EquipSuit suit){
-        List<ItemStack> list=List.copyOf(suit.getSlotItems());
-        for(int i=0;i<list.size();i++){
-            int slotNum = (int)suit.getSlotsNums().get(i);
-            if(slotNum == 40) continue;
-            ItemStack playerItemStack=player.getInventory().getItem(slotNum);
-            suit.getSlotItems().set(i,playerItemStack);
-            player.getInventory().setItem(slotNum, list.get(i));
-        }
-        suit.save();
-    }
-
-
-    public static boolean SuitUpdate(Player player) {
+    public static boolean SuitChange(Player player) {
         IPlayerInterface player1 = (IPlayerInterface) player;
         int focus = player1.getFocus();
-        return SuitUpdate(player,focus,(focus + 1) % 4);
+        return SuitChange(player,focus,(focus + 1) % 4,null);
     }
 
-    public static boolean SuitUpdate(Player player, int targetNum){
+    public static boolean SuitChange(Player player, int targetNum){
         IPlayerInterface player1 = (IPlayerInterface) player;
         int focus = player1.getFocus();
-        return SuitUpdate(player,focus,targetNum);
+        return SuitChange(player,focus,targetNum,null);
     }
 
-    public static boolean SuitUpdate(Player player , int oldNum , int targetNum) {
+    public static boolean SuitChange(Player player, int oldNum , int targetNum , @Nullable Container container ,@Nullable int...except) {
         try {
             targetNum = targetNum < 4 ? targetNum : 0 ;
             IPlayerInterface player1 = (IPlayerInterface) player;
             ArrayList<int[]> suitArrayList = player1.getSuitList();
             SuitContainer suitContainer= player1.getSuitContainer();
-            EquipSuitHelper.SuitChangeWithoutOff(player, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(oldNum)).build());
-            EquipSuitHelper.SuitChangeWithoutOff(player,ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(targetNum)).build());
+            if(container!=null){
+                EquipChange(container, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(oldNum)).build(),except);
+                EquipChange(container, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(targetNum)).build(),except);
+                return true;
+            }
+            EquipChange(player, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(oldNum)).build(),except);
+            EquipChange(player, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(targetNum)).build(),except);
             return true;
         }catch (Exception e){
             return false;
         }
-
+    }
+    // 一定要用两次哦！
+    public static void SingleChange(Player player){
+        IPlayerInterface player1 = (IPlayerInterface) player;
+        int focus = player1.getFocus();
+        SuitContainer suitContainer= player1.getSuitContainer();
+        ArrayList<int[]> suitArrayList = player1.getSuitList();
+        EquipChange(player,ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(focus)).build());
     }
 
 }

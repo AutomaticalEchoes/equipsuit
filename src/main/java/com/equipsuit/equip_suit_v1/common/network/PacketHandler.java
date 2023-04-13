@@ -36,6 +36,11 @@ public class PacketHandler {
                 .decoder(SuitStackUpdate::decode)
                 .consumerMainThread(SuitStackUpdate::onMessage)
                 .add();
+        INSTANCE.messageBuilder(SuitSingleChange.class,4)
+                .encoder(SuitSingleChange::encode)
+                .decoder(SuitSingleChange::decode)
+                .consumerMainThread(SuitSingleChange::onMessage)
+                .add();
         return INSTANCE;
     }
 }

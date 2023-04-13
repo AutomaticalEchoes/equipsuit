@@ -89,7 +89,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     }
 
     public void setFocus(Integer integer) {
-        if(EquipSuitHelper.SuitUpdate((Player) (Object)this,integer)){
+        if(EquipSuitHelper.SuitChange((Player) (Object)this,integer)){
             this.focus = integer;
             this.entityData.set(FOCUS,integer);
         }
@@ -106,7 +106,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     }
 
     public void updateFocus(){
-        if(EquipSuitHelper.SuitUpdate((Player) (Object)this)){
+        if(EquipSuitHelper.SuitChange((Player) (Object)this)){
             this.focus = (focus+1)%4;
             this.entityData.set(FOCUS,focus);
         }

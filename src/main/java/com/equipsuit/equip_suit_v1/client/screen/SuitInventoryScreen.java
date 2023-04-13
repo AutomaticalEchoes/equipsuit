@@ -13,6 +13,7 @@ import com.equipsuit.equip_suit_v1.client.ClientModEvents;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.container.SuitInventoryMenu;
 import com.equipsuit.equip_suit_v1.common.network.SuitChange;
+import com.equipsuit.equip_suit_v1.common.network.SuitSingleChange;
 import com.equipsuit.equip_suit_v1.common.network.SuitStackUpdate;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
@@ -47,7 +48,6 @@ import java.util.Optional;
 @OnlyIn(Dist.CLIENT)
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
-
     private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
     private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
     private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/mark.png");
@@ -84,7 +84,10 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
 
     }
 
-
+    //这玩意就是要空的 不能删， 原版绘制的标题会和装备格重叠影响
+    @Override
+    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+    }
 
     @Override
     protected void init() {
@@ -92,7 +95,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         int x = this.leftPos - 100;
         int y = this.topPos ;
         initWarningMessage();
-        EDIT_BUTTON = new Button(x+3 , y +4 ,14,14,Component.translatable("⚙") ,p_93751_ -> {canEdit =!canEdit; buttonClicked=false;});
+        EDIT_BUTTON = new Button(x+3 , y +4 ,14,14,Component.translatable("⚙") ,p_93751_ -> {canEdit =!canEdit;buttonClicked=false; });
         this.addRenderableWidget(EDIT_BUTTON);
         for(int i=0 ;i<4;i++){
             MutableComponent translatable = Component.translatable(Messages.SUIT_NUM[i]);
@@ -233,7 +236,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         int y =(int) (this.topPos +  ( 7 + Math.ceil(slotNum / 4) * 19));
         this.blit(poseStack, x  + suit * 4 , y , getBlitOffset() ,4 * num,suit * 4, 4, 4,16,16);
     }
-
 
     private void blit(PoseStack p_194036_, int p_194037_, int p_194038_, int p_194039_, Texture p_194040_) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
