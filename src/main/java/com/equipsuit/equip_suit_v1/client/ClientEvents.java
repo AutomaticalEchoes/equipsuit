@@ -59,9 +59,8 @@ public class ClientEvents {
             CommonModEvents.NetWork.sendToServer(new SuitChangeNext());
         }else {
             CommonModEvents.NetWork.sendToServer(new SuitChange(num));
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK,1.0F));
         }
-
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK,1.0F));
     }
 
 }
