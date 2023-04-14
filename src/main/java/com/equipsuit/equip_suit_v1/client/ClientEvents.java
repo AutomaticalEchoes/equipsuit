@@ -19,6 +19,8 @@ import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nullable;
+
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
     public static FocusSuitHud focusSuitHUD =null;
@@ -34,12 +36,21 @@ public class ClientEvents {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
         if(EquipSuitClientConfig.CHANGE_MODE.get().equals(0)){
-            if (ClientModEvents.SUIT_CHANGE.consumeClick()) CommonModEvents.NetWork.sendToServer(new SuitChangeNext());
+            if(ClientModEvents.SELECT_SUIT_CHANGE_I.consumeClick())   SendSuitChange(0);
+            if(ClientModEvents.SELECT_SUIT_CHANGE_II.consumeClick())  SendSuitChange(1);
+            if(ClientModEvents.SELECT_SUIT_CHANGE_III.consumeClick()) SendSuitChange(2);
+            if(ClientModEvents.SELECT_SUIT_CHANGE_IV.consumeClick())  SendSuitChange(3);
         }else if(EquipSuitClientConfig.CHANGE_MODE.get().equals(1)){
-            if(ClientModEvents.SELECT_SUIT_CHANGE_I.consumeClick())   CommonModEvents.NetWork.sendToServer(new SuitChange(0));
-            if(ClientModEvents.SELECT_SUIT_CHANGE_II.consumeClick())  CommonModEvents.NetWork.sendToServer(new SuitChange(1));
-            if(ClientModEvents.SELECT_SUIT_CHANGE_III.consumeClick()) CommonModEvents.NetWork.sendToServer(new SuitChange(2));
-            if(ClientModEvents.SELECT_SUIT_CHANGE_IV.consumeClick())  CommonModEvents.NetWork.sendToServer(new SuitChange(3));
+            if (ClientModEvents.SUIT_CHANGE.consumeClick()) SendSuitChange(null);
+
+        }
+    }
+
+    public static void SendSuitChange(@Nullable Integer nums){
+        if (nums==null){
+            CommonModEvents.NetWork.sendToServer(new SuitChangeNext());
+        }else {
+            CommonModEvents.NetWork.sendToServer(new SuitChange(nums));
         }
     }
 
