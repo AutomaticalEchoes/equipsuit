@@ -67,6 +67,7 @@ public  class ClientModEvents {
     public static void registerKeyBinding(RegisterKeyMappingsEvent event){
         event.register(CALL_SUIT_INVENTORY_KEY);
         event.register(SUIT_CHANGE);
+        event.register(MODE_CHANGE);
         event.register(SELECT_SUIT_CHANGE_I);
         event.register(SELECT_SUIT_CHANGE_II);
         event.register(SELECT_SUIT_CHANGE_III);
