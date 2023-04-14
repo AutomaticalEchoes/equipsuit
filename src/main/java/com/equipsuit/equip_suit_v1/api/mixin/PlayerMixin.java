@@ -67,8 +67,6 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
         }
     }
 
-
-
     public ArrayList<int[]> getSuitList() {
         return suitStack.readTag(this.entityData.get(SUIT_STACK)).getSuitArrayList();
     }
