@@ -62,6 +62,7 @@ public  class ClientModEvents {
             MenuScreens.register(ContainerRegister.SUIT_INVENTORY_MENU.get(),SuitInventoryScreen::new);
             ClientRegistry.registerKeyBinding(CALL_SUIT_INVENTORY_KEY);
             ClientRegistry.registerKeyBinding(SUIT_CHANGE);
+            ClientRegistry.registerKeyBinding(MODE_CHANGE);
             ClientRegistry.registerKeyBinding(SELECT_SUIT_CHANGE_I);
             ClientRegistry.registerKeyBinding(SELECT_SUIT_CHANGE_II);
             ClientRegistry.registerKeyBinding(SELECT_SUIT_CHANGE_III);
