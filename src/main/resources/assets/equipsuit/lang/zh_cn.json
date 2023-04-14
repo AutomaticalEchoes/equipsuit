@@ -1,0 +1,28 @@
+{
+  "text.message.equipsuit.suit_1" : "I",
+  "text.message.equipsuit.suit_2" : "II",
+  "text.message.equipsuit.suit_3" : "III",
+  "text.message.equipsuit.suit_4" : "IV",
+  "text.message.equipsuit.part_name_1" : "头盔",
+  "text.message.equipsuit.part_name_2" : "盔甲",
+  "text.message.equipsuit.part_name_3" : "腿甲",
+  "text.message.equipsuit.part_name_4" : "靴子",
+  "text.message.equipsuit.mode_sequence" : "顺序切换",
+  "text.message.equipsuit.mode_quickselect" : "快速选定切换",
+  "text.message.equipsuit.no_click_result" : "编辑状态下点击装备库物品栏以外将没有正常反馈，",
+  "text.message.equipsuit.no_click_result_1" : "取消或完成编辑以恢复正常",
+  "text.tag.equipsuit.mode" : "模式",
+  "text.tag.equipsuit.suit" : "套装",
+  "text.tag.equipsuit.editing" : "正在编辑",
+  "text.tag.equipsuit.part" : "部位",
+  "text.tag.equipsuit.warning" : "！注意",
+
+  "key.equipsuit": "装备套装",
+  "key.category.equipsuit.suitinvetory": "装备背包栏",
+  "key.category.equipsuit.suitchange": "套装切换",
+  "key.category.equipsuit.suitchange.select_1": "快速切换_I",
+  "key.category.equipsuit.suitchange.select_2": "快速切换_II",
+  "key.category.equipsuit.suitchange.select_3": "快速切换_III",
+  "key.category.equipsuit.suitchange.select_4": "快速切换_IV",
+  "key.category.equipsuit.modechange": "模式切换"
+}
