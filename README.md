@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="heimu.css">  
 
 # 装备套装/装备快速切换(EquipSuit)
 [![Build Status](https://img.shields.io/badge/MinecraftForge-1.19.x-brightgreen)](https://github.com/MinecraftForge/MinecraftForge?branch=1.19.x)
@@ -8,7 +7,7 @@
 ## 使用
 安装本模组后，在游戏中你会看到快捷物品栏右侧出现罗马数字 I-IV，表示四种可以快速切换的套装。  
 当没有特殊需求时，只需切换套装编号并穿上对应装备即可。例如，如果我想设置三号套装为铁套，只需按下 `R` 键切换至 III 套装，然后右键点击装备铁套即可。  
-~~当前版本为升序循环切换，可能会添加快速选定切换功能。~~<span class="heimu" title="虽然很捞" >已经有啦！</span>  
+~~当前版本为升序循环切换，可能会添加快速选定切换功能。~~<span title="虽然很捞" >已经有啦！</span>  
   
 ### 切换模式
 本模组有两种切换模式：升序循环切换和快速选定切换。按下 `Ctrl + R` 可以在两种模式之间切换，同时右下角会有当前模式的提示。
