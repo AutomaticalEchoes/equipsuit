@@ -1,7 +1,7 @@
 # 装备套装/装备快速切换(EquipSuit)
 [![Build Status](https://img.shields.io/badge/MinecraftForge-1.19.x-brightgreen)](https://github.com/MinecraftForge/MinecraftForge?branch=1.19.x)
  
-阅前提示：本人喜欢用<span title="如果影响你观看就献给你道个歉啦！>-<" >`…`</span>来添加注释。
+_阅前提示：本人喜欢用<span title="如果影响你观看就先给你道个歉啦！>-<" >`…`</span>来添加注释。_
 ## 介绍
 
 该模组为方便快速切换装备套装而设计，其中预定义了四个可供快速切换的不同装备套装。
