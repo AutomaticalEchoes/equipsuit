@@ -10,6 +10,7 @@ import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
 import com.equipsuit.equip_suit_v1.api.utils.Messages;
 import com.equipsuit.equip_suit_v1.client.ClientEvents;
 import com.equipsuit.equip_suit_v1.client.ClientModEvents;
+import com.equipsuit.equip_suit_v1.client.gui.TradeOfferButton;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.container.SuitInventoryMenu;
 import com.equipsuit.equip_suit_v1.common.network.SuitChange;
@@ -295,38 +296,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         WARNING_MESSAGE.add(Component.translatable(Messages.NO_CLICK_RESULT_1).withStyle(Style.EMPTY.withColor(16184082)));
     }
 
-    @OnlyIn(Dist.CLIENT)
-    abstract class TradeOfferButton extends Button {
-        final int index;
-        final List<Component> renderTooltip =new ArrayList<>();
-        final Optional optional;
-        public TradeOfferButton(int p_99205_, int p_99206_, int p_99207_,Component component, Button.OnPress p_99208_,int width, int height) {
-            super(p_99205_, p_99206_, width, height, component, p_99208_);
-            this.index = p_99207_;
-            this.visible = true;
-            renderTooltip.add(component);
-            IPlayerInterface player = (IPlayerInterface) Minecraft.getInstance().player;
-            ContainerEquipSuitImpl build = ContainerEquipSuit.buildInt(player.getSuitContainer(), player.getSuitList().get(index)).build();
-            optional = Optional.of(new BundleTooltip( build.getSlotItems(),1));
-        }
 
-        @Override
-        public boolean isHoveredOrFocused() {
-            return super.isHoveredOrFocused();
-        }
-
-        @Override
-        public boolean isActive() {
-            return super.isActive() &&  ((IPlayerInterface) Minecraft.getInstance().player).getFocus() != this.index;
-        }
-
-        public int getIndex() {
-            return this.index;
-        }
-
-
-        public abstract void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) ;
-    }
 
     @OnlyIn(Dist.CLIENT)
     static enum Texture {
