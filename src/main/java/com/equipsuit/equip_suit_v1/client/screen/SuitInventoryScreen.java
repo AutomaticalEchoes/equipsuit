@@ -10,6 +10,7 @@ import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
 import com.equipsuit.equip_suit_v1.api.utils.Messages;
 import com.equipsuit.equip_suit_v1.client.ClientEvents;
 import com.equipsuit.equip_suit_v1.client.ClientModEvents;
+import com.equipsuit.equip_suit_v1.client.gui.BinarySwitchButton;
 import com.equipsuit.equip_suit_v1.client.gui.TradeOfferButton;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.container.SuitInventoryMenu;
@@ -96,7 +97,13 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         int x = this.leftPos - 100;
         int y = this.topPos ;
         initWarningMessage();
-        EDIT_BUTTON = new Button(x+3 , y +4 ,14,14,Component.translatable("⚙") ,p_93751_ -> {canEdit =!canEdit;buttonClicked=false; });
+        EDIT_BUTTON = new BinarySwitchButton(x+3 , y +4 ,14,14,Component.translatable("⚙")) {
+            @Override
+            public void onSwitchCase(boolean SwitchBinary) {
+                canEdit =!canEdit;
+                buttonClicked=false;
+            }
+        };
         this.addRenderableWidget(EDIT_BUTTON);
         for(int i=0 ;i<4;i++){
             MutableComponent translatable = Component.translatable(Messages.SUIT_NUM[i]);
