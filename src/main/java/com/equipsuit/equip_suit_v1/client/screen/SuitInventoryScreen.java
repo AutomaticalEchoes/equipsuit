@@ -97,7 +97,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         int x = this.leftPos - 100;
         int y = this.topPos ;
         initWarningMessage();
-        EDIT_BUTTON = new BinarySwitchButton(x+3 , y +4 ,14,14,Component.translatable("⚙")) {
+        EDIT_BUTTON = new BinarySwitchButton(x + 3 , y + 4 ,14,10) {
             @Override
             public void onSwitchCase(boolean SwitchBinary) {
                 canEdit =!canEdit;
@@ -121,7 +121,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         }
 
         for (int i=0;i<EquipSuit.SIZE;i++){
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 3, y + 19 + i * 15, i, Component.translatable(Messages.PART[i]), SlotUpdatePress, 14, 14) {
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 3, y + 15 + i * 15, i, Component.translatable(Messages.PART[i]), SlotUpdatePress, 14, 14) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
                     if (this.isHovered && !buttonClicked) {
