@@ -10,6 +10,8 @@ import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
 import com.equipsuit.equip_suit_v1.api.utils.Messages;
 import com.equipsuit.equip_suit_v1.client.ClientEvents;
 import com.equipsuit.equip_suit_v1.client.ClientModEvents;
+import com.equipsuit.equip_suit_v1.client.gui.BinarySwitchButton;
+import com.equipsuit.equip_suit_v1.client.gui.TradeOfferButton;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.container.SuitInventoryMenu;
 import com.equipsuit.equip_suit_v1.common.network.SuitChange;
@@ -55,7 +57,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 6;
     private static final List<Component> EDITING_MESSAGE = new ArrayList<>();
     private static final  List<Component> WARNING_MESSAGE = new ArrayList<>();
-    private static Button EDIT_BUTTON;
+    private static BinarySwitchButton EDIT_BUTTON;
     private static int ChangeIndex = 0;
     private float xMouse;
     private float yMouse;
@@ -79,7 +81,11 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 buttonClicked = ! buttonClicked;
                 canEdit = buttonClicked;
                 ChangeIndex = buttonClicked?tradeOfferButton.index : -1;
-                if(buttonClicked) resetEditingMessage();
+                if(buttonClicked){
+                    resetEditingMessage();
+                }else {
+                    CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
+                }
             }
         };
 
@@ -93,15 +99,22 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     @Override
     protected void init() {
         super.init();
-        int x = this.leftPos - 100;
+        int x = this.leftPos - 98;
         int y = this.topPos ;
         initWarningMessage();
-        EDIT_BUTTON = new Button(x+3 , y +4 ,14,14,Component.nullToEmpty("⚙") ,p_93751_ -> {canEdit =!canEdit;buttonClicked=false; });
+        EDIT_BUTTON = new BinarySwitchButton(x + 3 , y + 4 ,14,10) {
+            @Override
+            public void onSwitchCase(boolean SwitchBinary) {
+                canEdit =!canEdit;
+                buttonClicked = false;
+                CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
+            }
+        };
         this.addRenderableWidget(EDIT_BUTTON);
         for(int i=0 ;i<4;i++){
             TextComponent translatable = new TextComponent(Messages.SUIT_NUM[i]);
             translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_NUM_COLORS[i]));
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 15, y - 12, i,translatable, IndexPress, 14, 14) {
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 13, y - 12, i,translatable, IndexPress, 14, 14) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
                     if (this.isHovered && !buttonClicked) {
@@ -114,7 +127,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         }
 
         for (int i=0;i<EquipSuit.SIZE;i++){
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 3, y + 19 + i * 15, i, new TextComponent(Messages.PART[i]), SlotUpdatePress, 14, 14) {
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 3, y + 15 + i * 15, i, new TextComponent(Messages.PART[i]), SlotUpdatePress, 14, 14) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
                     if (this.isHovered && !buttonClicked) {
@@ -147,6 +160,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     @Override
     protected void containerTick() {
         super.containerTick();
+        EDIT_BUTTON.binary = canEdit;
         Arrays.stream(suitIndexButtons).forEach(tradeOfferButton -> {
             tradeOfferButton.active = tradeOfferButton.index !=  ((IPlayerInterface) Minecraft.getInstance().player).getFocus() && !buttonClicked && !canEdit;
         });
@@ -253,6 +267,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 int[] ints = player.getSuitList().get(player.getFocus());
                 ints[ChangeIndex] = slot.index - INVENTORY_SIZE;
                 CommonModEvents.NetWork.sendToServer(new SuitStackUpdate(player.getFocus(),ints));
+                CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
                 buttonClicked = ! buttonClicked;
                 canEdit = false;
                 return true;
@@ -294,39 +309,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         WARNING_MESSAGE.add(new TextComponent(Messages.TAG_WARNING).withStyle(Style.EMPTY.withColor(16184082)));
         WARNING_MESSAGE.add(new TextComponent(Messages.NO_CLICK_RESULT).withStyle(Style.EMPTY.withColor(16184082)));
         WARNING_MESSAGE.add(new TextComponent(Messages.NO_CLICK_RESULT_1).withStyle(Style.EMPTY.withColor(16184082)));
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    abstract class TradeOfferButton extends Button {
-        final int index;
-        final List<Component> renderTooltip =new ArrayList<>();
-        final Optional optional;
-        public TradeOfferButton(int p_99205_, int p_99206_, int p_99207_,Component component, Button.OnPress p_99208_,int width, int height) {
-            super(p_99205_, p_99206_, width, height, component, p_99208_);
-            this.index = p_99207_;
-            this.visible = true;
-            renderTooltip.add(component);
-            IPlayerInterface player = (IPlayerInterface) Minecraft.getInstance().player;
-            ContainerEquipSuitImpl build = ContainerEquipSuit.buildInt(player.getSuitContainer(), player.getSuitList().get(index)).build();
-            optional = Optional.of(new BundleTooltip( build.getSlotItems(),1));
-        }
-
-        @Override
-        public boolean isHoveredOrFocused() {
-            return super.isHoveredOrFocused();
-        }
-
-        @Override
-        public boolean isActive() {
-            return super.isActive() &&  ((IPlayerInterface) Minecraft.getInstance().player).getFocus() != this.index;
-        }
-
-        public int getIndex() {
-            return this.index;
-        }
-
-
-        public abstract void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) ;
     }
 
     @OnlyIn(Dist.CLIENT)
