@@ -56,7 +56,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 6;
     private static final List<Component> EDITING_MESSAGE = new ArrayList<>();
     private static final  List<Component> WARNING_MESSAGE = new ArrayList<>();
-    private static Button EDIT_BUTTON;
+    private static BinarySwitchButton EDIT_BUTTON;
     private static int ChangeIndex = 0;
     private float xMouse;
     private float yMouse;
@@ -79,8 +79,12 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             if(p_93751_ instanceof TradeOfferButton tradeOfferButton){
                 buttonClicked = ! buttonClicked;
                 canEdit = buttonClicked;
-                ChangeIndex = buttonClicked?tradeOfferButton.index : -1;
-                if(buttonClicked) resetEditingMessage();
+                ChangeIndex = buttonClicked ? tradeOfferButton.index : -1;
+                if(buttonClicked) {
+                    resetEditingMessage();
+                }else{
+                    CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
+                }
             }
         };
 
@@ -101,7 +105,8 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             @Override
             public void onSwitchCase(boolean SwitchBinary) {
                 canEdit =!canEdit;
-                buttonClicked=false;
+                buttonClicked = false;
+                CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
             }
         };
         this.addRenderableWidget(EDIT_BUTTON);
@@ -154,6 +159,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     @Override
     protected void containerTick() {
         super.containerTick();
+        EDIT_BUTTON.binary = canEdit;
         Arrays.stream(suitIndexButtons).forEach(tradeOfferButton -> {
             tradeOfferButton.active = tradeOfferButton.index !=  ((IPlayerInterface) Minecraft.getInstance().player).getFocus() && !buttonClicked && !canEdit;
         });
@@ -260,6 +266,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 int[] ints = player.getSuitList().get(player.getFocus());
                 ints[ChangeIndex] = slot.index - INVENTORY_SIZE;
                 CommonModEvents.NetWork.sendToServer(new SuitStackUpdate(player.getFocus(),ints));
+                CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
                 buttonClicked = ! buttonClicked;
                 canEdit = false;
                 return true;
