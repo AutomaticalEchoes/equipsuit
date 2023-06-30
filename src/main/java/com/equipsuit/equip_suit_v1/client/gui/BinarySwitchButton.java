@@ -31,7 +31,7 @@ public abstract class BinarySwitchButton extends Button {
 
     public BinarySwitchButton(int p_93728_, int p_93729_, int p_93730_, int p_93731_) {
         super(p_93728_, p_93729_, p_93730_, p_93731_, Component.empty(), switchOnPress);
-        this.components[0] = Component.translatable("OFF").setStyle(Style.EMPTY);
+        this.components[0] = Component.translatable("OFF");
         this.components[1] = Component.translatable("ON");
     }
 
@@ -59,7 +59,7 @@ public abstract class BinarySwitchButton extends Button {
 
     @Override
     public void renderButton(PoseStack p_93676_, int p_93677_, int p_93678_, float p_93679_) {
-//        51, 204, 102
+        this.binary = defaultSwitch;
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         renderBar(p_93676_, p_93677_, p_93678_, p_93679_);
