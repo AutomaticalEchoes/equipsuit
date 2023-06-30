@@ -98,7 +98,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     @Override
     protected void init() {
         super.init();
-        int x = this.leftPos - 100;
+        int x = this.leftPos - 98;
         int y = this.topPos ;
         initWarningMessage();
         EDIT_BUTTON = new BinarySwitchButton(x + 3 , y + 4 ,14,10) {
@@ -113,7 +113,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         for(int i=0 ;i<4;i++){
             MutableComponent translatable = Component.translatable(Messages.SUIT_NUM[i]);
             translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_NUM_COLORS[i]));
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 15, y - 12, i,translatable, IndexPress, 14, 14) {
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 13, y - 12, i,translatable, IndexPress, 14, 14) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
                     if (this.isHovered && !buttonClicked) {

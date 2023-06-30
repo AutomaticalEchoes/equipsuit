@@ -1,5 +1,6 @@
 package com.equipsuit.equip_suit_v1.client.gui;
 
+import com.equipsuit.equip_suit_v1.EquipSuitChange;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -9,11 +10,13 @@ import net.minecraft.client.gui.font.FontManager;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 import java.awt.font.FontRenderContext;
 
 public abstract class BinarySwitchButton extends Button {
+    public static final ResourceLocation I_WIDGETS_LOCATION = new ResourceLocation(EquipSuitChange.MODID,"textures/gui/widgets.png");
     private static final OnPress switchOnPress = p_93751_ -> {
         if(p_93751_ instanceof BinarySwitchButton binarySwitchButton){
             binarySwitchButton.binary = !binarySwitchButton.binary;
@@ -78,19 +81,21 @@ public abstract class BinarySwitchButton extends Button {
     }
 
     public void renderBar(PoseStack p_93676_, int p_93677_, int p_93678_, float p_93679_){
-        float rgbX = binary ? ( 28.0F / 255) :  1.0F  ;
-        float rgbY = binary ? ( 246.0F / 255) :  1.0F ;
-        float rgbZ = binary ? ( 18.0F / 255) :  1.0F ;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-        RenderSystem.setShaderColor(0.1F , 0.8F , 0.1F ,  this.alpha);
+        RenderSystem.setShaderTexture(0,I_WIDGETS_LOCATION);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        this.blit(p_93676_, this.x, this.y, 0, 46 , this.width / 2, this.height / 2);
-        this.blit(p_93676_, this.x + this.width / 2, this.y, 200 - this.width / 2, 46 , this.width / 2, this.height / 2);
-        this.blit(p_93676_, this.x, this.y + this.height / 2, 0, 66  - this.height / 2, this.width / 2, this.height / 2);
-        this.blit(p_93676_, this.x + this.width / 2, this.y + this.height / 2, 200 - this.width / 2, 66 - this.height / 2, this.width / 2, this.height / 2);
+        int Lx = binary ? 23 : 0;
+        int Ly = binary ? 61 : 0;
+        int left = Lx;
+        int right = 200 - this.width / 2 + Lx;
+        int top = 46 + Ly;
+        int bottom = 66 - this.height / 2 + Ly;
+        this.blit(p_93676_, this.x, this.y, left, top , this.width / 2, this.height / 2);
+        this.blit(p_93676_, this.x + this.width / 2, this.y, right, top , this.width / 2, this.height / 2);
+        this.blit(p_93676_, this.x, this.y + this.height / 2, left, bottom, this.width / 2, this.height / 2);
+        this.blit(p_93676_, this.x + this.width / 2, this.y + this.height / 2, right, bottom, this.width / 2, this.height / 2);
     }
 
     public void renderBlock(PoseStack p_93676_, int p_93677_, int p_93678_, float p_93679_){
