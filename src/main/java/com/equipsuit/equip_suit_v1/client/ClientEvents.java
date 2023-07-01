@@ -30,17 +30,17 @@ public class ClientEvents {
             CommonModEvents.NetWork.sendToServer(new OpenOrCloseSuitInventory());
         }
         if(ClientModEvents.MODE_CHANGE.consumeClick()){
-            int i =EquipSuitClientConfig.CHANGE_MODE.get()==0?1:0;
+            int i = EquipSuitClientConfig.CHANGE_MODE.get()==0?1:0;
             EquipSuitClientConfig.CHANGE_MODE.set(i);
             focusSuitHUD.setMode(i);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
-        if(EquipSuitClientConfig.CHANGE_MODE.get().equals(0)){
+        if(EquipSuitClientConfig.CHANGE_MODE.get().equals(1)){
             if(ClientModEvents.SELECT_SUIT_CHANGE_I.consumeClick())   SendSuitChange(0);
             if(ClientModEvents.SELECT_SUIT_CHANGE_II.consumeClick())  SendSuitChange(1);
             if(ClientModEvents.SELECT_SUIT_CHANGE_III.consumeClick()) SendSuitChange(2);
             if(ClientModEvents.SELECT_SUIT_CHANGE_IV.consumeClick())  SendSuitChange(3);
-        }else if(EquipSuitClientConfig.CHANGE_MODE.get().equals(1)){
+        }else if(EquipSuitClientConfig.CHANGE_MODE.get().equals(0)){
             if (ClientModEvents.SUIT_CHANGE.consumeClick()) SendSuitChange(null);
 
         }
@@ -59,7 +59,7 @@ public class ClientEvents {
         if(focusSuitHUD == null) {
             focusSuitHUD=FocusSuitHUD.Create(event.getPoseStack());
         }
-       focusSuitHUD.render(Messages.SUIT_NUM[((IPlayerInterface)(Minecraft.getInstance().player)).getFocus()]);
+       focusSuitHUD.render();
     }
 
 }

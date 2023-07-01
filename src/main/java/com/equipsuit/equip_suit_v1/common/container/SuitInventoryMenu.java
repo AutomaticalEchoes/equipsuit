@@ -21,7 +21,10 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class SuitInventoryMenu extends AbstractContainerMenu {
     public static final ResourceLocation BLOCK_ATLAS = new ResourceLocation("textures/atlas/blocks.png");
@@ -37,6 +40,9 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
     private final Inventory inventory;
     private final SuitContainer suitContainer;
     private final Player owner;
+    private Supplier<Boolean> slotRuleOr = () -> false;
+    private Supplier<Boolean> slotRuleAnd = () -> true;
+
     public static SuitInventoryMenu Create(int p_38852_, Inventory inventory) {
         return new SuitInventoryMenu(inventory,p_38852_);
     }
@@ -49,6 +55,16 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
         initCraftSlot(inventory);
         initInventory();
         initContainer();
+    }
+
+    public SuitInventoryMenu SlotRuleOr(Supplier<Boolean> SlotRule){
+        this.slotRuleOr = SlotRule;
+        return this;
+    }
+
+    public SuitInventoryMenu SlotRuleAnd(Supplier<Boolean> SlotRule){
+        this.slotRuleAnd = SlotRule;
+        return this;
     }
 
     private void initCraftSlot(Inventory p_39706_){
@@ -70,7 +86,7 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
                 }
 
                 public boolean mayPlace(ItemStack p_39746_) {
-                    return p_39746_.getItem() instanceof ArmorItem || slotRule();
+                    return slotRuleAnd.get() && (slotRuleOr.get() || p_39746_.getItem() instanceof ArmorItem );
                 }
             });
         }
@@ -208,9 +224,6 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
         return itemstack;
     }
 
-    private boolean slotRule(){
-        return false;
-    }
 
     public boolean canTakeItemForPickAll(ItemStack p_39716_, Slot p_39717_) {
         return p_39717_.container != this.resultSlots && super.canTakeItemForPickAll(p_39716_, p_39717_);

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @OnlyIn(Dist.CLIENT)
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
@@ -62,7 +63,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     private float yMouse;
     private final Button.OnPress IndexPress , SlotUpdatePress;
     private boolean buttonClicked =false;
-    private boolean canEdit =false;
+    private boolean canEdit = false;
     private final TradeOfferButton[] suitIndexButtons = new TradeOfferButton[4];
     private final TradeOfferButton[] slotIndexButtons = new TradeOfferButton[4];
 
@@ -87,7 +88,10 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 }
             }
         };
+    }
 
+    public Boolean mayPlace(){
+        return this.canEdit;
     }
 
     //这玩意就是要空的 不能删， 原版绘制的标题会和装备格重叠影响
