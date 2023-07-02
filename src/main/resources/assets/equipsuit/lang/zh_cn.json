@@ -16,6 +16,9 @@
   "text.tag.equipsuit.editing" : "正在编辑",
   "text.tag.equipsuit.part" : "部位",
   "text.tag.equipsuit.warning" : "！注意",
+  "text.tag.equipsuit.edit_title" : "套装切换(EquipSuit)模组设置",
+  "text.tag.equipsuit.enable_simple_hud" : "启动切换简易显示",
+  "text.tag.equipsuit.enable_quick_select_mode" : "启动快速切换模式",
 
   "key.equipsuit": "装备套装",
   "key.category.equipsuit.suitinvetory": "装备背包栏",

@@ -52,17 +52,24 @@ public class FocusSuitHUD extends Screen implements Widget, FocusSuitHud {
 
     public void render(){
         initPos();
-        matrixStack.pushPose();
-        matrixStack.scale(scale,scale,1.0F);
-        renderBg();
-        renderFocus();
-        matrixStack.popPose();
-        renderNum();
+        Integer focus = ((IPlayerInterface) (Minecraft.getInstance().player)).getFocus();
+        if(EquipSuitClientConfig.HUD_MODE.get() == 0){
+            MutableComponent translatable = Component.translatable(Messages.SUIT_NUM[focus]);
+            translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_NUM_COLORS[focus]));
+            this.renderTooltip(matrixStack,translatable,leftPos,topPos);
+        }else {
+            matrixStack.pushPose();
+            matrixStack.scale(scale,scale,1.0F);
+            renderBg();
+            renderFocus(focus);
+            matrixStack.popPose();
+            renderNum();
+        }
+
         if(ModeTipTime > 0){
             drawString(matrixStack, font,Component.translatable(Messages.TAG_MODE +Messages.MODE_NAME[mode])  ,leftPos+10,topPos-28, 0xFFFFFF);
             ModeTipTime--;
         }
-
     }
 
     public void renderBg(){
@@ -83,8 +90,7 @@ public class FocusSuitHUD extends Screen implements Widget, FocusSuitHud {
         }
     }
 
-    public void renderFocus(){
-        Integer focus = ((IPlayerInterface) (Minecraft.getInstance().player)).getFocus();
+    public void renderFocus( int focus){
         this.blit(matrixStack, focus * 20, (int)((this.height - 22) / scale), 1 , 23 , 24, 23);
 
     }

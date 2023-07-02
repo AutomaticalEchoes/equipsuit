@@ -20,11 +20,11 @@ public abstract class BinarySwitchButton extends Button {
     private static final OnPress switchOnPress = p_93751_ -> {
         if(p_93751_ instanceof BinarySwitchButton binarySwitchButton){
             binarySwitchButton.binary = !binarySwitchButton.binary;
-            time = 100;
+            binarySwitchButton.time = 100;
             binarySwitchButton.onSwitchCase(binarySwitchButton.binary);
         }
     };
-    public static int time = 0 ;
+    public int time = 0 ;
     private final Component[] components = new Component[2];
     public boolean binary = false;
 

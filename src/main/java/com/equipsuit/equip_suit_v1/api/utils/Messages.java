@@ -17,12 +17,15 @@ public class Messages {
             I18n.get("text.message.equipsuit.part_name_4")};;
     public static final String NO_CLICK_RESULT =I18n.get("text.message.equipsuit.no_click_result");
     public static final String NO_CLICK_RESULT_1 =I18n.get("text.message.equipsuit.no_click_result_1");
+    public static final String EDIT_TITLE = I18n.get("text.tag.equipsuit.edit_title");
     public static final int[] SUIT_NUM_COLORS={1898002,16136466,1223670,16184082};
     public static final String TAG_MODE = MessageTag("text.tag.equipsuit.mode");
     public static final String TAG_SUIT = MessageTag("text.tag.equipsuit.suit");
     public static final String TAG_EDITING = MessageTag("text.tag.equipsuit.editing");
     public static final String TAG_PART = MessageTag("text.tag.equipsuit.part");
     public static final String TAG_WARNING = MessageTag("text.tag.equipsuit.warning");
+    public static final String TAG_ENABLE_SIMPLE_HUD = MessageTag("text.tag.equipsuit.enable_simple_hud");
+    public static final String TAG_ENABLE_QUICK_SELECT_MODE = MessageTag("text.tag.equipsuit.enable_quick_select_mode");
     public static String MessageTag(String s){
         return I18n.get(s) + ": ";
     }

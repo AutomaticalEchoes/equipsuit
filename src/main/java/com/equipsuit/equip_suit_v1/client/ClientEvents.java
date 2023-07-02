@@ -23,16 +23,16 @@ import javax.annotation.Nullable;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
-    public static FocusSuitHud focusSuitHUD =null;
+    public static FocusSuitHud FocusSuitHud =null;
     @SubscribeEvent
     public static void onKeyboardInput(InputEvent.Key event) {
         if(ClientModEvents.CALL_SUIT_INVENTORY_KEY.consumeClick()){
             CommonModEvents.NetWork.sendToServer(new OpenOrCloseSuitInventory());
         }
         if(ClientModEvents.MODE_CHANGE.consumeClick()){
-            int i = EquipSuitClientConfig.CHANGE_MODE.get()==0?1:0;
+            int i = EquipSuitClientConfig.CHANGE_MODE.get()==0 ? 1 : 0;
             EquipSuitClientConfig.CHANGE_MODE.set(i);
-            focusSuitHUD.setMode(i);
+            FocusSuitHud.setMode(i);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
         if(EquipSuitClientConfig.CHANGE_MODE.get().equals(1)){
@@ -56,10 +56,10 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onOverlayRender(RenderGuiOverlayEvent event){
-        if(focusSuitHUD == null) {
-            focusSuitHUD=FocusSuitHUD.Create(event.getPoseStack());
+        if(FocusSuitHud == null) {
+            FocusSuitHud=FocusSuitHUD.Create(event.getPoseStack());
         }
-       focusSuitHUD.render();
+       FocusSuitHud.render();
     }
 
 }
