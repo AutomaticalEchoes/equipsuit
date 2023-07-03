@@ -314,7 +314,14 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         WARNING_MESSAGE.add(Component.translatable(Messages.NO_CLICK_RESULT_1).withStyle(Style.EMPTY.withColor(16184082)));
     }
 
-
+    @Override
+    public void onClose() {
+        super.onClose();
+        if(this.canEdit){
+            CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
+            this.canEdit =!canEdit;
+        }
+    }
 
     @OnlyIn(Dist.CLIENT)
     static enum Texture {
