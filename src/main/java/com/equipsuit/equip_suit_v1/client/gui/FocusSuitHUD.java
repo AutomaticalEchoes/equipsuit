@@ -10,6 +10,7 @@ import com.equipsuit.equip_suit_v1.api.utils.Messages;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -28,6 +29,8 @@ import java.util.Optional;
 @OnlyIn(Dist.CLIENT)
 public class FocusSuitHUD extends Screen implements Widget, FocusSuitHud {
     public static final ResourceLocation I_WIDGETS_LOCATION = new ResourceLocation(EquipSuitChange.MODID,"textures/gui/widgets.png");
+    public static final ResourceLocation ICON_QUICK_SELECT = new ResourceLocation(EquipSuitChange.MODID,"textures/gui/qs.png");
+    public static final ResourceLocation ICON_SEQUENCE = new ResourceLocation(EquipSuitChange.MODID,"textures/gui/squ.png");
     private static final Component FOCUS_SUIT_HUD=Component.translatable("focus suit hud");
     private static int leftPos,topPos;
     private final PoseStack matrixStack;
@@ -57,19 +60,22 @@ public class FocusSuitHUD extends Screen implements Widget, FocusSuitHud {
             MutableComponent translatable = Component.translatable(Messages.SUIT_NUM[focus]);
             translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_NUM_COLORS[focus]));
             this.renderTooltip(matrixStack,translatable,leftPos,topPos);
+            if(ModeTipTime > 0){
+                drawString(matrixStack, font,Component.translatable(Messages.TAG_MODE +Messages.MODE_NAME[mode])  ,leftPos+10,topPos-28, 0xFFFFFF);
+                ModeTipTime--;
+            }
         }else {
             matrixStack.pushPose();
             matrixStack.scale(scale,scale,1.0F);
             renderBg();
             renderFocus(focus);
+            renderMode();
             matrixStack.popPose();
+            drawString(matrixStack, font,Component.translatable(Messages.MODE_NAME[mode])  ,15 , (int) (this.height  - 22 - 16 * scale), 0xFFFFFF);
             renderNum();
         }
 
-        if(ModeTipTime > 0){
-            drawString(matrixStack, font,Component.translatable(Messages.TAG_MODE +Messages.MODE_NAME[mode])  ,leftPos+10,topPos-28, 0xFFFFFF);
-            ModeTipTime--;
-        }
+
     }
 
     public void renderBg(){
@@ -78,7 +84,15 @@ public class FocusSuitHUD extends Screen implements Widget, FocusSuitHud {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
+        int top = (int) ((this.height - 22) / scale) - 20;
         this.blit(matrixStack, 0, (int) ((this.height - 22) /scale), 0 , 0 , 81, 22);
+
+
+        this.blit(matrixStack,0, top, 0, 66, 10, 10);
+        this.blit(matrixStack, 10 , top, 200 - 10, 66, 10, 10);
+
+        this.blit(matrixStack,0,  top + 10, 0, 76, 10, 10);
+        this.blit(matrixStack, 10 , top +10, 200 - 10, 76, 10, 10);
     }
 
     public void renderNum(){
@@ -90,9 +104,20 @@ public class FocusSuitHUD extends Screen implements Widget, FocusSuitHud {
         }
     }
 
+    public void renderMode(){
+        boolean b = mode == 0;
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0,b ? ICON_SEQUENCE : ICON_QUICK_SELECT);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        int top = (int) ((this.height - 22) / scale) - 18;
+        blit(matrixStack,2, top, 0, 0, 16, 16,16,16);
+
+    }
+
     public void renderFocus( int focus){
         this.blit(matrixStack, focus * 20, (int)((this.height - 22) / scale), 1 , 23 , 24, 23);
-
     }
 
     public void setMode(int i){
