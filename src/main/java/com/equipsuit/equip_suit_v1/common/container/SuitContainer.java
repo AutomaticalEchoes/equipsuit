@@ -92,7 +92,7 @@ public class SuitContainer implements Container {
             int j = compoundtag.getByte("Slot") & 255;
             ItemStack itemstack = ItemStack.of(compoundtag);
             if (!itemstack.isEmpty()) {
-                if (j >= 0 && j < this.items.size()) {
+                if (j < this.items.size()) {
                     this.items.set(j, itemstack);
                 }
             }
@@ -101,10 +101,8 @@ public class SuitContainer implements Container {
     }
 
     public void dropAll(Player player) {
-        items.stream().forEach(itemStack -> {
-            if (!itemStack.isEmpty()) {
+        items.forEach(itemStack -> {
                 player.drop(itemStack, true, false);
-            }
         });
 
     }

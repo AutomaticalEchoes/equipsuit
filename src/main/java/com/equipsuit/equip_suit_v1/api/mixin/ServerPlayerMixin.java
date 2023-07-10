@@ -27,10 +27,9 @@ public abstract class ServerPlayerMixin extends Player {
     @Inject(method = "restoreFrom", at = { @At("RETURN")} )
     public void restoreFrom(ServerPlayer p_9016_, boolean p_9017_, CallbackInfo callbackInfo){
         if (this.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || p_9016_.isSpectator()) {
-            SuitContainer suitContainer = ((IPlayerInterface) (Object) p_9016_).getSuitContainer();
-            EquipSuitChange.LOGGER.info(suitContainer.toString());
-            ((IPlayerInterface)(Object)this).getSuitContainer().replaceWith(suitContainer);
+            SuitContainer suitContainer = ((IPlayerInterface) p_9016_).getSuitContainer();
+            ((IPlayerInterface) this).getSuitContainer().replaceWith(suitContainer);
         }
-        ((IPlayerInterface)(Object)this).restore(p_9016_);
+        ((IPlayerInterface) this).restore(p_9016_);
     }
 }
