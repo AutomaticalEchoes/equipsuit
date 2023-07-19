@@ -307,6 +307,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         EDITING_MESSAGE.add(Component.translatable(Messages.TAG_SUIT + Messages.SUIT_NUM[((IPlayerInterface) Minecraft.getInstance().player).getFocus()]));
         EDITING_MESSAGE.add(Component.translatable(Messages.TAG_PART + Messages.PART_NAME[ChangeIndex]));
     }
+
     public void initWarningMessage(){
         WARNING_MESSAGE.clear();
         WARNING_MESSAGE.add(Component.translatable(Messages.TAG_WARNING).withStyle(Style.EMPTY.withColor(16184082)));

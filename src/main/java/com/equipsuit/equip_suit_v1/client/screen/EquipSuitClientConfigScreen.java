@@ -46,7 +46,6 @@ public class EquipSuitClientConfigScreen extends OptionsSubScreen {
         HudModeSwitchButton.binary = EquipSuitClientConfig.HUD_MODE.get() == 0;
         this.addRenderableWidget(HudModeSwitchButton);
         k += 24;
-
         this.addRenderableWidget(new Button(this.width / 2 - 100, k, 200, 20, CommonComponents.GUI_DONE, (p_97535_) -> {
             this.minecraft.setScreen(this.lastScreen);
         }));
@@ -59,6 +58,10 @@ public class EquipSuitClientConfigScreen extends OptionsSubScreen {
         this.renderBackground(p_97530_);
         drawCenteredString(p_97530_, this.font, this.title, this.width / 2, 15, 16777215);
         drawString(p_97530_,font,Component.translatable(Messages.TAG_ENABLE_QUICK_SELECT_MODE),i,k,16777215);
+        k += 24;
+        drawString(p_97530_,font,Component.translatable(Messages.TAG_ENABLE_SIMPLE_HUD),i,k,16777215);
+        k += 24;
+        drawString(p_97530_,font,Component.translatable(Messages.TAG_ENABLE_SIMPLE_HUD),i,k,16777215);
         k += 24;
         drawString(p_97530_,font,Component.translatable(Messages.TAG_ENABLE_SIMPLE_HUD),i,k,16777215);
         super.render(p_97530_, p_97531_, p_97532_, p_97533_);
