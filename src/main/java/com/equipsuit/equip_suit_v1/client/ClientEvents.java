@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -24,6 +25,7 @@ import javax.annotation.Nullable;
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
     public static FocusSuitHud FocusSuitHud =null;
+    public static int inputDelay = 0;
     @SubscribeEvent
     public static void onKeyboardInput(InputEvent.Key event) {
         if(ClientModEvents.CALL_SUIT_INVENTORY_KEY.consumeClick()){
@@ -35,14 +37,34 @@ public class ClientEvents {
             FocusSuitHud.setMode(i);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
-        if(EquipSuitClientConfig.CHANGE_MODE.get().equals(1)){
-            if(ClientModEvents.SELECT_SUIT_CHANGE_I.consumeClick())   SendSuitChange(0);
-            if(ClientModEvents.SELECT_SUIT_CHANGE_II.consumeClick())  SendSuitChange(1);
-            if(ClientModEvents.SELECT_SUIT_CHANGE_III.consumeClick()) SendSuitChange(2);
-            if(ClientModEvents.SELECT_SUIT_CHANGE_IV.consumeClick())  SendSuitChange(3);
-        }else if(EquipSuitClientConfig.CHANGE_MODE.get().equals(0)){
-            if (ClientModEvents.SUIT_CHANGE.consumeClick()) SendSuitChange(null);
+       SuitChangeClick();
 
+    }
+
+
+    @SubscribeEvent
+    public static void onOverlayRender(RenderGuiOverlayEvent event){
+        if(FocusSuitHud == null) {
+            FocusSuitHud=FocusSuitHUD.Create(event.getPoseStack());
+        }
+       FocusSuitHud.render();
+    }
+
+    @SubscribeEvent
+    public static void clientTick(TickEvent.ClientTickEvent event){
+        if (inputDelay > 0) inputDelay--;
+    }
+
+    public static void SuitChangeClick(){
+        if(inputDelay <=0){
+            if(EquipSuitClientConfig.CHANGE_MODE.get().equals(1)){
+                if(ClientModEvents.SELECT_SUIT_CHANGE_I.consumeClick())   SendSuitChange(0);
+                if(ClientModEvents.SELECT_SUIT_CHANGE_II.consumeClick())  SendSuitChange(1);
+                if(ClientModEvents.SELECT_SUIT_CHANGE_III.consumeClick()) SendSuitChange(2);
+                if(ClientModEvents.SELECT_SUIT_CHANGE_IV.consumeClick())  SendSuitChange(3);
+            }else if(EquipSuitClientConfig.CHANGE_MODE.get().equals(0)){
+                if (ClientModEvents.SUIT_CHANGE.consumeClick()) SendSuitChange(null);
+            }
         }
     }
 
@@ -52,14 +74,7 @@ public class ClientEvents {
         }else {
             CommonModEvents.NetWork.sendToServer(new SuitChange(nums));
         }
-    }
-
-    @SubscribeEvent
-    public static void onOverlayRender(RenderGuiOverlayEvent event){
-        if(FocusSuitHud == null) {
-            FocusSuitHud=FocusSuitHUD.Create(event.getPoseStack());
-        }
-       FocusSuitHud.render();
+        inputDelay = 5;
     }
 
 }

@@ -71,7 +71,7 @@ public class FocusSuitHUD extends Screen implements Widget, FocusSuitHud {
             }
             renderMode();
             matrixStack.popPose();
-            drawString(matrixStack, font,Component.translatable(Messages.MODE_NAME[mode])  ,leftPos_1 + 17 , topPos_1 + 4, 0xFFFFFF);
+            drawString(matrixStack, font,Component.translatable(Messages.MODE_NAME[mode])  ,leftPos_1 + 18 , topPos_1 + 4, 0xFFFFFF);
 
         }
     }
@@ -137,7 +137,7 @@ public class FocusSuitHUD extends Screen implements Widget, FocusSuitHud {
         this.height = minecraft.getWindow().getGuiScaledHeight();
         leftPos_0 = this.width / 2 + 18 * 4 + 10;
         topPos_0 = this.height - 6;
-        leftPos_1 = EquipSuitClientConfig.StartX.get() > width ? width - 80 : EquipSuitClientConfig.StartX.get();
+        leftPos_1 = EquipSuitClientConfig.StartX.get() > width -80 ? width - 80 : EquipSuitClientConfig.StartX.get();
         topPos_1 = EquipSuitClientConfig.StartY.get() > height ? 0 : height - EquipSuitClientConfig.StartY.get()  ;
     }
 

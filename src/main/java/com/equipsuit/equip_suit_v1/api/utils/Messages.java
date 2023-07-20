@@ -26,6 +26,7 @@ public class Messages {
     public static final String TAG_WARNING = MessageTag("text.tag.equipsuit.warning");
     public static final String TAG_ENABLE_SIMPLE_HUD = MessageTag("text.tag.equipsuit.enable_simple_hud");
     public static final String TAG_ENABLE_QUICK_SELECT_MODE = MessageTag("text.tag.equipsuit.enable_quick_select_mode");
+    public static final String TAG_GUI_COORDINATE= MessageTag("text.tag.equipsuit.coordinate");
     public static String MessageTag(String s){
         return I18n.get(s) + ": ";
     }

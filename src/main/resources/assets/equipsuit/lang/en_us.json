@@ -19,6 +19,7 @@
   "text.tag.equipsuit.edit_title" : "EquipSuit Edit",
   "text.tag.equipsuit.enable_simple_hud" : "Simple Hud",
   "text.tag.equipsuit.enable_quick_select_mode" : "Quick Select Mode",
+  "text.tag.equipsuit.coordinate": "HUD Coordinate",
 
   "key.equipsuit": "EquipSuit",
   "key.category.equipsuit.suitinvetory": "open suit inventory",
