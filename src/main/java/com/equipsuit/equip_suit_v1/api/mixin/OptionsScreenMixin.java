@@ -29,11 +29,11 @@ public class OptionsScreenMixin extends Screen {
         super(p_96550_);
     }
 
-    @Inject(method = {"init"},at = {@At("RETURN")})
-    public void init( CallbackInfo callbackInfo) {
-        MutableComponent translatable = Component.translatable(Messages.EDIT_TITLE);
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 6 + 150 - 6, 200, 20, translatable , (p_96257_) -> {
-            this.minecraft.setScreen(new EquipSuitClientConfigScreen(this,options, translatable));
-        }));
-    }
+//    @Inject(method = {"init"},at = {@At("RETURN")})
+//    public void init( CallbackInfo callbackInfo) {
+//        MutableComponent translatable = Component.translatable(Messages.EDIT_TITLE);
+//        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 6 + 150 - 6, 200, 20, translatable , (p_96257_) -> {
+//            this.minecraft.setScreen(new EquipSuitClientConfigScreen(this,options, translatable));
+//        }));
+//    }
 }

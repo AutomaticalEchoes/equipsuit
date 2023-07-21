@@ -15,13 +15,14 @@ import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
-public class EquipSuitClientConfigScreen extends OptionsSubScreen {
+public class EquipSuitClientConfigScreen extends Screen {
     private BinarySwitchButton ChangeModeSwitchButton;
     private BinarySwitchButton HudModeSwitchButton;
     private MathEditBox xStart;
     private MathEditBox yStart;
-    public EquipSuitClientConfigScreen(Screen p_96284_, Options p_96285_, Component p_96286_) {
-        super(p_96284_, p_96285_, p_96286_);
+
+    public EquipSuitClientConfigScreen(Component p_96550_) {
+        super(p_96550_);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class EquipSuitClientConfigScreen extends OptionsSubScreen {
         k += 24;
 
         this.addRenderableWidget(new Button(this.width / 2 - 100, k, 200, 20, CommonComponents.GUI_DONE, (p_97535_) -> {
-            this.minecraft.setScreen(this.lastScreen);
+            onClose();
         }));
     }
 

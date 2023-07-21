@@ -6,12 +6,15 @@ import com.equipsuit.equip_suit_v1.api.modInterfcae.player.IPlayerInterface;
 import com.equipsuit.equip_suit_v1.api.utils.EquipSuitHelper;
 import com.equipsuit.equip_suit_v1.api.utils.Messages;
 import com.equipsuit.equip_suit_v1.client.gui.FocusSuitHUD;
+import com.equipsuit.equip_suit_v1.client.screen.EquipSuitClientConfigScreen;
 import com.equipsuit.equip_suit_v1.common.CommonModEvents;
 import com.equipsuit.equip_suit_v1.common.network.OpenOrCloseSuitInventory;
 import com.equipsuit.equip_suit_v1.common.network.SuitChange;
 import com.equipsuit.equip_suit_v1.common.network.SuitChangeNext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -37,8 +40,8 @@ public class ClientEvents {
             FocusSuitHud.setMode(i);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
-       SuitChangeClick();
-
+        SuitChangeClick();
+        SettingScreen();
     }
 
 
@@ -53,6 +56,12 @@ public class ClientEvents {
     @SubscribeEvent
     public static void clientTick(TickEvent.ClientTickEvent event){
         if (inputDelay > 0) inputDelay--;
+    }
+
+    public static void SettingScreen(){
+        if(!ClientModEvents.CALL_SUIT_SETTING.consumeClick()) return;
+        MutableComponent translatable = Component.translatable(Messages.EDIT_TITLE);
+        Minecraft.getInstance().setScreen(new EquipSuitClientConfigScreen(translatable));
     }
 
     public static void SuitChangeClick(){

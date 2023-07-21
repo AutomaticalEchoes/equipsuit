@@ -24,6 +24,11 @@ public  class ClientModEvents {
                 KeyModifier.NONE,
                 InputConstants.getKey(InputConstants.KEY_B,0 ),
                 "key.equipsuit");
+    public static final KeyMapping CALL_SUIT_SETTING = new KeyMapping("key.category.equipsuit.setting",
+            KeyConflictContext.IN_GAME,
+            KeyModifier.CONTROL,
+            InputConstants.getKey(InputConstants.KEY_F,0 ),
+            "key.equipsuit");
     public static final KeyMapping SUIT_CHANGE = new KeyMapping("key.category.equipsuit.suitchange",
             KeyConflictContext.IN_GAME,
             KeyModifier.NONE,
@@ -72,6 +77,7 @@ public  class ClientModEvents {
         event.register(SELECT_SUIT_CHANGE_II);
         event.register(SELECT_SUIT_CHANGE_III);
         event.register(SELECT_SUIT_CHANGE_IV);
+        event.register(CALL_SUIT_SETTING);
     }
 
 }
