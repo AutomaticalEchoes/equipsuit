@@ -1,10 +1,10 @@
 {
   "required": true,
-  "package": "com.equipsuit.equip_suit_v1.api.mixin",
+  "package": "com.AutomaticalEchoes.EquipSuit.api.mixin",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
   "refmap": "mod.refmap.json",
-  "plugin": "com.equipsuit.equip_suit_v1.api.mixin.MixinPlugin",
+  "plugin": "com.AutomaticalEchoes.EquipSuit.api.mixin.MixinPlugin",
   "mixins": [
     "PlayerMixin",
     "ServerPlayerMixin",
