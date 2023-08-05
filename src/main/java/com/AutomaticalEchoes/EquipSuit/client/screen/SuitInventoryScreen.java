@@ -124,7 +124,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             this.addRenderableWidget(tradeOfferButton);
         }
 
-        SUIT_NAME = new EditBox(this.minecraft.font,x + 54 ,y - 13 ,56 ,14,null,Component.translatable("name"));
+        SUIT_NAME = new EditBox(this.minecraft.font,x + 54 ,y - 13 ,56 ,14,Component.translatable("name"));
         SUIT_NAME.setValue(EquipSuitClientConfig.SUIT_NAME.get().get(focus));
         SUIT_NAME.setMaxLength(10);
         SUIT_NAME.setCanLoseFocus(true);
@@ -163,7 +163,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.xMouse = (float)p_97796_;
         this.yMouse = (float)p_97797_;
         drawString(p_97795_, font,Component.translatable(Messages.TAG_MODE +Messages.MODE_NAME[EquipSuitClientConfig.CHANGE_MODE.get()])  ,leftPos,topPos+170, 0xFFFFFF);
-
     }
 
     @Override
