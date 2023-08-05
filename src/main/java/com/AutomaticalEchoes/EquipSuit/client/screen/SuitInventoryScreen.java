@@ -124,7 +124,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             this.addRenderableWidget(tradeOfferButton);
         }
 
-        SUIT_NAME = new EditBox(this.minecraft.font,x + 54 ,y - 13 ,50 ,14,null,Component.translatable("name"));
+        SUIT_NAME = new EditBox(this.minecraft.font,x + 54 ,y - 13 ,56 ,14,null,Component.translatable("name"));
         SUIT_NAME.setValue(EquipSuitClientConfig.SUIT_NAME.get().get(focus));
         SUIT_NAME.setMaxLength(10);
         SUIT_NAME.setCanLoseFocus(true);
@@ -182,8 +182,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.lastFocus = focus;
     }
 
-
-
     @Override
     protected void renderBg(PoseStack p_97787_, float p_97788_, int p_97789_, int p_97790_) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -215,8 +213,8 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     }
 
     public static void renderEntityInInventory(int p_98851_, int p_98852_, int p_98853_, float p_98854_, float p_98855_, LivingEntity p_98856_) {
-        float f = (float)Math.atan((double)(p_98854_ / 40.0F));
-        float f1 = (float)Math.atan((double)(p_98855_ / 40.0F));
+        float f = (float)Math.atan(p_98854_ / 40.0F);
+        float f1 = (float)Math.atan(p_98855_ / 40.0F);
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.pushPose();
         posestack.translate((double)p_98851_, (double)p_98852_, 1050.0D);

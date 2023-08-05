@@ -8,7 +8,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SuitChange {
-    private int targetNum;
+    private final int targetNum;
 
     public SuitChange(int targetNum) {
         this.targetNum = targetNum;
