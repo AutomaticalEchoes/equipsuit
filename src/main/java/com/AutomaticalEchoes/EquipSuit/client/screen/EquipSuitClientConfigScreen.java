@@ -19,6 +19,7 @@ public class EquipSuitClientConfigScreen extends Screen {
     private BinarySwitchButton HudModeSwitchButton;
     private MathEditBox xStart;
     private MathEditBox yStart;
+    private MathEditBox alpha;
 
     public EquipSuitClientConfigScreen(Component p_96550_) {
         super(p_96550_);
@@ -67,6 +68,16 @@ public class EquipSuitClientConfigScreen extends Screen {
         this.addRenderableWidget(yStart);
         k += 24;
 
+        alpha = new MathEditBox(this.minecraft.font, j , k ,40 ,16 ,null,Component.translatable("alpha"));
+        alpha.setValue(EquipSuitClientConfig.ALPHA.get().toString());
+        alpha.setResponder(s -> EquipSuitClientConfig.ALPHA.set(s.matches("\\d+") ? Integer.parseInt(alpha.getValue()) : 100));
+        alpha.setOnFocusChange(isFocused ->{
+            if(!isFocused) alpha.setValue(EquipSuitClientConfig.ALPHA.get().toString());
+        });
+        alpha.setCanLoseFocus(true);
+        this.addRenderableWidget(alpha);
+        k += 24;
+
         this.addRenderableWidget(new Button(this.width / 2 - 100, k, 200, 20, CommonComponents.GUI_DONE, (p_97535_) -> {
             onClose();
         }));
@@ -78,8 +89,10 @@ public class EquipSuitClientConfigScreen extends Screen {
         boolean flag = EquipSuitClientConfig.HUD_MODE.get() == 1;
         xStart.setVisible(flag);
         yStart.setVisible(flag);
+        alpha.setVisible(flag);
         xStart.setEditable(flag && xStart.isFocused());
         yStart.setEditable(flag && yStart.isFocused());
+        alpha.setEditable(flag && alpha.isFocused());
         if(InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 257)){
             this.renderables.forEach(widget -> {
                 if(widget instanceof EditBox editBox) editBox.setFocus(false);
@@ -103,6 +116,8 @@ public class EquipSuitClientConfigScreen extends Screen {
             drawString(p_97530_,font,Component.translatable(Messages.TAG_GUI_COORDINATE), i,k,16777215);
             drawString(p_97530_,font,Component.translatable("X :"),j - 15,k,16777215);
             drawString(p_97530_,font,Component.translatable("Y :"),j + 45,k,16777215);
+            drawString(p_97530_,font,Component.translatable(Messages.TAG_GUI_ALPHA), i,k + 24 ,16777215);
+            drawString(p_97530_,font,Component.translatable("/ 100"),j + 50 ,k + 24 ,16777215);
         }
 
 

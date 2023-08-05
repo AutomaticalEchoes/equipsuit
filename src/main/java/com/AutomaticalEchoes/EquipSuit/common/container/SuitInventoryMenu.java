@@ -78,7 +78,7 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
     private void initContainer(){
         for(int k = 0; k < 36; k++) {
             final int i= (int) Math.ceil(k / 4);
-            this.addSlot(new Slot(suitContainer,  k, -((4 -( k % 4)) * 18 + 4), (int) (8 + Math.ceil(k / 4) * 19)){
+            this.addSlot(new Slot(suitContainer,  k, -((4 -( k % 4)) * 18 + 4), (int) (8 + Math.ceil(k / 4) * 19) -5){
                 public int getMaxStackSize() {
                     return 1 ;
                 }

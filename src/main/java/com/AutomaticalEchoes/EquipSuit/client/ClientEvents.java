@@ -2,6 +2,7 @@ package com.AutomaticalEchoes.EquipSuit.client;
 
 import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.gui.FocusSuitHud;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
 import com.AutomaticalEchoes.EquipSuit.api.utils.Messages;
 import com.AutomaticalEchoes.EquipSuit.client.gui.FocusSuitHUD;
 import com.AutomaticalEchoes.EquipSuit.client.screen.EquipSuitClientConfigScreen;
@@ -37,7 +38,7 @@ public class ClientEvents {
             EquipSuitClientConfig.CHANGE_MODE.set(i);
             FocusSuitHud.setMode(i);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            inputDelay = 5;
+            inputDelay = 10;
         }
         SuitChangeClick();
         SettingScreen();
@@ -64,25 +65,23 @@ public class ClientEvents {
     }
 
     public static void SuitChangeClick(){
-        if(inputDelay <=0){
             if(EquipSuitClientConfig.CHANGE_MODE.get().equals(1)){
-                if(ClientModEvents.SELECT_SUIT_CHANGE_I.consumeClick())   SendSuitChange(0);
-                if(ClientModEvents.SELECT_SUIT_CHANGE_II.consumeClick())  SendSuitChange(1);
-                if(ClientModEvents.SELECT_SUIT_CHANGE_III.consumeClick()) SendSuitChange(2);
-                if(ClientModEvents.SELECT_SUIT_CHANGE_IV.consumeClick())  SendSuitChange(3);
+                if(ClientModEvents.SELECT_SUIT_CHANGE_I.consumeClick()  && inputDelay <=0) SendSuitChange(0);
+                if(ClientModEvents.SELECT_SUIT_CHANGE_II.consumeClick() && inputDelay <=0) SendSuitChange(1);
+                if(ClientModEvents.SELECT_SUIT_CHANGE_III.consumeClick()&& inputDelay <=0) SendSuitChange(2);
+                if(ClientModEvents.SELECT_SUIT_CHANGE_IV.consumeClick() && inputDelay <=0) SendSuitChange(3);
             }else if(EquipSuitClientConfig.CHANGE_MODE.get().equals(0)){
-                if (ClientModEvents.SUIT_CHANGE.consumeClick()) SendSuitChange(null);
+                if (ClientModEvents.SUIT_CHANGE.consumeClick() && inputDelay <=0) SendSuitChange(null);
             }
-        }
     }
 
     public static void SendSuitChange(@Nullable Integer nums){
         if (nums==null){
             CommonModEvents.NetWork.sendToServer(new SuitChangeNext());
-        }else {
+        }else if (!((IPlayerInterface) Minecraft.getInstance().player).getFocus().equals(nums)){
             CommonModEvents.NetWork.sendToServer(new SuitChange(nums));
         }
-        inputDelay = 5;
+        inputDelay = 10;
     }
 
 }

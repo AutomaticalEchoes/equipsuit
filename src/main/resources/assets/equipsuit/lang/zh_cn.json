@@ -20,6 +20,7 @@
   "text.tag.equipsuit.enable_simple_hud" : "简易模式",
   "text.tag.equipsuit.enable_quick_select_mode" : "快速切换模式",
   "text.tag.equipsuit.coordinate": "HUD坐标(标准坐标系)",
+  "text.tag.equipsuit.alpha" : "透明度",
 
   "key.equipsuit": "装备套装",
   "key.category.equipsuit.suitinvetory": "装备背包栏",

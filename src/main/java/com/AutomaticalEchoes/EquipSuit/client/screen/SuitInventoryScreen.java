@@ -96,11 +96,11 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     @Override
     protected void init() {
         super.init();
-        int x = this.leftPos - 98;
-        int y = this.topPos ;
+        int x = this.leftPos - 94;
+        int y = this.topPos  - 5;
         initWarningMessage();
         Integer focus = ((IPlayerInterface) Minecraft.getInstance().player).getFocus();
-        EDIT_BUTTON = new BinarySwitchButton(x + 3 , y ,14,10) {
+        EDIT_BUTTON = new BinarySwitchButton(x + 1 , y - 4 ,14,10) {
             @Override
             public void onSwitchCase(boolean SwitchBinary) {
                 canEdit =!canEdit;
@@ -112,19 +112,19 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         for(int i=0 ;i<4;i++){
             MutableComponent translatable = Component.translatable(Messages.SUIT_NUM[i]);
             translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_NUM_COLORS[i]));
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 13, y - 15, i,translatable, IndexPress, 14, 14) {
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 1 + i * 12, y - 16, i,translatable, IndexPress, 13, 11) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
-                    if (this.isHovered && !buttonClicked) {
-                        renderTooltip(p_99211_,renderTooltip,optional,(int)xMouse,(int)yMouse);
-                    }
+//                    if (this.isHovered && !buttonClicked) {
+//                        renderTooltip(p_99211_,renderTooltip,optional,(int)xMouse,(int)yMouse);
+//                    }
                 }
             };
             suitIndexButtons[i] = tradeOfferButton;
             this.addRenderableWidget(tradeOfferButton);
         }
 
-        SUIT_NAME = new EditBox(this.minecraft.font,x + 56 ,y - 14 ,48 ,12,null,Component.translatable("name"));
+        SUIT_NAME = new EditBox(this.minecraft.font,x + 54 ,y - 13 ,50 ,14,null,Component.translatable("name"));
         SUIT_NAME.setValue(EquipSuitClientConfig.SUIT_NAME.get().get(focus));
         SUIT_NAME.setMaxLength(10);
         SUIT_NAME.setCanLoseFocus(true);
@@ -136,7 +136,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.addRenderableWidget(SUIT_NAME);
 
         for (int i=0;i<EquipSuit.SIZE;i++){
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 3, y + 11 + i * 15, i, Component.translatable(Messages.PART[i]), SlotUpdatePress, 14, 14) {
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 1, y + 7 + i * 15, i, Component.translatable(Messages.PART[i]), SlotUpdatePress, 14, 14) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
                     if (this.isHovered && !buttonClicked) {
@@ -207,10 +207,10 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, SUIT_INVENTORY);
         int i = this.leftPos;
-        int j = this.topPos - 19;
+        int j = this.topPos - 24;
         this.blit(p_97787_, i-102, j, 0, 0, 100,200,100,200);
         for(int k = 0; k < 36; k++) {
-            this.blit(p_97787_,this.leftPos-((4 -( k % 4)) * 18 + 5), (int) (this.topPos +  ( 7 + Math.ceil(k / 4) * 19)),p_97790_,TextureType.INVENTORY_SLOT);
+            this.blit(p_97787_,this.leftPos-((4 -( k % 4)) * 18 + 5), (int) (this.topPos - 5 +  ( 7 + Math.ceil(k / 4) * 19)),p_97790_,TextureType.INVENTORY_SLOT);
         }
     }
 
@@ -265,7 +265,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, SLOT_MARK);
         int x = this.leftPos-((4 -( slotNum % 4)) * 18 + 4);
-        int y =(int) (this.topPos +  ( 7 + Math.ceil(slotNum / 4) * 19));
+        int y =(int) (this.topPos - 5 +  ( 7 + Math.ceil(slotNum / 4) * 19));
         this.blit(poseStack, x  + suit * 4 , y , getBlitOffset() ,4 * num,suit * 4, 4, 4,16,16);
     }
 
