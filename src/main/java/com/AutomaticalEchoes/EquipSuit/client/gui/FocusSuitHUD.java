@@ -126,7 +126,6 @@ public class FocusSuitHUD extends Screen implements Widget, FocusSuitHud {
         matrixStack.popPose();
     }
 
-
     public void setMode(int i){
         this.mode = i;
         ModeTipTime = 1500;
