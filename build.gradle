@@ -32,6 +32,7 @@ publishing {
 
 version = '1.7.0'
 group = 'com.automaticalechoes.equipsuit' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'equipsuit'
 
 apply plugin:  'org.spongepowered.mixin'
 mixin {
