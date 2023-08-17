@@ -2,7 +2,6 @@ package com.AutomaticalEchoes.EquipSuit.client.screen;
 
 import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
 import com.AutomaticalEchoes.EquipSuit.api.utils.Messages;
-import com.AutomaticalEchoes.EquipSuit.client.ClientEvents;
 import com.AutomaticalEchoes.EquipSuit.client.gui.BinarySwitchButton;
 import com.AutomaticalEchoes.EquipSuit.client.gui.MathEditBox;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -35,7 +34,6 @@ public class EquipSuitClientConfigScreen extends Screen {
             public void onSwitchCase(boolean SwitchBinary) {
                 int i = EquipSuitClientConfig.CHANGE_MODE.get() == 0 ? 1 : 0;
                 EquipSuitClientConfig.CHANGE_MODE.set(i);
-                ClientEvents.FocusSuitHud.setMode(i);
             }
         };
         ChangeModeSwitchButton.binary = !(EquipSuitClientConfig.CHANGE_MODE.get() == 0);

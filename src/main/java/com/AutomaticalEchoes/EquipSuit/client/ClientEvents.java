@@ -1,10 +1,10 @@
 package com.AutomaticalEchoes.EquipSuit.client;
 
 import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
-import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.gui.FocusSuitHud;
+import com.AutomaticalEchoes.EquipSuit.api.event.CreateHudEvent;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.gui.EquipSuitHudInterface;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
 import com.AutomaticalEchoes.EquipSuit.api.utils.Messages;
-import com.AutomaticalEchoes.EquipSuit.client.gui.FocusSuitHUD;
 import com.AutomaticalEchoes.EquipSuit.client.screen.EquipSuitClientConfigScreen;
 import com.AutomaticalEchoes.EquipSuit.common.CommonModEvents;
 import com.AutomaticalEchoes.EquipSuit.common.network.OpenOrCloseSuitInventory;
@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,7 +27,7 @@ import javax.annotation.Nullable;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
-    public static FocusSuitHud FocusSuitHud =null;
+    public static EquipSuitHudInterface HUD = null;
     public static int inputDelay = 0;
     @SubscribeEvent
     public static void onKeyboardInput(InputEvent.Key event) {
@@ -36,7 +37,6 @@ public class ClientEvents {
         if(ClientModEvents.MODE_CHANGE.consumeClick() && inputDelay <= 0){
             int i = EquipSuitClientConfig.CHANGE_MODE.get()==0 ? 1 : 0;
             EquipSuitClientConfig.CHANGE_MODE.set(i);
-            FocusSuitHud.setMode(i);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             inputDelay = 10;
         }
@@ -44,13 +44,19 @@ public class ClientEvents {
         SettingScreen();
     }
 
-
     @SubscribeEvent
     public static void onOverlayRender(RenderGuiOverlayEvent event){
-        if(FocusSuitHud == null) {
-            FocusSuitHud=FocusSuitHUD.Create(event.getPoseStack());
+        if(HUD == null) {
+            CreateHudEvent createHudEvent = new CreateHudEvent(event.getPoseStack());
+            MinecraftForge.EVENT_BUS.post(createHudEvent);
+            createHudEvent.getEquipSuitHUD().ifPresent(equipSuitHudInterface -> HUD = equipSuitHudInterface);
+        }else {
+            if(EquipSuitClientConfig.HUD_MODE.get() == 0){
+                HUD.renderSimple(((IPlayerInterface) (Minecraft.getInstance().player)).getFocus());
+            }else {
+                HUD.renderALl(((IPlayerInterface) (Minecraft.getInstance().player)).getFocus());
+            }
         }
-       FocusSuitHud.render();
     }
 
     @SubscribeEvent
