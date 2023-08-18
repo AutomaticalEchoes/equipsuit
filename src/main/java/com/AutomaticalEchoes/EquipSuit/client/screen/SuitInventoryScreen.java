@@ -4,8 +4,8 @@ import com.AutomaticalEchoes.EquipSuit.EquipSuitChange;
 import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuit;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
+import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitKeyMapping;
 import com.AutomaticalEchoes.EquipSuit.api.utils.Messages;
-import com.AutomaticalEchoes.EquipSuit.client.ClientModEvents;
 import com.AutomaticalEchoes.EquipSuit.client.gui.BinarySwitchButton;
 import com.AutomaticalEchoes.EquipSuit.client.gui.TradeOfferButton;
 import com.AutomaticalEchoes.EquipSuit.common.CommonModEvents;
@@ -295,7 +295,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     @Override
     public boolean keyPressed(int p_97765_, int p_97766_, int p_97767_) {
         InputConstants.Key mouseKey = InputConstants.getKey(p_97765_, p_97766_);
-        if(ClientModEvents.CALL_SUIT_INVENTORY_KEY.getKey().equals(mouseKey)){
+        if(EquipSuitKeyMapping.CALL_SUIT_INVENTORY_KEY.getKey().equals(mouseKey)){
             this.onClose();
             return true;
         }

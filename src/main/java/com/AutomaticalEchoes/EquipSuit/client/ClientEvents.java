@@ -6,6 +6,7 @@ import com.AutomaticalEchoes.EquipSuit.api.event.client.EquipSuitCreateHudEvent;
 import com.AutomaticalEchoes.EquipSuit.api.event.client.EquipSuitKeyBoardEvent;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.gui.EquipSuitHudInterface;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
+import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitKeyMapping;
 import com.AutomaticalEchoes.EquipSuit.common.CommonModEvents;
 import com.AutomaticalEchoes.EquipSuit.common.network.OpenOrCloseSuitInventory;
 import com.AutomaticalEchoes.EquipSuit.common.network.SuitChange;
@@ -36,7 +37,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onKeyboardInput(InputEvent.Key event) {
-        ClientModEvents.EQUIP_SUIT_KEY_MAPPING.forEach(ClientEvents::ClickCheck);
+        EquipSuitKeyMapping.KEY_MAPPING.forEach(ClientEvents::ClickCheck);
     }
 
     @SubscribeEvent
@@ -68,10 +69,10 @@ public class ClientEvents {
     }
 
     public static void OnModKeyClick(KeyMapping keyMapping){
-        if(ClientModEvents.CALL_SUIT_INVENTORY_KEY.isActiveAndMatches(keyMapping.getKey())){
+        if(EquipSuitKeyMapping.CALL_SUIT_INVENTORY_KEY.isActiveAndMatches(keyMapping.getKey())){
             CommonModEvents.NetWork.sendToServer(new OpenOrCloseSuitInventory());
         }
-        if(ClientModEvents.MODE_CHANGE.isActiveAndMatches(keyMapping.getKey())){
+        if(EquipSuitKeyMapping.MODE_CHANGE.isActiveAndMatches(keyMapping.getKey())){
             int i = EquipSuitClientConfig.CHANGE_MODE.get()==0 ? 1 : 0;
             EquipSuitClientConfig.CHANGE_MODE.set(i);
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -82,7 +83,7 @@ public class ClientEvents {
     }
 
     public static void SettingScreen(KeyMapping keyMapping){
-        if(!ClientModEvents.CALL_SUIT_SETTING.isActiveAndMatches(keyMapping.getKey())) return;
+        if(!EquipSuitKeyMapping.CALL_SUIT_SETTING.isActiveAndMatches(keyMapping.getKey())) return;
         EquipSuitConfigScreenEvent equipSuitConfigScreenEvent = new EquipSuitConfigScreenEvent();
         MinecraftForge.EVENT_BUS.post(equipSuitConfigScreenEvent);
         Minecraft.getInstance().setScreen(equipSuitConfigScreenEvent.getScreen());
@@ -90,12 +91,12 @@ public class ClientEvents {
 
     public static void SuitChangeClick(KeyMapping keyMapping){
             if(EquipSuitClientConfig.CHANGE_MODE.get().equals(1)){
-                if(ClientModEvents.SELECT_SUIT_CHANGE_I.isActiveAndMatches(keyMapping.getKey())) SendSuitChange(0);
-                if(ClientModEvents.SELECT_SUIT_CHANGE_II.isActiveAndMatches(keyMapping.getKey())) SendSuitChange(1);
-                if(ClientModEvents.SELECT_SUIT_CHANGE_III.isActiveAndMatches(keyMapping.getKey())) SendSuitChange(2);
-                if(ClientModEvents.SELECT_SUIT_CHANGE_IV.isActiveAndMatches(keyMapping.getKey())) SendSuitChange(3);
+                if(EquipSuitKeyMapping.SELECT_SUIT_CHANGE_I.isActiveAndMatches(keyMapping.getKey())) SendSuitChange(0);
+                if(EquipSuitKeyMapping.SELECT_SUIT_CHANGE_II.isActiveAndMatches(keyMapping.getKey())) SendSuitChange(1);
+                if(EquipSuitKeyMapping.SELECT_SUIT_CHANGE_III.isActiveAndMatches(keyMapping.getKey())) SendSuitChange(2);
+                if(EquipSuitKeyMapping.SELECT_SUIT_CHANGE_IV.isActiveAndMatches(keyMapping.getKey())) SendSuitChange(3);
             }else if(EquipSuitClientConfig.CHANGE_MODE.get().equals(0)){
-                if(ClientModEvents.SUIT_CHANGE.isActiveAndMatches(keyMapping.getKey())) SendSuitChange(null);
+                if(EquipSuitKeyMapping.SUIT_CHANGE.isActiveAndMatches(keyMapping.getKey())) SendSuitChange(null);
             }
     }
 
