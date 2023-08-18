@@ -30,7 +30,7 @@ publishing {
 }
 
 
-version = '1.7.0'
+version = '1.7.1'
 group = 'com.automaticalechoes.equipsuit' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'equipsuit'
 
