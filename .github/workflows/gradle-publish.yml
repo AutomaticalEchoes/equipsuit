@@ -33,6 +33,9 @@ jobs:
       with:
         arguments: build
 
+    - name: Check ACCESS_TOKEN value
+        run: echo ${{ secrets.PACKAGES_TOKEN }}
+
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
     - name: Publish to GitHub Packages
@@ -42,3 +45,4 @@ jobs:
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+
