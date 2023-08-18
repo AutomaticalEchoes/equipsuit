@@ -1,4 +1,4 @@
-package com.AutomaticalEchoes.EquipSuit.api.event;
+package com.AutomaticalEchoes.EquipSuit.api.event.client;
 
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.gui.EquipSuitHudInterface;
 import com.AutomaticalEchoes.EquipSuit.client.gui.EquipSuitHud;
@@ -7,10 +7,10 @@ import net.minecraftforge.eventbus.api.Event;
 
 import java.util.Optional;
 
-public class CreateHudEvent extends Event {
+public class EquipSuitCreateHudEvent extends Event {
     Optional<EquipSuitHudInterface> equipSuitHUD;
-
-    public CreateHudEvent(PoseStack stack){
+    //    client level
+    public EquipSuitCreateHudEvent(PoseStack stack){
         equipSuitHUD = Optional.of( EquipSuitHud.Create(stack));
     }
 

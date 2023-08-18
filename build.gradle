@@ -15,24 +15,24 @@ plugins {
 }
 
 
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/AutomaticalEchoes/EquipSuit")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
-        }
-    }
-}
+//
+//publishing {
+//    repositories {
+//        maven {
+//            name = "GitHubPackages"
+//            url = uri("https://maven.pkg.github.com/AutomaticalEchoes/EquipSuit")
+//            credentials {
+//                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+//                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+//            }
+//        }
+//    }
+//    publications {
+//        gpr(MavenPublication) {
+//            from(components.java)
+//        }
+//    }
+//}
 
 
 version = '1.7.1'
@@ -157,15 +157,15 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     // Put repositories for dependencies here
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
-
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/AutomaticalEchoes/EquipSuit")
-        credentials {
-            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-            password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
+//
+//    maven {
+//        name = "GitHubPackages"
+//        url = uri("https://maven.pkg.github.com/AutomaticalEchoes/EquipSuit")
+//        credentials {
+//            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+//            password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+//        }
+//    }
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
     // flatDir {
     //     dir 'libs'
