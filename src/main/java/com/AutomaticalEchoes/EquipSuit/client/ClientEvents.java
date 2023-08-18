@@ -1,12 +1,11 @@
 package com.AutomaticalEchoes.EquipSuit.client;
 
 import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
+import com.AutomaticalEchoes.EquipSuit.api.event.client.EquipSuitConfigScreenEvent;
 import com.AutomaticalEchoes.EquipSuit.api.event.client.EquipSuitCreateHudEvent;
 import com.AutomaticalEchoes.EquipSuit.api.event.client.EquipSuitKeyBoardEvent;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.gui.EquipSuitHudInterface;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
-import com.AutomaticalEchoes.EquipSuit.api.utils.Messages;
-import com.AutomaticalEchoes.EquipSuit.client.screen.EquipSuitClientConfigScreen;
 import com.AutomaticalEchoes.EquipSuit.common.CommonModEvents;
 import com.AutomaticalEchoes.EquipSuit.common.network.OpenOrCloseSuitInventory;
 import com.AutomaticalEchoes.EquipSuit.common.network.SuitChange;
@@ -14,8 +13,6 @@ import com.AutomaticalEchoes.EquipSuit.common.network.SuitChangeNext;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -86,8 +83,9 @@ public class ClientEvents {
 
     public static void SettingScreen(KeyMapping keyMapping){
         if(!ClientModEvents.CALL_SUIT_SETTING.isActiveAndMatches(keyMapping.getKey())) return;
-        MutableComponent translatable = Component.translatable(Messages.EDIT_TITLE);
-        Minecraft.getInstance().setScreen(new EquipSuitClientConfigScreen(translatable));
+        EquipSuitConfigScreenEvent equipSuitConfigScreenEvent = new EquipSuitConfigScreenEvent();
+        MinecraftForge.EVENT_BUS.post(equipSuitConfigScreenEvent);
+        Minecraft.getInstance().setScreen(equipSuitConfigScreenEvent.getScreen());
     }
 
     public static void SuitChangeClick(KeyMapping keyMapping){
