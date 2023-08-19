@@ -1,7 +1,5 @@
 package com.AutomaticalEchoes.EquipSuit.client.gui;
 
-import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.ContainerEquipSuit;
-import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.ContainerEquipSuitImpl;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,26 +9,20 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 @OnlyIn(Dist.CLIENT)
 public abstract class TradeOfferButton extends Button {
     public final int index;
     public final List<Component> renderTooltip =new ArrayList<>();
-    public final Optional optional;
     public TradeOfferButton(int p_99205_, int p_99206_, int p_99207_, Component component, Button.OnPress p_99208_, int width, int height) {
         super(p_99205_, p_99206_, width, height, component, p_99208_);
         this.index = p_99207_;
         this.visible = true;
         renderTooltip.add(component);
-        IPlayerInterface player = (IPlayerInterface) Minecraft.getInstance().player;
-        ContainerEquipSuitImpl build = ContainerEquipSuit.buildInt(player.getSuitContainer(), player.getSuitList().get(index)).build();
-        optional = Optional.of(new BundleTooltip( build.getSlotItems(),1));
     }
 
     @Override

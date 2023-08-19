@@ -1,42 +1,49 @@
 package com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit;
 
-import com.AutomaticalEchoes.EquipSuit.api.config.EquipSlotConfig;
-import net.minecraft.core.NonNullList;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.EquipSlot;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.item.ItemStack;
 
-import java.util.List;
+import java.util.HashMap;
 
-public interface EquipSuit<T extends EquipSuit<T>> {
-    NonNullList<Integer> SLOTS_NUMS = toList(EquipSlotConfig.EQUIP_SLOT_LIST.get());
-    int SIZE =SLOTS_NUMS.size();
-    void save();
-    T build();
-    static EquipSuitImpl defaultEquipSuit(CompoundTag tag){
-        return new EquipSuitImpl(tag);
+public interface EquipSuit {
+    int num();
+
+    HashMap<String, BaseSlot> left();
+
+    HashMap<String, BaseSlot> right();
+
+    void setLeft(HashMap<String, BaseSlot> map);
+
+    void setRight(HashMap<String, BaseSlot> map);
+
+    default void Build(){
+        BaseEquipSuit.BASE_SUIT_MAP.forEach((s, slot) -> left().put(s, new EquipSlot(slot.ContainerType(), slot.getSlotNum() + num() * BaseEquipSuit.Size)));
+        BaseEquipSuit.BASE_INVENTORY_MAP.forEach((s, slot) -> right().put(s, new EquipSlot(slot.ContainerType(), slot.getSlotNum())));
     }
-    default NonNullList<Integer> getSlotsNums(){
-        return SLOTS_NUMS;
-    }
-    NonNullList<ItemStack> getSlotItems() ;
 
-    default CompoundTag defaultSave(CompoundTag tag){
-        CompoundTag armorsTag= tag.contains("equips") ? tag.getCompound("equips") : new CompoundTag();
-        ContainerHelper.saveAllItems(armorsTag,getSlotItems());
-        tag.put("equips",armorsTag);
+    default CompoundTag Save(CompoundTag tag) {
+        CompoundTag equipSuitTag = new CompoundTag();
+        Gson gson = new Gson();
+        String left = gson.toJson(left());
+        String right = gson.toJson(right());
+        equipSuitTag.putString("left",left);
+        equipSuitTag.putString("right",right);
+        tag.put("equip_suit",equipSuitTag);
         return tag;
     }
 
-    default int getSize(){
-        return SIZE;
+    default void Read(CompoundTag tag){
+        CompoundTag equip_suit_tag = tag.getCompound("equip_suit");
+        String left = equip_suit_tag.getString("left");
+        String right = equip_suit_tag.getString("right");
+        Gson gson = new Gson();
+        setLeft(gson.fromJson(left,new TypeToken<HashMap<String, EquipSlot>>(){}.getType()));
+        setRight(gson.fromJson(right,new TypeToken<HashMap<String, EquipSlot>>(){}.getType()));
     }
 
-    private static NonNullList<Integer> toList(List<? extends Integer> list){
-        NonNullList<Integer> nonNullList = NonNullList.withSize(list.size(), 64);
-        for (int i = 0; i < list.size(); i++) {
-            nonNullList.set(i,list.get(i));
-        }
-        return nonNullList;
-    }
+
 }
+

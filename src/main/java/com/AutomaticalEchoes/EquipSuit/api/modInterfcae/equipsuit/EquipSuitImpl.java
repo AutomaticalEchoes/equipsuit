@@ -1,40 +1,40 @@
 package com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit;
 
-import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.item.ItemStack;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
 
-public class EquipSuitImpl implements EquipSuit<EquipSuitImpl> {
-    private NonNullList<ItemStack> SLOT_ITEMS = NonNullList.withSize(getSize(),ItemStack.EMPTY);
-    public CompoundTag tag;
+import java.util.HashMap;
 
-    protected EquipSuitImpl(CompoundTag tag) {
-        this.tag = tag;
-        this.build();
-    }
+public class EquipSuitImpl implements EquipSuit {
+    private final int number;
+    private HashMap<String, BaseSlot> left = new HashMap<>();
+    private HashMap<String, BaseSlot> right = new HashMap<>();
 
-    public CompoundTag getTag() {
-        return tag;
+    public EquipSuitImpl(int number) {
+        this.number = number;
     }
 
     @Override
-    public void save() {
-        this.defaultSave(tag);
+    public int num() {
+        return number;
     }
 
     @Override
-    public EquipSuitImpl build() {
-        if(tag.contains("equips")){
-            ContainerHelper.loadAllItems(tag.getCompound("equips"),SLOT_ITEMS);
-        }
-        return this;
+    public HashMap<String, BaseSlot> left() {
+        return left;
     }
 
     @Override
-    public NonNullList<ItemStack> getSlotItems() {
-        return SLOT_ITEMS;
+    public HashMap<String, BaseSlot> right() {
+        return right;
     }
 
+    @Override
+    public void setLeft(HashMap<String, BaseSlot> map) {
+        this.left = map;
+    }
 
+    @Override
+    public void setRight(HashMap<String, BaseSlot> map) {
+        this.right = map;
+    }
 }

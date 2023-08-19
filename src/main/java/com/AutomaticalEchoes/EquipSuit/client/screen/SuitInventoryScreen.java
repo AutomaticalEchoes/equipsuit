@@ -2,6 +2,8 @@ package com.AutomaticalEchoes.EquipSuit.client.screen;
 
 import com.AutomaticalEchoes.EquipSuit.EquipSuitChange;
 import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.containerType.ContainerTypes;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuit;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
 import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitKeyMapping;
@@ -31,7 +33,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -41,11 +42,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @OnlyIn(Dist.CLIENT)
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
-    private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
+    public static final String[] INDEX_KEY = {"head","chest","leg","feet"};
+    public static final Map<String,Integer> KEY_INDEX = Map.of("head",0,"chest",1,"leg",2,"feet",3);
     private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
     private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/mark.png");
     private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 6;
@@ -60,6 +65,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     private boolean buttonClicked =false;
     private boolean canEdit = false;
     private int lastFocus = 0;
+    private String key;
     private final TradeOfferButton[] suitIndexButtons = new TradeOfferButton[4];
     private final TradeOfferButton[] slotIndexButtons = new TradeOfferButton[4];
 
@@ -77,6 +83,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 buttonClicked = ! buttonClicked;
                 canEdit = buttonClicked;
                 ChangeIndex = buttonClicked ? tradeOfferButton.index : -1;
+                this.key = INDEX_KEY[tradeOfferButton.index];
                 if(buttonClicked) {
                     resetEditingMessage();
                 }else{
@@ -115,9 +122,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 1 + i * 12, y - 16, i,translatable, IndexPress, 13, 11) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
-//                    if (this.isHovered && !buttonClicked) {
-//                        renderTooltip(p_99211_,renderTooltip,optional,(int)xMouse,(int)yMouse);
-//                    }
                 }
             };
             suitIndexButtons[i] = tradeOfferButton;
@@ -135,7 +139,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         });
         this.addRenderableWidget(SUIT_NAME);
 
-        for (int i=0;i<EquipSuit.SIZE;i++){
+        for (int i=0;i<4;i++){
             TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 1, y + 7 + i * 15, i, Component.translatable(Messages.PART[i]), SlotUpdatePress, 14, 14) {
                 @Override
                 public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
@@ -147,7 +151,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             slotIndexButtons[i] = tradeOfferButton;
             this.addRenderableWidget(tradeOfferButton);
         }
-
     }
 
     @Override
@@ -191,10 +194,17 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.blit(p_97787_, i, j, 0, 0, this.imageWidth, this.imageHeight);
         renderEntityInInventory(i + 51, j + 75, 30, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.minecraft.player);
         renderSuitInventory(p_97787_,p_97790_);
-        ArrayList<int[]> suitList = ((IPlayerInterface) Minecraft.getInstance().player).getSuitList();
-        suitList.forEach((ints) ->{
-            for (int i1=0;i1<ints.length;i1++){
-                markSlot( p_97787_, ints[i1], suitList.indexOf(ints), i1);
+        ArrayList<EquipSuit> equipSuitList = ((IPlayerInterface) Minecraft.getInstance().player).getSuitStack().getEquipSuitList();
+        equipSuitList.forEach(new Consumer<EquipSuit>() {
+            @Override
+            public void accept(EquipSuit equipSuit) {
+                equipSuit.left().forEach(new BiConsumer<String, BaseSlot>() {
+                    @Override
+                    public void accept(String s, BaseSlot slot) {
+                        if(slot.ContainerType() == ContainerTypes.TYPE_SUIT)
+                        markSlot(p_97787_,slot.getSlotNum(),equipSuit.num(),s);
+                    }
+                });
             }
         });
     }
@@ -257,10 +267,11 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         Lighting.setupFor3DItems();
     }
 
-    private void markSlot(PoseStack poseStack ,int slotNum , int suit ,int num){
+    private void markSlot(PoseStack poseStack ,int slotNum , int suit ,String s){
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, SLOT_MARK);
+        int num = KEY_INDEX.get(s);
         int x = this.leftPos-((4 -( slotNum % 4)) * 18 + 4);
         int y =(int) (this.topPos - 5 +  ( 7 + Math.ceil(slotNum / 4) * 19));
         this.blit(poseStack, x  + suit * 4 , y , getBlitOffset() ,4 * num,suit * 4, 4, 4,16,16);
@@ -278,9 +289,9 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             Slot slot = this.IFindSlot(p_97748_, p_97749_);
             if(slot!=null && slot.index > INVENTORY_SIZE - 1 ){
                 IPlayerInterface player = (IPlayerInterface) Minecraft.getInstance().player;
-                int[] ints = player.getSuitList().get(player.getFocus());
-                ints[ChangeIndex] = slot.index - INVENTORY_SIZE;
-                CommonModEvents.NetWork.sendToServer(new SuitStackUpdate(player.getFocus(),ints));
+                Integer focus = player.getFocus();
+                int newSlotNum = slot.index - INVENTORY_SIZE;
+                CommonModEvents.NetWork.sendToServer(new SuitStackUpdate(focus,key,newSlotNum));
                 CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
                 buttonClicked = ! buttonClicked;
                 canEdit = false;

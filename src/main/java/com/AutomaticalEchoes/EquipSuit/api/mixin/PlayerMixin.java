@@ -10,6 +10,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -20,13 +21,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity implements IPlayerInterface {
     private final SuitContainer suitContainer = new SuitContainer((Player) (Object)this);
-    private SuitStack suitStack = new SuitStackImpl();
+    private SuitStack suitStack = new SuitStackImpl().defaultSet();
     private int focus;
     private static final EntityDataAccessor<Integer> FOCUS = SynchedEntityData.defineId(Player.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<CompoundTag> SUIT_STACK = SynchedEntityData.defineId(Player.class , EntityDataSerializers.COMPOUND_TAG);
@@ -37,7 +36,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     @Inject(method = {"defineSynchedData"},at = {@At("RETURN")})
     protected void defineSynchedData(CallbackInfo callbackInfo) {
         this.entityData.define(FOCUS, 0);
-        this.entityData.define(SUIT_STACK,new SuitStackImpl().toTag());
+        this.entityData.define(SUIT_STACK,new SuitStackImpl().defaultSet().toTag());
     }
     @Inject(method = {"readAdditionalSaveData"},at = {@At("RETURN")})
     public void readAdditionalSaveData(CompoundTag compoundTag,CallbackInfo callbackInfo){
@@ -67,8 +66,8 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
         }
     }
 
-    public ArrayList<int[]> getSuitList() {
-        return suitStack.readTag(this.entityData.get(SUIT_STACK)).getSuitArrayList();
+    public SuitStack getSuitStack() {
+        return suitStack.readTag(this.entityData.get(SUIT_STACK));
     }
 
     public Integer getFocus() {
@@ -76,24 +75,21 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     }
 
     public void setFocus(Integer integer) {
-        if(EquipSuitHelper.SuitChange((Player) (Object)this,integer)){
+        if(EquipSuitHelper.SuitChange((ServerPlayer) (Object)this,integer)){
             this.focus = integer;
             this.entityData.set(FOCUS,integer);
         }
     }
 
-    public boolean setSuitArray(int num, int... ints) {
-        try {
-            this.suitStack.getSuitArrayList().set(num,ints);
-            this.entityData.set(SUIT_STACK,suitStack.toTag());
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+    @Override
+    public boolean setSuitSlotNum(int num, String key, int slotNum) {
+        boolean b = suitStack.setSuitSlotNum(num, key, slotNum);
+        this.entityData.set(SUIT_STACK,suitStack.toTag());
+        return b;
     }
 
     public void updateFocus(){
-        if(EquipSuitHelper.SuitChange((Player) (Object)this)){
+        if(EquipSuitHelper.SuitChange((ServerPlayer) (Object)this)){
             this.focus = (focus+1)%4;
             this.entityData.set(FOCUS,focus);
         }

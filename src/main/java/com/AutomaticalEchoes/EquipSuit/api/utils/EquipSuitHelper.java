@@ -1,73 +1,65 @@
 package com.AutomaticalEchoes.EquipSuit.api.utils;
 
-import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.ContainerEquipSuit;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuit;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
-import com.AutomaticalEchoes.EquipSuit.common.container.SuitContainer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.function.BiConsumer;
 
 public class EquipSuitHelper{
-    public static void EquipChange(Container container, EquipSuit equipSuit ,@Nullable int... exceptNums){
-        List<ItemStack> list=List.copyOf(equipSuit.getSlotItems());
-        for(int i=0;i<list.size();i++){
-            int slotNum= (int) equipSuit.getSlotsNums().get(i);
-            int finalI = i;
-            if(exceptNums !=null && exceptNums.length != 0  && Arrays.stream(exceptNums).anyMatch(value -> value == finalI)) continue;
-            ItemStack playerItemStack=container.getItem(slotNum);
-            equipSuit.getSlotItems().set(i,playerItemStack);
-            container.setItem(slotNum, list.get(i));
-        }
-        equipSuit.save();
+    public static void EquipChange(ServerPlayer serverPlayer,EquipSuit equipSuit){
+        equipSuit.right().forEach(new BiConsumer<String, BaseSlot>() {
+            @Override
+            public void accept(String s, BaseSlot rightSlot) {
+                Container rightContainer = rightSlot.ContainerType().getContainer(serverPlayer);
+                ItemStack itemRight = rightContainer.getItem(rightSlot.getSlotNum());
+
+                BaseSlot leftSlot = equipSuit.left().get(s);
+                Container leftContainer = leftSlot.ContainerType().getContainer(serverPlayer);
+                ItemStack itemLeft = leftContainer.getItem(leftSlot.getSlotNum());
+
+                leftSlot.onChange(serverPlayer,itemRight);
+                rightSlot.onChange(serverPlayer,itemLeft);
+
+            }
+        });
     }
 
-    public static void EquipChange(Player player, EquipSuit suit, @Nullable int... exceptNums){
-        EquipChange(player.getInventory(),suit,exceptNums);
-    }
-
-    public static boolean SuitChange(Player player) {
+    public static boolean SuitChange(ServerPlayer player) {
         IPlayerInterface player1 = (IPlayerInterface) player;
         int focus = player1.getFocus();
-        return SuitChange(player,focus,(focus + 1) % 4,null);
+        return SuitChange(player,focus,(focus + 1) % 4);
     }
 
-    public static boolean SuitChange(Player player, int targetNum){
+    public static boolean SuitChange(ServerPlayer player, int targetNum){
         IPlayerInterface player1 = (IPlayerInterface) player;
         int focus = player1.getFocus();
-        return SuitChange(player,focus,targetNum,null);
+        return SuitChange(player,focus,targetNum);
     }
 
-    public static boolean SuitChange(Player player, int oldNum , int targetNum , @Nullable Container container ,@Nullable int...except) {
+    public static boolean SuitChange(ServerPlayer player, int oldNum , int targetNum ) {
         try {
             targetNum = targetNum < 4 ? targetNum : 0 ;
             IPlayerInterface player1 = (IPlayerInterface) player;
-            ArrayList<int[]> suitArrayList = player1.getSuitList();
-            SuitContainer suitContainer= player1.getSuitContainer();
-            if(container!=null){
-                EquipChange(container, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(oldNum)).build(),except);
-                EquipChange(container, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(targetNum)).build(),except);
-                return true;
-            }
-            EquipChange(player, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(oldNum)).build(),except);
-            EquipChange(player, ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(targetNum)).build(),except);
+            ArrayList<EquipSuit> equipSuitList = player1.getSuitStack().getEquipSuitList();
+
+            EquipChange(player, equipSuitList.get(oldNum));
+            EquipChange(player, equipSuitList.get(targetNum));
             return true;
         }catch (Exception e){
             return false;
         }
     }
     // 一定要用两次哦！
-    public static void SingleChange(Player player){
+    public static void SingleChange(ServerPlayer player){
         IPlayerInterface player1 = (IPlayerInterface) player;
         int focus = player1.getFocus();
-        SuitContainer suitContainer= player1.getSuitContainer();
-        ArrayList<int[]> suitArrayList = player1.getSuitList();
-        EquipChange(player,ContainerEquipSuit.buildInt(suitContainer,suitArrayList.get(focus)).build());
+        ArrayList<EquipSuit> equipSuitList = player1.getSuitStack().getEquipSuitList();
+        EquipChange(player, equipSuitList.get(focus));
     }
 
 }
