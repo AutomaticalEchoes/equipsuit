@@ -279,9 +279,8 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         int x = this.leftPos-((4 -( slotNum % 4)) * 18 + 4);
         int y =(int) (this.topPos - 5 +  ( 7 + Math.ceil(slotNum / 4) * 19));
         blit(poseStack, x  + suit * 4 , y , getBlitOffset() ,8,4, 4, 4,16,16);
-        RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
         blit(poseStack, x  + suit * 4 , y , getBlitOffset() ,num * 4,12, 4, 4,16,16);
-
+        RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
     }
 
     private void blit(PoseStack p_194036_, int p_194037_, int p_194038_, int p_194039_, TextureType p_194040_) {
