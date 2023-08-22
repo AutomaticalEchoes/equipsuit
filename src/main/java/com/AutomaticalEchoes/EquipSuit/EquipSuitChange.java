@@ -1,7 +1,7 @@
 package com.AutomaticalEchoes.EquipSuit;
 
 import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
-import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuitTemplate;
+import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitTemplate;
 import com.AutomaticalEchoes.EquipSuit.common.registry.ContainerRegister;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;

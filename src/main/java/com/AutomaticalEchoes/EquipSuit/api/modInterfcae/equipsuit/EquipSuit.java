@@ -2,6 +2,7 @@ package com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit;
 
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.EquipSlot;
+import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitTemplate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.nbt.CompoundTag;
