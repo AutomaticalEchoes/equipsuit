@@ -19,9 +19,14 @@ public interface EquipSuit {
 
     void setRight(HashMap<String, BaseSlot> map);
 
+    void setName(String s);
+
+    String getName();
+
     default void Build(){
-        BaseEquipSuit.BASE_SUIT_MAP.forEach((s, slot) -> left().put(s, new EquipSlot(slot.ContainerType(), slot.getSlotNum() + num() * BaseEquipSuit.Size)));
-        BaseEquipSuit.BASE_INVENTORY_MAP.forEach((s, slot) -> right().put(s, new EquipSlot(slot.ContainerType(), slot.getSlotNum())));
+        setName(EquipSuitTemplate.NAME[num()]);
+        EquipSuitTemplate.BASE_SUIT_MAP.forEach((s, slot) -> left().put(s, new EquipSlot(slot.ContainerType(), slot.getSlotNum() + num() * EquipSuitTemplate.Size)));
+        EquipSuitTemplate.BASE_INVENTORY_MAP.forEach((s, slot) -> right().put(s, new EquipSlot(slot.ContainerType(), slot.getSlotNum())));
     }
 
     default CompoundTag Save(CompoundTag tag) {
@@ -31,17 +36,19 @@ public interface EquipSuit {
         String right = gson.toJson(right());
         equipSuitTag.putString("left",left);
         equipSuitTag.putString("right",right);
+        equipSuitTag.putString("name",getName());
         tag.put("equip_suit",equipSuitTag);
         return tag;
     }
 
     default void Read(CompoundTag tag){
-        CompoundTag equip_suit_tag = tag.getCompound("equip_suit");
-        String left = equip_suit_tag.getString("left");
-        String right = equip_suit_tag.getString("right");
+        CompoundTag equipSuitTag = tag.getCompound("equip_suit");
+        String left = equipSuitTag.getString("left");
+        String right = equipSuitTag.getString("right");
         Gson gson = new Gson();
         setLeft(gson.fromJson(left,new TypeToken<HashMap<String, EquipSlot>>(){}.getType()));
         setRight(gson.fromJson(right,new TypeToken<HashMap<String, EquipSlot>>(){}.getType()));
+        setName(equipSuitTag.getString("name"));
     }
 
 

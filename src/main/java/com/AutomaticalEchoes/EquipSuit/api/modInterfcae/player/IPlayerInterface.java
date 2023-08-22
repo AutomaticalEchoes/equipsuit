@@ -12,4 +12,5 @@ public interface IPlayerInterface {
     boolean setSuitSlotNum(int num,String key,int slotNum);
     SuitContainer getSuitContainer();
     void restore(Player player);
+    void setSuitName(int num,String s);
 }

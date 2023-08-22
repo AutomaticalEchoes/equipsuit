@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 public class EquipSuitImpl implements EquipSuit {
     private final int number;
+    private String name;
     private HashMap<String, BaseSlot> left = new HashMap<>();
     private HashMap<String, BaseSlot> right = new HashMap<>();
 
@@ -36,5 +37,15 @@ public class EquipSuitImpl implements EquipSuit {
     @Override
     public void setRight(HashMap<String, BaseSlot> map) {
         this.right = map;
+    }
+
+    @Override
+    public void setName(String s) {
+        name = s;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

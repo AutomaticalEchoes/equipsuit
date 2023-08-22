@@ -1,8 +1,9 @@
 package com.AutomaticalEchoes.EquipSuit.client.gui;
 
 import com.AutomaticalEchoes.EquipSuit.EquipSuitChange;
-import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuit;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.gui.EquipSuitHudInterface;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
 import com.AutomaticalEchoes.EquipSuit.api.utils.Messages;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -68,9 +69,10 @@ public class EquipSuitHud extends Screen implements Widget, EquipSuitHudInterfac
         for (int i = 0; i < 4; i++) {
             renderNum(i, i == focus);
         }
+        EquipSuit equipSuit = ((IPlayerInterface) Minecraft.getInstance().player).getSuitStack().getEquipSuitList().get(focus);
         renderMode();
         matrixStack.popPose();
-        drawString(matrixStack, font,Component.translatable(EquipSuitClientConfig.SUIT_NAME.get().get(focus)).withStyle(Style.EMPTY)  ,StartX() + 18 , StartY() + 4, stringColor);
+        drawString(matrixStack, font,Component.translatable(equipSuit.getName()).withStyle(Style.EMPTY)  ,StartX() + 18 , StartY() + 4, stringColor);
     }
 
     public void renderBg(){

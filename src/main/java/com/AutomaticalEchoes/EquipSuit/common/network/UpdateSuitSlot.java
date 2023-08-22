@@ -8,32 +8,32 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SuitStackUpdate {
+public class UpdateSuitSlot {
     private int targetNum;
     private String key ;
     private int slotNum;
 
-    public SuitStackUpdate(int targetNum, String key, int slotNum) {
+    public UpdateSuitSlot(int targetNum, String key, int slotNum) {
         this.targetNum = targetNum;
         this.key = key;
         this.slotNum = slotNum;
     }
 
-    public static void encode(SuitStackUpdate msg, FriendlyByteBuf packetBuffer) {
+    public static void encode(UpdateSuitSlot msg, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeInt(msg.targetNum);
         packetBuffer.writeComponent(Component.translatable(msg.key));
         packetBuffer.writeInt(msg.slotNum);
     }
-    public static SuitStackUpdate decode(FriendlyByteBuf packetBuffer) {
-        return new SuitStackUpdate(packetBuffer.readInt(),packetBuffer.readComponent().getString(),packetBuffer.readInt());
+    public static UpdateSuitSlot decode(FriendlyByteBuf packetBuffer) {
+        return new UpdateSuitSlot(packetBuffer.readInt(),packetBuffer.readComponent().getString(),packetBuffer.readInt());
     }
-    static void onMessage(SuitStackUpdate msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    static void onMessage(UpdateSuitSlot msg, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> msg.handleMessage(msg,context.getSender()));
         context.setPacketHandled(true);
     }
 
-    public void handleMessage(SuitStackUpdate msg, ServerPlayer sender) {
+    public void handleMessage(UpdateSuitSlot msg, ServerPlayer sender) {
         ((IPlayerInterface)sender).setSuitSlotNum(targetNum,key,slotNum);
     }
 }

@@ -5,6 +5,7 @@ import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.containerType.ContainerTypes;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuit;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuitTemplate;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
 import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitKeyMapping;
 import com.AutomaticalEchoes.EquipSuit.api.utils.Messages;
@@ -14,7 +15,8 @@ import com.AutomaticalEchoes.EquipSuit.common.CommonModEvents;
 import com.AutomaticalEchoes.EquipSuit.common.container.SuitInventoryMenu;
 import com.AutomaticalEchoes.EquipSuit.common.network.SuitChange;
 import com.AutomaticalEchoes.EquipSuit.common.network.SuitSingleChange;
-import com.AutomaticalEchoes.EquipSuit.common.network.SuitStackUpdate;
+import com.AutomaticalEchoes.EquipSuit.common.network.UpdateSuitName;
+import com.AutomaticalEchoes.EquipSuit.common.network.UpdateSuitSlot;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -35,6 +37,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -42,15 +45,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @OnlyIn(Dist.CLIENT)
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
-    public static final String[] INDEX_KEY = {"head","chest","leg","feet"};
-    public static final Map<String,Integer> KEY_INDEX = Map.of("head",0,"chest",1,"leg",2,"feet",3);
     private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
     private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/mark.png");
     private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 6;
@@ -83,7 +83,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 buttonClicked = ! buttonClicked;
                 canEdit = buttonClicked;
                 ChangeIndex = buttonClicked ? tradeOfferButton.index : -1;
-                this.key = INDEX_KEY[tradeOfferButton.index];
+                this.key = EquipSuitTemplate.INDEX_KEY[tradeOfferButton.index];
                 if(buttonClicked) {
                     resetEditingMessage();
                 }else{
@@ -107,6 +107,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         int y = this.topPos  - 5;
         initWarningMessage();
         Integer focus = ((IPlayerInterface) Minecraft.getInstance().player).getFocus();
+        EquipSuit equipSuit = ((IPlayerInterface) Minecraft.getInstance().player).getSuitStack().getEquipSuitList().get(focus);
         EDIT_BUTTON = new BinarySwitchButton(x + 1 , y - 4 ,14,10) {
             @Override
             public void onSwitchCase(boolean SwitchBinary) {
@@ -129,13 +130,12 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         }
 
         SUIT_NAME = new EditBox(this.minecraft.font,x + 54 ,y - 13 ,56 ,14,Component.translatable("name"));
-        SUIT_NAME.setValue(EquipSuitClientConfig.SUIT_NAME.get().get(focus));
+        SUIT_NAME.setValue(equipSuit.getName());
         SUIT_NAME.setMaxLength(10);
         SUIT_NAME.setCanLoseFocus(true);
         SUIT_NAME.setResponder(s -> {
-            List<String> strings = (List<String>) EquipSuitClientConfig.SUIT_NAME.get();
-            strings.set(((IPlayerInterface) Minecraft.getInstance().player).getFocus(),s);
-            EquipSuitClientConfig.SUIT_NAME.set(strings);
+            Integer focus1 = ((IPlayerInterface) Minecraft.getInstance().player).getFocus();
+            CommonModEvents.NetWork.sendToServer(new UpdateSuitName(focus1,s));
         });
         this.addRenderableWidget(SUIT_NAME);
 
@@ -172,13 +172,14 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     protected void containerTick() {
         super.containerTick();
         Integer focus = ((IPlayerInterface) Minecraft.getInstance().player).getFocus();
+        EquipSuit equipSuit = ((IPlayerInterface) Minecraft.getInstance().player).getSuitStack().getEquipSuitList().get(focus);
         EDIT_BUTTON.binary = canEdit;
         SUIT_NAME.setEditable(SUIT_NAME.isFocused());
         if(InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 257) && SUIT_NAME.isFocused()){
            SUIT_NAME.setFocus(false);
-           SUIT_NAME.setValue(EquipSuitClientConfig.SUIT_NAME.get().get(focus));
+           SUIT_NAME.setValue(equipSuit.getName());
         }
-        if(lastFocus != focus) SUIT_NAME.setValue(EquipSuitClientConfig.SUIT_NAME.get().get(focus));
+        if(lastFocus != focus) SUIT_NAME.setValue(equipSuit.getName());
         Arrays.stream(suitIndexButtons).forEach(tradeOfferButton -> tradeOfferButton.active = tradeOfferButton.index != focus && !buttonClicked && !canEdit);
         Arrays.stream(slotIndexButtons).forEach(tradeOfferButton -> tradeOfferButton.active = canEdit &&(!buttonClicked || tradeOfferButton.index == ChangeIndex));
         this.lastFocus = focus;
@@ -271,7 +272,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, SLOT_MARK);
-        int num = KEY_INDEX.get(s);
+        int num = EquipSuitTemplate.KEY_INDEX.get(s);
         int x = this.leftPos-((4 -( slotNum % 4)) * 18 + 4);
         int y =(int) (this.topPos - 5 +  ( 7 + Math.ceil(slotNum / 4) * 19));
         this.blit(poseStack, x  + suit * 4 , y , getBlitOffset() ,4 * num,suit * 4, 4, 4,16,16);
@@ -291,7 +292,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
                 IPlayerInterface player = (IPlayerInterface) Minecraft.getInstance().player;
                 Integer focus = player.getFocus();
                 int newSlotNum = slot.index - INVENTORY_SIZE;
-                CommonModEvents.NetWork.sendToServer(new SuitStackUpdate(focus,key,newSlotNum));
+                CommonModEvents.NetWork.sendToServer(new UpdateSuitSlot(focus,key,newSlotNum));
                 CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
                 buttonClicked = ! buttonClicked;
                 canEdit = false;
@@ -306,11 +307,33 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     @Override
     public boolean keyPressed(int p_97765_, int p_97766_, int p_97767_) {
         InputConstants.Key mouseKey = InputConstants.getKey(p_97765_, p_97766_);
-        if(EquipSuitKeyMapping.CALL_SUIT_INVENTORY_KEY.getKey().equals(mouseKey)){
+        if (p_97765_ == 256 && this.shouldCloseOnEsc()) {
             this.onClose();
             return true;
+        } else if (p_97765_ == 258) {
+            boolean flag = !hasShiftDown();
+            if (!this.changeFocus(flag)) {
+                this.changeFocus(flag);
+            }
+            return false;
+        } else if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey) || EquipSuitKeyMapping.CALL_SUIT_INVENTORY_KEY.getKey().equals(mouseKey)) {
+            if(!SUIT_NAME.isFocused()) this.onClose();
+            return true;
+        } else {
+            boolean handled = this.checkHotbarKeyPressed(p_97765_, p_97766_);// Forge MC-146650: Needs to return true when the key is handled
+            if (this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
+                if (this.minecraft.options.keyPickItem.isActiveAndMatches(mouseKey)) {
+                    this.slotClicked(this.hoveredSlot, this.hoveredSlot.index, 0, ClickType.CLONE);
+                    handled = true;
+                } else if (this.minecraft.options.keyDrop.isActiveAndMatches(mouseKey)) {
+                    this.slotClicked(this.hoveredSlot, this.hoveredSlot.index, hasControlDown() ? 1 : 0, ClickType.THROW);
+                    handled = true;
+                }
+            } else if (this.minecraft.options.keyDrop.isActiveAndMatches(mouseKey)) {
+                handled = true; // Forge MC-146650: Emulate MC bug, so we don't drop from hotbar when pressing drop without hovering over a item.
+            }
+            return handled || (this.getFocused() != null && this.getFocused().keyPressed(p_97765_, p_97766_, p_97767_));
         }
-        return super.keyPressed(p_97765_, p_97766_, p_97767_);
     }
 
     private Slot IFindSlot(double p_97748_, double p_97749_){

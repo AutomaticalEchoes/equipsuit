@@ -49,7 +49,6 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
         suitContainer.load(containerTag);
         focus = compoundTag.getInt("Focus");
         this.entityData.set(FOCUS,focus);
-
     }
 
     @Inject(method = {"addAdditionalSaveData"},at = {@At("RETURN")})
@@ -106,4 +105,8 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
         return suitContainer;
     }
 
+    public void setSuitName(int num,String s){
+        this.getSuitStack().getEquipSuitList().get(num).setName(s);
+        this.entityData.set(SUIT_STACK,suitStack.toTag());
+    }
 }

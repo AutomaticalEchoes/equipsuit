@@ -31,15 +31,20 @@ public class PacketHandler {
                 .decoder(SuitChange::decode)
                 .consumerMainThread(SuitChange::onMessage)
                 .add();
-        INSTANCE.messageBuilder(SuitStackUpdate.class,3)
-                .encoder(SuitStackUpdate::encode)
-                .decoder(SuitStackUpdate::decode)
-                .consumerMainThread(SuitStackUpdate::onMessage)
+        INSTANCE.messageBuilder(UpdateSuitSlot.class,3)
+                .encoder(UpdateSuitSlot::encode)
+                .decoder(UpdateSuitSlot::decode)
+                .consumerMainThread(UpdateSuitSlot::onMessage)
                 .add();
         INSTANCE.messageBuilder(SuitSingleChange.class,4)
                 .encoder(SuitSingleChange::encode)
                 .decoder(SuitSingleChange::decode)
                 .consumerMainThread(SuitSingleChange::onMessage)
+                .add();
+        INSTANCE.messageBuilder(UpdateSuitName.class,5)
+                .encoder(UpdateSuitName::encode)
+                .decoder(UpdateSuitName::decode)
+                .consumerMainThread(UpdateSuitName::onMessage)
                 .add();
         return INSTANCE;
     }
