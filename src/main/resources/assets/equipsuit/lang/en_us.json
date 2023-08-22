@@ -16,6 +16,11 @@
   "text.tag.equipsuit.editing" : "Editing",
   "text.tag.equipsuit.part" : "Part",
   "text.tag.equipsuit.warning" : "！Warning",
+  "text.tag.equipsuit.edit_title" : "EquipSuit Edit",
+  "text.tag.equipsuit.enable_simple_hud" : "Simple Hud",
+  "text.tag.equipsuit.enable_quick_select_mode" : "Quick Select Mode",
+  "text.tag.equipsuit.coordinate": "HUD Coordinate",
+  "text.tag.equipsuit.alpha" : "alpha",
 
   "key.equipsuit": "EquipSuit",
   "key.category.equipsuit.suitinvetory": "open suit inventory",
