@@ -7,8 +7,7 @@
   "plugin": "com.AutomaticalEchoes.EquipSuit.api.mixin.MixinPlugin",
   "mixins": [
     "PlayerMixin",
-    "ServerPlayerMixin",
-    "OptionsScreenMixin"
+    "ServerPlayerMixin"
   ],
   "client": [
   ],
