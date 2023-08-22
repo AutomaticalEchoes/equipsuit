@@ -9,7 +9,7 @@ public class Messages {
             I18n.get("text.message.equipsuit.suit_4")};
     public static final String[] MODE_NAME = {I18n.get("text.message.equipsuit.mode_sequence"),
             I18n.get("text.message.equipsuit.mode_quickselect")};
-    public static final String[] PART ={"H","B","L","F"};
+    public static final String[] PART ={"H","C","L","F"};
     public static final String[] PART_NAME ={I18n.get("text.message.equipsuit.part_name_1"),
             I18n.get("text.message.equipsuit.part_name_2"),
             I18n.get("text.message.equipsuit.part_name_3"),

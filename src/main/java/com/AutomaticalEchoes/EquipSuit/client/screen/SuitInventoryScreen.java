@@ -52,7 +52,7 @@ import java.util.function.Consumer;
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
     private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
-    private static final ResourceLocation SLOT_MARK = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/mark.png");
+    private static final ResourceLocation SUIT_GUI = new ResourceLocation(EquipSuitChange.MODID, "textures/gui/suit_gui.png");
     private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 6;
     private static final List<Component> EDITING_MESSAGE = new ArrayList<>();
     private static final  List<Component> WARNING_MESSAGE = new ArrayList<>();
@@ -269,13 +269,19 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     }
 
     private void markSlot(PoseStack poseStack ,int slotNum , int suit ,String s){
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, SLOT_MARK);
         int num = EquipSuitTemplate.KEY_INDEX.get(s);
+        float red = (Messages.SUIT_NUM_COLORS[suit] >> 16 & 255) / 255.0F;
+        float green =  (Messages.SUIT_NUM_COLORS[suit] >> 8 & 255) / 255.0F;
+        float blue =  (Messages.SUIT_NUM_COLORS[suit] & 255) / 255.0F;
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(red, green, blue, 1.0F);
+        RenderSystem.setShaderTexture(0, SUIT_GUI);
         int x = this.leftPos-((4 -( slotNum % 4)) * 18 + 4);
         int y =(int) (this.topPos - 5 +  ( 7 + Math.ceil(slotNum / 4) * 19));
-        this.blit(poseStack, x  + suit * 4 , y , getBlitOffset() ,4 * num,suit * 4, 4, 4,16,16);
+        blit(poseStack, x  + suit * 4 , y , getBlitOffset() ,8,4, 4, 4,16,16);
+        RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
+        blit(poseStack, x  + suit * 4 , y , getBlitOffset() ,num * 4,12, 4, 4,16,16);
+
     }
 
     private void blit(PoseStack p_194036_, int p_194037_, int p_194038_, int p_194039_, TextureType p_194040_) {
