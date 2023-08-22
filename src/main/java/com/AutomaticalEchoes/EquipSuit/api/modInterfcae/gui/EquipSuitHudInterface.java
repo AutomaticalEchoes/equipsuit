@@ -18,7 +18,7 @@ public interface EquipSuitHudInterface {
      }
 
      default int StartY() {
-          return Math.min(MaxStartY(),Math.max(MinStartY(),EquipSuitClientConfig.LAYER_START_Y.get()));
+          return GameWindowHeight() - Math.min(MaxStartY(),Math.max(MinStartY(),EquipSuitClientConfig.LAYER_START_Y.get()));
      }
 
      default float Alpha() {
@@ -46,6 +46,6 @@ public interface EquipSuitHudInterface {
      }
 
      default int MinStartY(){
-          return GameWindowHeight() -guiHeight();
+          return guiHeight();
      }
 }

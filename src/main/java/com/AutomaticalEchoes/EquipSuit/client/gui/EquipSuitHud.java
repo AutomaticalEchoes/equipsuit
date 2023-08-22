@@ -91,7 +91,7 @@ public class EquipSuitHud extends Screen implements Widget, EquipSuitHudInterfac
         float red = (Messages.SUIT_NUM_COLORS[i] >> 16 & 255) / 255.0F;
         float green =  (Messages.SUIT_NUM_COLORS[i] >> 8 & 255) / 255.0F;
         float blue =  (Messages.SUIT_NUM_COLORS[i] & 255) / 255.0F;
-        float alpha = 0.5F * StartX();
+        float alpha = 0.5F * Alpha();
         int startY = StartY() + 16;
         int textureStartY = 26;
         if(isFocus){
