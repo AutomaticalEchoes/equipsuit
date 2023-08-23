@@ -2,7 +2,7 @@ buildscript {
     repositories {
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[6.0,6.2)', changing: true
         // 添加 MixinGradle 插件
         classpath 'org.spongepowered:mixingradle:0.7.+'
     }
@@ -16,11 +16,9 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
-base {
-    archivesName = mod_id
-}
 
-version = '1.7.8-forge-1.20.x-46.0.14'
+
+version = '1.7.9-forge-1.20.x-46.0.14'
 group = 'com.automaticalechoes.equipsuit' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'equipsuit'
 
@@ -181,7 +179,7 @@ dependencies {
     // If the group id is "net.minecraft" and the artifact id is one of ["client", "server", "joined"],
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
@@ -205,7 +203,7 @@ dependencies {
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
 def replaceProperties = [
         minecraft_version: minecraft_version, minecraft_version_range: "[1.20,)",
-        forge_version: forge_version, forge_version_range:  "[46,)",
+        forge_version: forge_version, forge_version_range:  "[46.0.14,)",
         loader_version_range: "[46,)",
         mod_id: "equipsuit", mod_name: archivesBaseName, mod_license: "All rights reserved", mod_version: version,
         mod_authors: "AutomaticalEchoes", mod_description: '''github:https://github.com/1121665965/EquipSuit'''

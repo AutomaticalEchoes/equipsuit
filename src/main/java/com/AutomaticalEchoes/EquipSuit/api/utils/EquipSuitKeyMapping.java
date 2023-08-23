@@ -28,7 +28,7 @@ public class EquipSuitKeyMapping {
     public static final KeyMapping MODE_CHANGE = RegisterKeyMapping(new KeyMapping("key.category.equipsuit.modechange",
             KeyConflictContext.IN_GAME,
             KeyModifier.CONTROL,
-            InputConstants.getKey(InputConstants.KEY_R,0 ),
+            InputConstants.getKey(InputConstants.KEY_C,0 ),
             "key.equipsuit"));
     public static final KeyMapping SELECT_SUIT_CHANGE_I = RegisterKeyMapping(new KeyMapping("key.category.equipsuit.suitchange.select_1",
             KeyConflictContext.IN_GAME,
