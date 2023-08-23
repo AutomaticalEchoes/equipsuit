@@ -37,7 +37,7 @@ public class EquipSuitHud extends Screen implements Widget, EquipSuitHudInterfac
         this.minecraft = Minecraft.getInstance();
         this.width = minecraft.getWindow().getGuiScaledWidth();
         this.height = minecraft.getWindow().getGuiScaledHeight();
-        this.matrixStack=matrixStack;
+        this.matrixStack = matrixStack;
         this.font = minecraft.font;
         this.itemRenderer=minecraft.getItemRenderer();
     }

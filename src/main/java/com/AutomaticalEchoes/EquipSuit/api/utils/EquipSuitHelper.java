@@ -24,7 +24,6 @@ public class EquipSuitHelper{
 
                 leftSlot.onChange(serverPlayer,itemRight);
                 rightSlot.onChange(serverPlayer,itemLeft);
-
             }
         });
     }

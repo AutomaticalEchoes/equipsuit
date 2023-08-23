@@ -14,7 +14,7 @@ public class EquipSuitTemplate {
     public static final String[] NAME = {"SUIT_I","SUIT_II","SUIT_III","SUIT_IV"};
     public static final String[] INDEX_KEY = {"head","chest","leg","feet"};
     public static final Map<String,Integer> KEY_INDEX = Map.of("head",0,"chest",1,"leg",2,"feet",3);
-    public static final String[] PART ={"H","C","L","F"};
+    public static final String[] PART = {"H","C","L","F"};
     public static int Size;
     public static void Init(){
         BASE_INVENTORY_MAP = new HashMap<>();
