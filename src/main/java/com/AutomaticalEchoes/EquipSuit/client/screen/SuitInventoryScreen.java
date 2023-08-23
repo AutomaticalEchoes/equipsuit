@@ -316,6 +316,11 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
 
     @Override
     public boolean keyPressed(int p_97765_, int p_97766_, int p_97767_) {
+        InputConstants.Key mouseKey = InputConstants.getKey(p_97765_, p_97766_);
+        if(EquipSuitKeyMapping.CALL_SUIT_INVENTORY_KEY.getKey().equals(mouseKey)){
+            this.onClose();
+            return true;
+        }
         return super.keyPressed(p_97765_, p_97766_, p_97767_);
     }
 
@@ -353,4 +358,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             }
         }
     }
+
+
+
 }
