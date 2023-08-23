@@ -1,8 +1,8 @@
 {
-  "text.message.equipsuit.suit_1" : "I",
-  "text.message.equipsuit.suit_2" : "II",
-  "text.message.equipsuit.suit_3" : "III",
-  "text.message.equipsuit.suit_4" : "IV",
+  "text.message.equipsuit.suit_1" : "Ⅰ",
+  "text.message.equipsuit.suit_2" : "Ⅱ",
+  "text.message.equipsuit.suit_3" : "Ⅲ",
+  "text.message.equipsuit.suit_4" : "Ⅳ",
   "text.message.equipsuit.part_name_1" : "HEAD",
   "text.message.equipsuit.part_name_2" : "BODY",
   "text.message.equipsuit.part_name_3" : "LEG",
