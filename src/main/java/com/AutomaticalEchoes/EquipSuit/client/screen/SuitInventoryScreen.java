@@ -306,37 +306,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         }
     }
 
-//    @Override
-//    public boolean keyPressed(int p_97765_, int p_97766_, int p_97767_) {
-//        InputConstants.Key mouseKey = InputConstants.getKey(p_97765_, p_97766_);
-//        if (p_97765_ == 256 && this.shouldCloseOnEsc()) {
-//            this.onClose();
-//            return true;
-//        } else if (p_97765_ == 258) {
-//            boolean flag = !hasShiftDown();
-//            if (!this.changeFocus(flag)) {
-//                this.changeFocus(flag);
-//            }
-//            return false;
-//        } else if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey) || EquipSuitKeyMapping.CALL_SUIT_INVENTORY_KEY.getKey().equals(mouseKey)) {
-//            if(!SUIT_NAME.isFocused()) this.onClose();
-//            return true;
-//        } else {
-//            boolean handled = this.checkHotbarKeyPressed(p_97765_, p_97766_);// Forge MC-146650: Needs to return true when the key is handled
-//            if (this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
-//                if (this.minecraft.options.keyPickItem.isActiveAndMatches(mouseKey)) {
-//                    this.slotClicked(this.hoveredSlot, this.hoveredSlot.index, 0, ClickType.CLONE);
-//                    handled = true;
-//                } else if (this.minecraft.options.keyDrop.isActiveAndMatches(mouseKey)) {
-//                    this.slotClicked(this.hoveredSlot, this.hoveredSlot.index, hasControlDown() ? 1 : 0, ClickType.THROW);
-//                    handled = true;
-//                }
-//            } else if (this.minecraft.options.keyDrop.isActiveAndMatches(mouseKey)) {
-//                handled = true; // Forge MC-146650: Emulate MC bug, so we don't drop from hotbar when pressing drop without hovering over a item.
-//            }
-//            return handled || (this.getFocused() != null && this.getFocused().keyPressed(p_97765_, p_97766_, p_97767_));
-//        }
-//    }
 
     private Slot IFindSlot(double p_97748_, double p_97749_){
         for(int i = 0; i < this.menu.slots.size(); ++i) {
@@ -364,10 +333,12 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
 
     @Override
     public void onClose() {
-        super.onClose();
-        if(this.canEdit){
-            CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
-            this.canEdit =!canEdit;
+        if(!SUIT_NAME.isFocused()){
+            super.onClose();
+            if(this.canEdit){
+                CommonModEvents.NetWork.sendToServer(new SuitSingleChange());
+                this.canEdit =!canEdit;
+            }
         }
     }
 }
