@@ -57,7 +57,6 @@ public class EquipSuitHud extends Screen implements Widget, EquipSuitHudInterfac
             ModeTipTime--;
         }
         LastMode = ChangeMod();
-
     }
 
     @Override
