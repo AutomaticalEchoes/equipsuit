@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public abstract class TradeOfferButton extends Button {
-    public final int index;
+    private final int index;
     public final List<Component> renderTooltip =new ArrayList<>();
     public TradeOfferButton(int p_99205_, int p_99206_, int p_99207_, Component component, Button.OnPress p_99208_, int width, int height) {
         super(p_99205_, p_99206_, width, height, component, p_99208_);
@@ -39,9 +39,7 @@ public abstract class TradeOfferButton extends Button {
         return this.index;
     }
 
-
     public abstract void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) ;
-
 
     @Override
     public void renderButton(PoseStack p_93676_, int p_93677_, int p_93678_, float p_93679_) {
