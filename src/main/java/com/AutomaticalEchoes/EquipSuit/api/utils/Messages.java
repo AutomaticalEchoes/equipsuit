@@ -1,6 +1,9 @@
 package com.AutomaticalEchoes.EquipSuit.api.utils;
 
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class Messages {
     public static final String[] SUIT_NUM = {I18n.get("text.message.equipsuit.suit_1"),
@@ -27,6 +30,9 @@ public class Messages {
     public static final String TAG_ENABLE_QUICK_SELECT_MODE = MessageTag("text.tag.equipsuit.enable_quick_select_mode");
     public static final String TAG_GUI_COORDINATE= MessageTag("text.tag.equipsuit.coordinate");
     public static final String TAG_GUI_ALPHA = MessageTag("text.tag.equipsuit.alpha");
+    public static final MutableComponent MODE_CHANGE_MESSAGE_0 = new TranslatableComponent(Messages.TAG_MODE + Messages.MODE_NAME[0]);
+    public static final MutableComponent MODE_CHANGE_MESSAGE_1 = new TranslatableComponent(Messages.TAG_MODE + Messages.MODE_NAME[1]);
+    public static final MutableComponent[] MODE_CHANGE_MESSAGE = {MODE_CHANGE_MESSAGE_0,MODE_CHANGE_MESSAGE_1};
     public static String MessageTag(String s){
         return I18n.get(s) + ": ";
     }

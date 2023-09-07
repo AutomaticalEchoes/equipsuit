@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,16 +42,17 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onOverlayRender(RenderGameOverlayEvent event){
+    public static void onOverlayRender(RenderGameOverlayEvent.PostLayer event){
+        if(event.getOverlay()!= ForgeIngameGui.HOTBAR_ELEMENT) return;
         if(HUD == null) {
             EquipSuitCreateHudEvent createHudEvent = new EquipSuitCreateHudEvent(event.getMatrixStack());
             MinecraftForge.EVENT_BUS.post(createHudEvent);
             createHudEvent.getEquipSuitHUD().ifPresent(equipSuitHudInterface -> HUD = equipSuitHudInterface);
         }else {
             if(EquipSuitClientConfig.HUD_MODE.get() == 0){
-                HUD.renderSimple(((IPlayerInterface) (Minecraft.getInstance().player)).getFocus());
+                HUD.renderSimple(event.getMatrixStack(),((IPlayerInterface) (Minecraft.getInstance().player)).getFocus());
             }else {
-                HUD.renderALl(((IPlayerInterface) (Minecraft.getInstance().player)).getFocus());
+                HUD.renderALl(event.getMatrixStack(),((IPlayerInterface) (Minecraft.getInstance().player)).getFocus());
             }
         }
     }

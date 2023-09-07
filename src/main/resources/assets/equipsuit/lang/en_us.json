@@ -23,6 +23,7 @@
   "text.tag.equipsuit.alpha" : "alpha",
 
   "key.equipsuit": "EquipSuit",
+  "key.category.equipsuit.setting": "setting",
   "key.category.equipsuit.suitinvetory": "open suit inventory",
   "key.category.equipsuit.suitchange": "change focus suit ",
   "key.category.equipsuit.suitchange.select_1": "quick change I",

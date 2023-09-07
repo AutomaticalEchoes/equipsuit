@@ -23,6 +23,7 @@
   "text.tag.equipsuit.alpha" : "透明度",
 
   "key.equipsuit": "装备套装",
+  "key.category.equipsuit.setting": "模组设置",
   "key.category.equipsuit.suitinvetory": "装备背包栏",
   "key.category.equipsuit.suitchange": "套装切换",
   "key.category.equipsuit.suitchange.select_1": "快速切换_I",

@@ -3,7 +3,7 @@
   "package": "com.AutomaticalEchoes.EquipSuit.api.mixin",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
-  "refmap": "mod.refmap.json",
+  "refmap": "equipsuit.refmap.json",
   "plugin": "com.AutomaticalEchoes.EquipSuit.api.mixin.MixinPlugin",
   "mixins": [
     "PlayerMixin",
