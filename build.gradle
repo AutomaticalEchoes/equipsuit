@@ -18,7 +18,7 @@ plugins {
 
 
 
-version = '1.7.9-forge-1.20.x-46.0.14'
+version = '1.8.0-forge-1.20.x-46.0.14'
 group = 'com.automaticalechoes.equipsuit' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'equipsuit'
 
