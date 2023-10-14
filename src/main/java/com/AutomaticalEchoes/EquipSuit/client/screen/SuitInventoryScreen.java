@@ -1,13 +1,15 @@
 package com.AutomaticalEchoes.EquipSuit.client.screen;
 
 import com.AutomaticalEchoes.EquipSuit.EquipSuitChange;
+import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.containerType.ContainerTypes;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuit;
+import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitTemplate;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
 import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitKeyMapping;
-import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitTemplate;
 import com.AutomaticalEchoes.EquipSuit.api.utils.Messages;
 import com.AutomaticalEchoes.EquipSuit.client.gui.BinarySwitchButton;
-import com.AutomaticalEchoes.EquipSuit.client.gui.MapSlotButton;
 import com.AutomaticalEchoes.EquipSuit.client.gui.TradeOfferButton;
 import com.AutomaticalEchoes.EquipSuit.common.CommonModEvents;
 import com.AutomaticalEchoes.EquipSuit.common.container.SuitInventoryMenu;
@@ -22,10 +24,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -43,15 +45,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @OnlyIn(Dist.CLIENT)
 public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInventoryMenu> {
     public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/gui/container/bundle.png");
     private static final ResourceLocation SUIT_INVENTORY = new ResourceLocation(EquipSuitChange.MODID, "textures/screens/suit_inventory.png");
     private static final ResourceLocation SUIT_GUI = new ResourceLocation(EquipSuitChange.MODID, "textures/gui/suit_gui.png");
-    private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE + Inventory.ALL_ARMOR_SLOTS.length + 1;
+    private static final int INVENTORY_SIZE = Inventory.INVENTORY_SIZE+ Inventory.ALL_ARMOR_SLOTS.length + 6;
     private static final List<Component> EDITING_MESSAGE = new ArrayList<>();
-    private static final List<Component> WARNING_MESSAGE = new ArrayList<>();
+    private static final  List<Component> WARNING_MESSAGE = new ArrayList<>();
     private static BinarySwitchButton EDIT_BUTTON;
     private static EditBox SUIT_NAME;
     private static int ChangeIndex = 0;
@@ -63,7 +67,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     private int lastFocus = 0;
     private String key;
     private final TradeOfferButton[] suitIndexButtons = new TradeOfferButton[4];
-    private final MapSlotButton[] slotIndexButtons = new MapSlotButton[4];
+    private final TradeOfferButton[] slotIndexButtons = new TradeOfferButton[4];
 
     public SuitInventoryScreen(SuitInventoryMenu p_97741_, Inventory p_97742_ ,Component p_97743_) {
         super(p_97741_, p_97742_, Component.translatable(""));
@@ -71,15 +75,15 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.titleLabelX = 12;
         this.IndexPress = p_93751_ -> {
             if(p_93751_ instanceof TradeOfferButton tradeOfferButton){
-                CommonModEvents.NetWork.sendToServer(new SuitChange(tradeOfferButton.getIndex()));
+                CommonModEvents.NetWork.sendToServer(new SuitChange(tradeOfferButton.index));
             }
         };
         this.SlotUpdatePress = p_93751_ -> {
-            if(p_93751_ instanceof MapSlotButton mapSlotButton){
+            if(p_93751_ instanceof TradeOfferButton tradeOfferButton){
                 buttonClicked = ! buttonClicked;
                 canEdit = buttonClicked;
-                ChangeIndex = buttonClicked ? mapSlotButton.getIndex() : -1;
-                this.key = EquipSuitTemplate.INDEX_KEY[mapSlotButton.getIndex()];
+                ChangeIndex = buttonClicked ? tradeOfferButton.index : -1;
+                this.key = EquipSuitTemplate.INDEX_KEY[tradeOfferButton.index];
                 if(buttonClicked) {
                     resetEditingMessage();
                 }else{
@@ -99,58 +103,12 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     @Override
     protected void init() {
         super.init();
-        int x = this.leftPos - 23;
-        int y = this.topPos + 10;
+        int x = this.leftPos - 94;
+        int y = this.topPos  - 5;
         initWarningMessage();
         Integer focus = ((IPlayerInterface) Minecraft.getInstance().player).getFocus();
         EquipSuit equipSuit = ((IPlayerInterface) Minecraft.getInstance().player).getSuitStack().getEquipSuitList().get(focus);
-
-
-        SUIT_NAME = new EditBox(this.minecraft.font,x ,y + 6 ,46 ,12,Component.translatable("name"));
-        SUIT_NAME.setValue(equipSuit.getName());
-        SUIT_NAME.setMaxLength(10);
-        SUIT_NAME.setEditable(false);
-        SUIT_NAME.setCanLoseFocus(true);
-        SUIT_NAME.setResponder(s -> {
-            Integer focus1 = ((IPlayerInterface) Minecraft.getInstance().player).getFocus();
-            CommonModEvents.NetWork.sendToServer(new UpdateSuitName(focus1,s));
-        });
-        this.addRenderableWidget(SUIT_NAME);
-        this.addRenderableWidget(new TradeOfferButton(x + 46, y + 6, 0, Component.translatable("edit"), p_93751_ -> SUIT_NAME.setEditable(true), 26, 12) {
-            @Override
-            public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
-
-            }
-        });
-
-
-        for (int i=0;i<4;i++){
-            MapSlotButton mapSlotButton = new MapSlotButton(x + i * 18, y + 22,i, Component.translatable(EquipSuitTemplate.PART[i]), this.SlotUpdatePress, (p_93753_, p_93754_, p_93755_, p_93756_) -> {
-                if(p_93753_ instanceof MapSlotButton mapSlotButton1){
-                    if(!p_93753_.isActive()){
-                        renderTooltip(p_93754_,mapSlotButton1.getMirrorItem(),p_93755_,p_93756_);
-                    }
-                }
-            });
-            slotIndexButtons[i] = mapSlotButton;
-            this.addRenderableWidget(mapSlotButton);
-        }
-
-
-        for(int i=0 ;i<4;i++){
-            MutableComponent translatable = Component.translatable(Messages.SUIT_NUM[i]);
-            translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_NUM_COLORS[i]));
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + i * 16, y + 42, i,translatable, IndexPress, 16, 12) {
-                @Override
-                public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
-                }
-            };
-            suitIndexButtons[i] = tradeOfferButton;
-            this.addRenderableWidget(tradeOfferButton);
-        }
-
-
-        EDIT_BUTTON = new BinarySwitchButton(x + 74 , y + 42 ,16,12) {
+        EDIT_BUTTON = new BinarySwitchButton(x + 1 , y - 4 ,14,10) {
             @Override
             public void onSwitchCase(boolean SwitchBinary) {
                 canEdit =!canEdit;
@@ -159,13 +117,44 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             }
         };
         this.addRenderableWidget(EDIT_BUTTON);
+        for(int i=0 ;i<4;i++){
+            MutableComponent translatable = Component.translatable(Messages.SUIT_NUM[i]);
+            translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_NUM_COLORS[i]));
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 1 + i * 12, y - 16, i,translatable, IndexPress, 13, 11) {
+                @Override
+                public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
+                }
+            };
+            suitIndexButtons[i] = tradeOfferButton;
+            this.addRenderableWidget(tradeOfferButton);
+        }
 
+        SUIT_NAME = new EditBox(this.minecraft.font,x + 54 ,y - 13 ,56 ,14,Component.translatable("name"));
+        SUIT_NAME.setValue(equipSuit.getName());
+        SUIT_NAME.setMaxLength(10);
+        SUIT_NAME.setCanLoseFocus(true);
+        SUIT_NAME.setResponder(s -> {
+            Integer focus1 = ((IPlayerInterface) Minecraft.getInstance().player).getFocus();
+            CommonModEvents.NetWork.sendToServer(new UpdateSuitName(focus1,s));
+        });
+        this.addRenderableWidget(SUIT_NAME);
 
+        for (int i=0;i<4;i++){
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 1, y + 7 + i * 15, i, Component.translatable(EquipSuitTemplate.PART[i]), SlotUpdatePress, 14, 14) {
+                @Override
+                public void renderToolTip(PoseStack p_99211_, int p_99212_, int p_99213_) {
+                    if (this.isHovered && !buttonClicked) {
+                        renderTooltip(p_99211_,Component.translatable(Messages.PART_NAME[index]),(int)xMouse,(int)yMouse);
+                    }
+                }
+            };
+            slotIndexButtons[i] = tradeOfferButton;
+            this.addRenderableWidget(tradeOfferButton);
+        }
     }
 
     @Override
     public void render(PoseStack p_97795_, int p_97796_, int p_97797_, float p_97798_) {
-        Minecraft.getInstance().player.getEnderChestInventory();
         this.renderBackground(p_97795_);
         super.render(p_97795_, p_97796_, p_97797_, p_97798_);
         if(buttonClicked){
@@ -176,51 +165,49 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         }
         this.xMouse = (float)p_97796_;
         this.yMouse = (float)p_97797_;
+        drawString(p_97795_, font,Component.translatable(Messages.TAG_MODE +Messages.MODE_NAME[EquipSuitClientConfig.CHANGE_MODE.get()])  ,leftPos,topPos+170, 0xFFFFFF);
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
-        LocalPlayer player = Minecraft.getInstance().player;
-        Integer focus = ((IPlayerInterface) player).getFocus();
-        EquipSuit equipSuit = ((IPlayerInterface) player).getSuitStack().getEquipSuitList().get(focus);
+        Integer focus = ((IPlayerInterface) Minecraft.getInstance().player).getFocus();
+        EquipSuit equipSuit = ((IPlayerInterface) Minecraft.getInstance().player).getSuitStack().getEquipSuitList().get(focus);
         EDIT_BUTTON.binary = canEdit;
-
+        SUIT_NAME.setEditable(SUIT_NAME.isFocused());
         if(InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 257) && SUIT_NAME.isFocused()){
-           SUIT_NAME.setEditable(false);
+           SUIT_NAME.setFocus(false);
            SUIT_NAME.setValue(equipSuit.getName());
         }
         if(lastFocus != focus) SUIT_NAME.setValue(equipSuit.getName());
-
-
-        Arrays.stream(suitIndexButtons).forEach(tradeOfferButton -> tradeOfferButton.active = tradeOfferButton.getIndex() != focus && !buttonClicked && !canEdit);
-        Arrays.stream(slotIndexButtons).forEach(mapSlotButton -> {
-            mapSlotButton.active = canEdit &&(!buttonClicked || mapSlotButton.getIndex() == ChangeIndex);
-            mapSlotButton.setNumber(equipSuit.left().get(EquipSuitTemplate.INDEX_KEY[mapSlotButton.getIndex()]).getSlotNum());
-            mapSlotButton.setMirrorItem(((IPlayerInterface) player).getSuitContainer());
-        });
+        Arrays.stream(suitIndexButtons).forEach(tradeOfferButton -> tradeOfferButton.active = tradeOfferButton.index != focus && !buttonClicked && !canEdit);
+        Arrays.stream(slotIndexButtons).forEach(tradeOfferButton -> tradeOfferButton.active = canEdit &&(!buttonClicked || tradeOfferButton.index == ChangeIndex));
         this.lastFocus = focus;
     }
 
     @Override
     protected void renderBg(PoseStack p_97787_, float p_97788_, int p_97789_, int p_97790_) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
         int i = this.leftPos;
         int j = this.topPos;
+        this.blit(p_97787_, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        renderEntityInInventory(i + 51, j + 75, 30, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.minecraft.player);
         renderSuitInventory(p_97787_,p_97790_);
-        renderEntityInInventory(i + 123, j + 75, 30, (float)(i + 123) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.minecraft.player);
-//        ArrayList<EquipSuit> equipSuitList = ((IPlayerInterface) Minecraft.getInstance().player).getSuitStack().getEquipSuitList();
-//        equipSuitList.forEach(new Consumer<EquipSuit>() {
-//            @Override
-//            public void accept(EquipSuit equipSuit) {
-//                equipSuit.left().forEach(new BiConsumer<String, BaseSlot>() {
-//                    @Override
-//                    public void accept(String s, BaseSlot slot) {
-//                        if(slot.ContainerType() == ContainerTypes.TYPE_SUIT)
-//                        markSlot(p_97787_,slot.getSlotNum(),equipSuit.num(),s);
-//                    }
-//                });
-//            }
-//        });
+        ArrayList<EquipSuit> equipSuitList = ((IPlayerInterface) Minecraft.getInstance().player).getSuitStack().getEquipSuitList();
+        equipSuitList.forEach(new Consumer<EquipSuit>() {
+            @Override
+            public void accept(EquipSuit equipSuit) {
+                equipSuit.left().forEach(new BiConsumer<String, BaseSlot>() {
+                    @Override
+                    public void accept(String s, BaseSlot slot) {
+                        if(slot.ContainerType() == ContainerTypes.TYPE_SUIT)
+                        markSlot(p_97787_,slot.getSlotNum(),equipSuit.num(),s);
+                    }
+                });
+            }
+        });
     }
 
     protected void renderSuitInventory(PoseStack p_97787_, int p_97790_){
@@ -228,8 +215,11 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, SUIT_INVENTORY);
         int i = this.leftPos;
-        int j = this.topPos;
-        this.blit(p_97787_, i - 120, j - 10, 0, 0, 300,256,300,256);
+        int j = this.topPos - 24;
+        this.blit(p_97787_, i-102, j, 0, 0, 100,200,100,200);
+        for(int k = 0; k < 36; k++) {
+            this.blit(p_97787_,this.leftPos-((4 -( k % 4)) * 18 + 5), (int) (this.topPos - 5 +  ( 7 + Math.ceil(k / 4) * 19)),p_97790_,TextureType.INVENTORY_SLOT);
+        }
     }
 
     public static void renderEntityInInventory(int p_98851_, int p_98852_, int p_98853_, float p_98854_, float p_98855_, LivingEntity p_98856_) {
@@ -293,11 +283,11 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
     }
 
-//    private void blit(PoseStack p_194036_, int p_194037_, int p_194038_, int p_194039_, TextureType p_194040_) {
-//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-//        RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
-//        GuiComponent.blit(p_194036_, p_194037_, p_194038_, p_194039_, (float)p_194040_.x, (float)p_194040_.y, p_194040_.w, p_194040_.h, 128, 128);
-//    }
+    private void blit(PoseStack p_194036_, int p_194037_, int p_194038_, int p_194039_, TextureType p_194040_) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
+        GuiComponent.blit(p_194036_, p_194037_, p_194038_, p_194039_, (float)p_194040_.x, (float)p_194040_.y, p_194040_.w, p_194040_.h, 128, 128);
+    }
 
     @Override
     public boolean mouseClicked(double p_97748_, double p_97749_, int p_97750_) {
@@ -352,9 +342,9 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
     }
 
     private Slot IFindSlot(double p_97748_, double p_97749_){
-        for(int i = 0; i < this.menu.slots.size(); i++) {
+        for(int i = 0; i < this.menu.slots.size(); ++i) {
             Slot slot = this.menu.slots.get(i);
-            if (this.isHovering(slot.x ,slot.y,16,16,p_97748_, p_97749_) && slot.isActive()) {
+            if (this.isHovering(slot.x,slot.y,16,16,p_97748_, p_97749_) && slot.isActive()) {
                 return slot;
             }
         }
