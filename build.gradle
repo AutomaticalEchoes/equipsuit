@@ -37,8 +37,8 @@ archivesBaseName = 'equipsuit'
 apply plugin:  'org.spongepowered.mixin'
 mixin {
     // MixinGradle 设置
-    add sourceSets.main, 'mod.refmap.json'
-    config 'mod.mixins.json'
+    add sourceSets.main, 'equipsuit.refmap.json'
+    config 'equipsuit.mixins.json'
     debug.verbose = true
     debug.export = true
 }
