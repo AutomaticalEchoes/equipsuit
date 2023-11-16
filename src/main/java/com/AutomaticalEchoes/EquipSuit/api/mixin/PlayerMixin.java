@@ -79,7 +79,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
         return this.level.isClientSide() ? this.entityData.get(FOCUS) : this.focus;
     }
 
-    @OnlyIn(Dist.DEDICATED_SERVER)
+
     public void setFocus(Integer integer) {
         if(EquipSuitHelper.SuitChange((ServerPlayer) (Object)this,integer)){
             this.focus = integer;
@@ -112,7 +112,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
         return suitContainer;
     }
 
-    @OnlyIn(Dist.DEDICATED_SERVER)
+
     public void setSuitName(int num,String s){
         this.suitStack.getEquipSuitList().get(num).setName(s);
         this.entityData.set(SUIT_STACK,suitStack);
