@@ -14,7 +14,6 @@ public class CommonModEvents {
     @SubscribeEvent
     public static  void commonSetup(final FMLCommonSetupEvent event)
     {
-        EquipSuitChange.LOGGER.info("common Starting");
         event.enqueueWork(()->{
             NetWork= PacketHandler.RegisterPacket();
         });
