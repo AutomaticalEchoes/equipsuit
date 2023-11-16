@@ -30,7 +30,7 @@ publishing {
 }
 
 
-version = '1.8.0-forge-1.19.x-41.1.0'
+version = '1.8.2-forge-1.19.x-41.1.0'
 group = 'com.automaticalechoes.equipsuit' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'equipsuit'
 
