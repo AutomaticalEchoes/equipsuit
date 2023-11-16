@@ -1,13 +1,14 @@
 package com.AutomaticalEchoes.EquipSuit.api.modInterfcae.gui;
 
 import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 
 public interface EquipSuitHudInterface {
-     void renderALl(int focus);
+     void renderALl(PoseStack poseStack, int focus);
      int guiWidth();
      int guiHeight();
-     void renderSimple(int focus);
+     void renderSimple(PoseStack poseStack, int focus);
 
      default int ChangeMod(){
           return EquipSuitClientConfig.CHANGE_MODE.get();
@@ -22,7 +23,7 @@ public interface EquipSuitHudInterface {
      }
 
      default float Alpha() {
-          return EquipSuitClientConfig.ALPHA.get() / 1000.0F;
+          return EquipSuitClientConfig.ALPHA.get() / 100.0F;
      }
 
      default int GameWindowWidth(){
