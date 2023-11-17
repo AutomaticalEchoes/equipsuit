@@ -2,6 +2,7 @@ package com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit;
 
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.EquipSlot;
+import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitTemplate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.nbt.CompoundTag;
@@ -25,8 +26,8 @@ public interface EquipSuit {
 
     default void Build(){
         setName(EquipSuitTemplate.NAME[num()]);
-        EquipSuitTemplate.BASE_SUIT_MAP.forEach((s, slot) -> left().put(s, new EquipSlot(slot.ContainerType(), slot.getSlotNum() + num() * EquipSuitTemplate.Size)));
-        EquipSuitTemplate.BASE_INVENTORY_MAP.forEach((s, slot) -> right().put(s, new EquipSlot(slot.ContainerType(), slot.getSlotNum())));
+        EquipSuitTemplate.BASE_SUIT_CONTAINER_MAP.forEach((s, slot) -> left().put(s, new EquipSlot(slot.ContainerType(), slot.getSlotNum() + num() * EquipSuitTemplate.Size)));
+        EquipSuitTemplate.BASE_EQUIP_MAP.forEach((s, slot) -> right().put(s, new EquipSlot(slot.ContainerType(), slot.getSlotNum())));
     }
 
     default CompoundTag Save(CompoundTag tag) {

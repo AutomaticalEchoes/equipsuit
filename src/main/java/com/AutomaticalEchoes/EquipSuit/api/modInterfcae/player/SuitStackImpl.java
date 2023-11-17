@@ -8,25 +8,25 @@ import net.minecraft.nbt.CompoundTag;
 import java.util.ArrayList;
 
 public class SuitStackImpl implements SuitStack{
-    private ArrayList<EquipSuit> suitStack = new ArrayList<>();
+    private ArrayList<EquipSuit> suitList = new ArrayList<>();
 
     @Override
     public ArrayList<EquipSuit> getEquipSuitList() {
-        return suitStack;
+        return suitList;
     }
 
     @Override
-    public void setSuitStack(ArrayList<EquipSuit> suitArrayList) {
-        this.suitStack = suitArrayList;
+    public void setSuitList(ArrayList<EquipSuit> suitArrayList) {
+        this.suitList = suitArrayList;
     }
 
     @Override
     public boolean setSuitSlotNum(int num, String key, int slotNum) {
-        EquipSuit equipSuit = this.suitStack.get(num);
+        EquipSuit equipSuit = this.suitList.get(num);
         if(!equipSuit.left().containsKey(key)) return false;
-        BaseSlot baseSlot = suitStack.get(num).left().get(key);
+        BaseSlot baseSlot = suitList.get(num).left().get(key);
         baseSlot.setSlotNum(slotNum);
-        suitStack.get(num).left().put(key,baseSlot);
+        suitList.get(num).left().put(key,baseSlot);
         return true;
     }
 
@@ -34,7 +34,7 @@ public class SuitStackImpl implements SuitStack{
     public CompoundTag toTag() {
         CompoundTag compoundtag = new CompoundTag();
         for(int i=0;i<4;i++){
-            CompoundTag save = suitStack.get(i).Save(new CompoundTag());
+            CompoundTag save = suitList.get(i).Save(new CompoundTag());
             compoundtag.put(String.valueOf(i),save);
         }
         return compoundtag;
@@ -42,23 +42,25 @@ public class SuitStackImpl implements SuitStack{
 
     @Override
     public SuitStack readTag(CompoundTag compoundTag) {
-        suitStack.clear();
+        suitList.clear();
         for(int i=0;i<4;i++){
             EquipSuitImpl equipSuit = new EquipSuitImpl(i);
             CompoundTag compound = compoundTag.getCompound(String.valueOf(i));
             equipSuit.Read(compound);
-            suitStack.add(equipSuit);
+            suitList.add(equipSuit);
         }
         return this;
     }
 
     public SuitStackImpl defaultSet(){
-        suitStack.clear();
+        suitList.clear();
         for(int i=0; i < 4 ; i++) {
             EquipSuitImpl equipSuit = new EquipSuitImpl(i);
             equipSuit.Build();
-            suitStack.add(equipSuit);
+            suitList.add(equipSuit);
         }
         return this;
     }
+
+
 }

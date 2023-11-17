@@ -1,11 +1,18 @@
 package com.AutomaticalEchoes.EquipSuit.api.utils;
 
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.containerType.ContainerType;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.containerType.ContainerTypes;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuit;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
+import com.AutomaticalEchoes.EquipSuit.common.CommonModEvents;
+import com.AutomaticalEchoes.EquipSuit.common.network.ClientSetSlot;
+import com.AutomaticalEchoes.EquipSuit.common.network.PacketHandler;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkDirection;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -18,12 +25,16 @@ public class EquipSuitHelper{
                 Container rightContainer = rightSlot.ContainerType().getContainer(serverPlayer);
                 ItemStack itemRight = rightContainer.getItem(rightSlot.getSlotNum());
 
+
                 BaseSlot leftSlot = equipSuit.left().get(s);
                 Container leftContainer = leftSlot.ContainerType().getContainer(serverPlayer);
                 ItemStack itemLeft = leftContainer.getItem(leftSlot.getSlotNum());
 
                 leftSlot.onChange(serverPlayer,itemRight);
                 rightSlot.onChange(serverPlayer,itemLeft);
+                if(rightSlot.ContainerType() == ContainerTypes.TYPE_INVENTORY && itemLeft.getItem() instanceof Equipable){
+                    CommonModEvents.NetWork.sendTo(new ClientSetSlot(44 - rightSlot.getSlotNum(),itemLeft),serverPlayer.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+                }
 
             }
         });
@@ -46,7 +57,6 @@ public class EquipSuitHelper{
             targetNum = targetNum < 4 ? targetNum : 0 ;
             IPlayerInterface player1 = (IPlayerInterface) player;
             ArrayList<EquipSuit> equipSuitList = player1.getSuitStack().getEquipSuitList();
-
             EquipChange(player, equipSuitList.get(oldNum));
             EquipChange(player, equipSuitList.get(targetNum));
             return true;

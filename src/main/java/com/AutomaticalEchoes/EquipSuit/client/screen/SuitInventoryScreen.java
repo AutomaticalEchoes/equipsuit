@@ -5,9 +5,9 @@ import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.containerType.ContainerTypes;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuit;
-import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuitTemplate;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
 import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitKeyMapping;
+import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitTemplate;
 import com.AutomaticalEchoes.EquipSuit.api.utils.Messages;
 import com.AutomaticalEchoes.EquipSuit.client.gui.BinarySwitchButton;
 import com.AutomaticalEchoes.EquipSuit.client.gui.TradeOfferButton;
@@ -21,11 +21,13 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -33,6 +35,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -96,9 +99,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
 
     //这玩意就是要空的 不能删， 原版绘制的标题会和装备格重叠影响
     @Override
-    protected void renderLabels(GuiGraphics p_281635_, int p_282681_, int p_283686_) {
-    }
-
+    protected void renderLabels(GuiGraphics p_97808_, int p_97809_, int p_97810_) { }
     @Override
     protected void init() {
         super.init();
@@ -139,7 +140,7 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         this.addRenderableWidget(SUIT_NAME);
 
         for (int i=0;i<4;i++){
-            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 1, y + 7 + i * 15, i, Component.translatable(Messages.PART[i]), SlotUpdatePress, 14, 14) {
+            TradeOfferButton tradeOfferButton = new TradeOfferButton(x + 1, y + 7 + i * 15, i, Component.translatable(EquipSuitTemplate.PART[i]), SlotUpdatePress, 14, 14) {
                 @Override
                 public void renderToolTip(GuiGraphics p_99211_, int p_99212_, int p_99213_) {
                     if (this.isHovered && !buttonClicked) {
@@ -150,6 +151,21 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
             slotIndexButtons[i] = tradeOfferButton;
             this.addRenderableWidget(tradeOfferButton);
         }
+    }
+
+    @Override
+    public void render(GuiGraphics p_97795_, int p_97796_, int p_97797_, float p_97798_) {
+        this.renderBackground(p_97795_);
+        super.render(p_97795_, p_97796_, p_97797_, p_97798_);
+        if(buttonClicked){
+            p_97795_.renderComponentTooltip(this.font,EDITING_MESSAGE, p_97796_,p_97797_);
+            p_97795_.renderComponentTooltip(this.font,WARNING_MESSAGE,this.leftPos-10 ,this.topPos-40 );
+        }else {
+            this.renderTooltip(p_97795_, p_97796_,p_97797_);
+        }
+        this.xMouse = (float)p_97796_;
+        this.yMouse = (float)p_97797_;
+        p_97795_.drawString(font,Component.translatable(Messages.TAG_MODE +Messages.MODE_NAME[EquipSuitClientConfig.CHANGE_MODE.get()])  ,leftPos,topPos+170, 0xFFFFFF);
     }
 
     @Override
@@ -174,20 +190,6 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         });
     }
 
-    @Override
-    public void render(GuiGraphics p_97795_, int p_97796_, int p_97797_, float p_97798_) {
-        this.renderBackground(p_97795_);
-        super.render(p_97795_, p_97796_, p_97797_, p_97798_);
-        if(buttonClicked){
-            p_97795_.renderComponentTooltip(this.font,EDITING_MESSAGE, p_97796_,p_97797_);
-            p_97795_.renderComponentTooltip(this.font,WARNING_MESSAGE,this.leftPos-10 ,this.topPos-40 );
-        }else {
-            this.renderTooltip(p_97795_, p_97796_,p_97797_);
-        }
-        this.xMouse = (float)p_97796_;
-        this.yMouse = (float)p_97797_;
-        p_97795_.drawString(font,Component.translatable(Messages.TAG_MODE +Messages.MODE_NAME[EquipSuitClientConfig.CHANGE_MODE.get()])  ,leftPos,topPos+170, 0xFFFFFF);
-    }
 
     @Override
     protected void containerTick() {
@@ -205,6 +207,8 @@ public class SuitInventoryScreen extends EffectRenderingInventoryScreen<SuitInve
         Arrays.stream(slotIndexButtons).forEach(tradeOfferButton -> tradeOfferButton.active = canEdit &&(!buttonClicked || tradeOfferButton.index == ChangeIndex));
         this.lastFocus = focus;
     }
+
+
 
     protected void renderSuitInventory(GuiGraphics p_97787_, int p_97790_){
         int i = this.leftPos;

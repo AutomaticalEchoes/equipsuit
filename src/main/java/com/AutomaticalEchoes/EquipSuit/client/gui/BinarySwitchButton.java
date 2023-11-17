@@ -98,6 +98,4 @@ public abstract class BinarySwitchButton extends ExtendedButton {
         p_93676_.blit(I_WIDGETS_LOCATION,left + this.width / 4, this.getY(), 128 - this.width / 4, i * 20, this.width / 4, this.height / 2,128,128);
     }
 
-
-
 }

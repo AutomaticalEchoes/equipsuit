@@ -13,10 +13,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
-
-import java.util.function.Supplier;
 
 public class EquipSuitClientConfigScreen extends Screen {
     private BinarySwitchButton ChangeModeSwitchButton;
@@ -102,7 +99,6 @@ public class EquipSuitClientConfigScreen extends Screen {
             });
         }
     }
-
 
     public void render(GuiGraphics p_97530_, int p_97531_, int p_97532_, float p_97533_) {
         int i = this.width / 2 - 155;

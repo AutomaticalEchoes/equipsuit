@@ -18,15 +18,15 @@ plugins {
 
 
 
-version = '1.8.0-forge-1.20.x-46.0.14'
-group = 'com.automaticalechoes.equipsuit' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'equipsuit'
+version = mod_version
+group = mod_group_id // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = mod_id
 
 apply plugin:  'org.spongepowered.mixin'
 mixin {
     // MixinGradle 设置
-    add sourceSets.main, 'mod.refmap.json'
-    config 'mod.mixins.json'
+    add sourceSets.main, 'equipsuit.refmap.json'
+    config 'equipsuit.mixins.json'
     debug.verbose = true
     debug.export = true
 }

@@ -6,31 +6,25 @@ import net.minecraftforge.eventbus.api.Event;
 import java.util.HashMap;
 
 public class EquipSuitMapRegister extends Event {
-    private final HashMap<String, BaseSlot> map;
+    private final HashMap<String, BaseSlot> equip;
+    private final HashMap<String, BaseSlot> container;
 
-    public EquipSuitMapRegister(HashMap<String, BaseSlot> map) {
-       this.map = map;
+    public EquipSuitMapRegister(HashMap<String, BaseSlot> equip , HashMap<String, BaseSlot> container) {
+       this.equip = equip;
+       this.container = container;
     }
 
-    public void register(String s,BaseSlot slot){
-        map.put(s,slot);
+    public HashMap<String, BaseSlot> getContainer() {
+        return container;
     }
 
-    public HashMap<String, BaseSlot> getMap() {
-        return map;
+    public HashMap<String, BaseSlot> getEquip() {
+        return equip;
     }
 
-    public static class Left extends EquipSuitMapRegister{
-
-        public Left(HashMap<String, BaseSlot> map) {
-            super(map);
-        }
-    }
-
-    public static class Right extends EquipSuitMapRegister{
-
-        public Right(HashMap<String, BaseSlot> map) {
-            super(map);
-        }
+    //example("chest",EquipSlots.INVENTORY_CHEST,EquipSlots.SUIT_CHEST);
+    public void Register(String name , BaseSlot equip, BaseSlot container){
+        this.equip.put(name,equip);
+        this.container.put(name,container);
     }
 }

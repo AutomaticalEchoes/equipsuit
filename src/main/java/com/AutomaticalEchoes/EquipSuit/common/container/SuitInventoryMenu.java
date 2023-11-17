@@ -173,6 +173,7 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(itemstack1, 9, 45, true)) {
                     return ItemStack.EMPTY;
                 }
+
                 slot.onQuickCraft(itemstack1, itemstack);
             } else if (p_39724_ >= 1 && p_39724_ < 5) {
                 if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
@@ -235,6 +236,7 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
         return true;
     }
 
+
     protected static void slotChangedCraftingGrid(AbstractContainerMenu p_150547_, Level p_150548_, Player p_150549_, CraftingContainer p_150550_, ResultContainer p_150551_) {
         if (!p_150548_.isClientSide) {
             ServerPlayer serverplayer = (ServerPlayer)p_150549_;
@@ -255,5 +257,6 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
             serverplayer.connection.send(new ClientboundContainerSetSlotPacket(p_150547_.containerId, p_150547_.incrementStateId(), 0, itemstack));
         }
     }
+
 
 }

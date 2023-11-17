@@ -1,13 +1,15 @@
 package com.AutomaticalEchoes.EquipSuit.api.modInterfcae.gui;
 
 import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 
 public interface EquipSuitHudInterface {
-     void renderALl(int focus);
+     void renderALl(GuiGraphics guiGraphics, int focus);
      int guiWidth();
      int guiHeight();
-     void renderSimple(int focus);
+     void renderSimple(GuiGraphics guiGraphics, int focus);
 
      default int ChangeMod(){
           return EquipSuitClientConfig.CHANGE_MODE.get();

@@ -46,6 +46,11 @@ public class PacketHandler {
                 .decoder(UpdateSuitName::decode)
                 .consumerMainThread(UpdateSuitName::onMessage)
                 .add();
+        INSTANCE.messageBuilder(ClientSetSlot.class,6)
+                .encoder(ClientSetSlot::encode)
+                .decoder(ClientSetSlot::decode)
+                .consumerMainThread(ClientSetSlot::onMessage)
+                .add();
         return INSTANCE;
     }
 }

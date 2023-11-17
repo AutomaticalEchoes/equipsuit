@@ -1,4 +1,4 @@
-package com.AutomaticalEchoes.EquipSuit.api.mixin;
+package com.AutomaticalEchoes.EquipSuit.mixin;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;

@@ -1,6 +1,8 @@
 package com.AutomaticalEchoes.EquipSuit.api.utils;
 
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class Messages {
     public static final String[] SUIT_NUM = {I18n.get("text.message.equipsuit.suit_1"),
@@ -9,7 +11,6 @@ public class Messages {
             I18n.get("text.message.equipsuit.suit_4")};
     public static final String[] MODE_NAME = {I18n.get("text.message.equipsuit.mode_sequence"),
             I18n.get("text.message.equipsuit.mode_quickselect")};
-    public static final String[] PART ={"H","C","L","F"};
     public static final String[] PART_NAME ={I18n.get("text.message.equipsuit.part_name_1"),
             I18n.get("text.message.equipsuit.part_name_2"),
             I18n.get("text.message.equipsuit.part_name_3"),
@@ -27,6 +28,9 @@ public class Messages {
     public static final String TAG_ENABLE_QUICK_SELECT_MODE = MessageTag("text.tag.equipsuit.enable_quick_select_mode");
     public static final String TAG_GUI_COORDINATE= MessageTag("text.tag.equipsuit.coordinate");
     public static final String TAG_GUI_ALPHA = MessageTag("text.tag.equipsuit.alpha");
+    public static final MutableComponent MODE_CHANGE_MESSAGE_0 = Component.translatable(Messages.TAG_MODE + Messages.MODE_NAME[0]);
+    public static final MutableComponent MODE_CHANGE_MESSAGE_1 = Component.translatable(Messages.TAG_MODE + Messages.MODE_NAME[1]);
+    public static final MutableComponent[] MODE_CHANGE_MESSAGE = {MODE_CHANGE_MESSAGE_0,MODE_CHANGE_MESSAGE_1};
     public static String MessageTag(String s){
         return I18n.get(s) + ": ";
     }
