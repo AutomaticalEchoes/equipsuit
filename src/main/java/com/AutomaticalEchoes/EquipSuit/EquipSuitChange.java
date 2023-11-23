@@ -20,8 +20,6 @@ public class EquipSuitChange
 {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "equipsuit";
-    // Directly reference a slf4j logger
-    public static final Logger LOGGER = LogUtils.getLogger();
     // Create a Deferred Register to hold Blocks which will all be registered under the "examplemod" namespace
     public EquipSuitChange()
     {
@@ -35,13 +33,5 @@ public class EquipSuitChange
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
-
-        EquipSuitTemplate.Init();
-    }
 
 }
