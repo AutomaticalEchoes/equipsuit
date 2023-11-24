@@ -94,9 +94,9 @@ public class SuitInventoryMenu extends AbstractContainerMenu {
         for(int k = 0; k < 4; ++k) {
             final EquipmentSlot equipmentslot = SLOT_IDS[k];
             this.addSlot(new Slot(inventory, 39 - k, 8, 8 + k * 18) {
-                public void set(ItemStack p_219985_) {
+                public void setByPlayer(ItemStack p_219985_) {
                     ItemStack itemstack = this.getItem();
-                    super.set(p_219985_);
+                    super.setByPlayer(p_219985_);
                     inventory.player.onEquipItem(equipmentslot, itemstack, p_219985_);
                 }
 

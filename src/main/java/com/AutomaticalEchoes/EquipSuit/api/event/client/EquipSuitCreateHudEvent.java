@@ -10,8 +10,8 @@ import java.util.Optional;
 public class EquipSuitCreateHudEvent extends Event {
     Optional<EquipSuitHudInterface> equipSuitHUD;
     //    client level
-    public EquipSuitCreateHudEvent(PoseStack stack){
-        equipSuitHUD = Optional.of( EquipSuitHud.Create(stack));
+    public EquipSuitCreateHudEvent(){
+        equipSuitHUD = Optional.of( EquipSuitHud.Create());
     }
 
     public Optional<EquipSuitHudInterface> getEquipSuitHUD() {

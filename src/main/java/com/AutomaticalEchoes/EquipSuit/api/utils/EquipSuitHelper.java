@@ -1,11 +1,16 @@
 package com.AutomaticalEchoes.EquipSuit.api.utils;
 
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.baseSlot.BaseSlot;
+import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.containerType.ContainerTypes;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.equipsuit.EquipSuit;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
+import com.AutomaticalEchoes.EquipSuit.common.CommonModEvents;
+import com.AutomaticalEchoes.EquipSuit.common.network.ClientSetSlot;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkDirection;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -24,6 +29,10 @@ public class EquipSuitHelper{
 
                 leftSlot.onChange(serverPlayer,itemRight);
                 rightSlot.onChange(serverPlayer,itemLeft);
+
+                if(rightSlot.ContainerType() == ContainerTypes.TYPE_INVENTORY && itemLeft.getItem() instanceof Equipable){
+                    CommonModEvents.NetWork.sendTo(new ClientSetSlot(44 - rightSlot.getSlotNum(),itemLeft),serverPlayer.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+                }
             }
         });
     }

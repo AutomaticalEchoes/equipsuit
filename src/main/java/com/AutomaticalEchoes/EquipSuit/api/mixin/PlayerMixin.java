@@ -5,6 +5,7 @@ import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.SuitStack;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.SuitStackImpl;
 import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitHelper;
 import com.AutomaticalEchoes.EquipSuit.common.container.SuitContainer;
+import com.AutomaticalEchoes.EquipSuit.common.registry.SerializerRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -28,7 +29,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     private SuitStack suitStack = new SuitStackImpl().defaultSet();
     private int focus;
     private static final EntityDataAccessor<Integer> FOCUS = SynchedEntityData.defineId(Player.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<CompoundTag> SUIT_STACK = SynchedEntityData.defineId(Player.class , EntityDataSerializers.COMPOUND_TAG);
+    private static final EntityDataAccessor<SuitStack> SUIT_STACK = SynchedEntityData.defineId(Player.class , SerializerRegistry.SUIT_STACK.get());
     protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
     }
@@ -36,15 +37,16 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     @Inject(method = {"defineSynchedData"},at = {@At("RETURN")})
     protected void defineSynchedData(CallbackInfo callbackInfo) {
         this.entityData.define(FOCUS, 0);
-        this.entityData.define(SUIT_STACK,new SuitStackImpl().defaultSet().toTag());
+        this.entityData.define(SUIT_STACK,new SuitStackImpl().defaultSet());
     }
+
     @Inject(method = {"readAdditionalSaveData"},at = {@At("RETURN")})
     public void readAdditionalSaveData(CompoundTag compoundTag,CallbackInfo callbackInfo){
         if(compoundTag.contains("SuitStack")){
             CompoundTag suitTag = compoundTag.getCompound("SuitStack");
-            suitStack = suitStack.readTag(suitTag);
+            suitStack = SuitStack.fromTag(suitTag);
         }
-        this.entityData.set(SUIT_STACK,suitStack.toTag());
+        this.entityData.set(SUIT_STACK,suitStack);
         ListTag containerTag = compoundTag.getList("EquipInventory", 10);
         suitContainer.load(containerTag);
         focus = compoundTag.getInt("Focus");
@@ -66,24 +68,24 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     }
 
     public SuitStack getSuitStack() {
-        return suitStack.readTag(this.entityData.get(SUIT_STACK));
+        return  this.level.isClientSide() ? this.entityData.get(SUIT_STACK) : this.suitStack;
     }
 
     public Integer getFocus() {
-        return this.entityData.get(FOCUS);
+        return this.level.isClientSide() ? this.entityData.get(FOCUS) : this.focus;
     }
 
     public void setFocus(Integer integer) {
         if(EquipSuitHelper.SuitChange((ServerPlayer) (Object)this,integer)){
             this.focus = integer;
-            this.entityData.set(FOCUS,integer);
+            this.entityData.set(FOCUS,focus);
         }
     }
 
     @Override
     public boolean setSuitSlotNum(int num, String key, int slotNum) {
         boolean b = suitStack.setSuitSlotNum(num, key, slotNum);
-        this.entityData.set(SUIT_STACK,suitStack.toTag());
+        this.entityData.set(SUIT_STACK,suitStack);
         return b;
     }
 
@@ -95,10 +97,10 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     }
 
     public void restore(Player player){
-        this.focus = player.getEntityData().get(FOCUS);
-        this.suitStack.readTag(player.getEntityData().get(SUIT_STACK));
-        this.entityData.set(FOCUS,player.getEntityData().get(FOCUS));
-        this.entityData.set(SUIT_STACK,player.getEntityData().get(SUIT_STACK));
+        this.focus = ((IPlayerInterface) player).getFocus();
+        this.suitStack = ((IPlayerInterface) player).getSuitStack();
+        this.entityData.set(FOCUS,focus);
+        this.entityData.set(SUIT_STACK,suitStack);
     }
 
     public SuitContainer getSuitContainer() {
@@ -106,7 +108,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     }
 
     public void setSuitName(int num,String s){
-        this.getSuitStack().getEquipSuitList().get(num).setName(s);
-        this.entityData.set(SUIT_STACK,suitStack.toTag());
+        this.suitStack.getEquipSuitList().get(num).setName(s);
+        this.entityData.set(SUIT_STACK,suitStack);
     }
 }

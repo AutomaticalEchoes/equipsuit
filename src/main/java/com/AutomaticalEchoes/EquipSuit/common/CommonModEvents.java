@@ -1,6 +1,7 @@
 package com.AutomaticalEchoes.EquipSuit.common;
 
 import com.AutomaticalEchoes.EquipSuit.EquipSuitChange;
+import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitTemplate;
 import com.AutomaticalEchoes.EquipSuit.common.network.PacketHandler;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -16,6 +17,7 @@ public class CommonModEvents {
         event.enqueueWork(()->{
             NetWork= PacketHandler.RegisterPacket();
         });
+        EquipSuitTemplate.Init();
     }
 
 
