@@ -14,15 +14,15 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-version = '1.8.0-forge-1.19.3-44.1.0'
+version = '1.8.2-forge-1.19.3-44.1.0'
 group = 'com.automaticalechoes.equipsuit' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'equipsuit'
 
 apply plugin:  'org.spongepowered.mixin'
 mixin {
     // MixinGradle 设置
-    add sourceSets.main, 'mod.refmap.json'
-    config 'mod.mixins.json'
+    add sourceSets.main, 'equipsuit.refmap.json'
+    config 'equipsuit.mixins.json'
     debug.verbose = true
     debug.export = true
 }

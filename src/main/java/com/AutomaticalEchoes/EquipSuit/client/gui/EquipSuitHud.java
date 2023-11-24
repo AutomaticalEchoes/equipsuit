@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,107 +24,149 @@ public class EquipSuitHud extends Screen implements EquipSuitHudInterface {
     public static final ResourceLocation ICON_QUICK_SELECT = new ResourceLocation(EquipSuitChange.MODID,"textures/gui/qs.png");
     public static final ResourceLocation ICON_SEQUENCE = new ResourceLocation(EquipSuitChange.MODID,"textures/gui/squ.png");
     private static final Component FOCUS_SUIT_HUD=Component.translatable("focus suit hud");
-    private final PoseStack matrixStack;
     private static int ModeTipTime = 0;
     private static int LastMode = 0;
 
-    public static EquipSuitHud Create(PoseStack matrixStack){
-        return new EquipSuitHud(FOCUS_SUIT_HUD,matrixStack);
+    public static EquipSuitHud Create(){
+        return new EquipSuitHud(FOCUS_SUIT_HUD);
     }
 
-    protected EquipSuitHud(Component p_96550_, PoseStack matrixStack) {
+    protected EquipSuitHud(Component p_96550_) {
         super(p_96550_);
         this.minecraft = Minecraft.getInstance();
         this.width = minecraft.getWindow().getGuiScaledWidth();
         this.height = minecraft.getWindow().getGuiScaledHeight();
-        this.matrixStack = matrixStack;
         this.font = minecraft.font;
         this.itemRenderer=minecraft.getItemRenderer();
     }
 
     @Override
-    public void renderSimple(int focus){
-        int leftPos_0 = GameWindowWidth() / 2 + 18 * 4 + 10;
-        int topPos_0 = GameWindowHeight() - 6;
-        MutableComponent translatable = Component.translatable(Messages.SUIT_NUM[focus]);
-        translatable.setStyle(Style.EMPTY.withColor(Messages.SUIT_NUM_COLORS[focus]));
-        this.renderTooltip(matrixStack,translatable,leftPos_0,topPos_0);
+    public void renderSimple(PoseStack poseStack,int focus){
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableDepthTest();
+        int leftPos_0 = GameWindowWidth() / 2 + 90;
+        int topPos_0 = Mth.floor(GameWindowHeight() - 22.0F);
+        renderSimpleBg(poseStack, leftPos_0, topPos_0);
+        renderSimpleNum(poseStack,focus,leftPos_0,topPos_0);
         if(LastMode != ChangeMod()){
-            ModeTipTime = 1500;
+            ModeTipTime = 100;
         }
+
         if(ModeTipTime > 0){
-            drawString(matrixStack, font,Component.translatable(Messages.TAG_MODE +Messages.MODE_NAME[ChangeMod()])  ,leftPos_0+10,topPos_0-28, 0xFFFFFF);
+            MutableComponent mutableComponent = Messages.MODE_CHANGE_MESSAGE[ChangeMod()];
+            int width = this.font.width(mutableComponent.getString());
+            int height = GameWindowHeight() - 73;
+            if (!minecraft.gameMode.canHurtPlayer()) {
+                height += 14;
+            }
+            poseStack.pushPose();
+            int l = (int)((float)ModeTipTime * 256.0F / 10.0F);
+            if (l > 255) {
+                l = 255;
+            }
+            int color =  16777215 + (l << 24);
+            drawString(poseStack, font, mutableComponent, (GameWindowWidth() - width) / 2, height, color);
+            poseStack.popPose();
             ModeTipTime--;
         }
         LastMode = ChangeMod();
+        RenderSystem.disableBlend();
+    }
+
+    public void renderSimpleBg(PoseStack poseStack, int x, int y ){
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0,I_GUI_LOCATION);
+        RenderSystem.setShaderColor(0.5F,0.5F,0.5F,1.0F);
+        poseStack.pushPose();
+        int j = this.getBlitOffset();
+        this.setBlitOffset(-90);
+
+        blit(poseStack, x, y,48,16,16,16,64,64);
+        this.setBlitOffset(j);
+        RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
+    }
+
+    public void renderSimpleNum(PoseStack poseStack, int i,int x, int y){
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0,I_GUI_LOCATION);
+        float red = (Messages.SUIT_NUM_COLORS[i] >> 16 & 255) / 255.0F;
+        float green = (Messages.SUIT_NUM_COLORS[i] >> 8 & 255) / 255.0F;
+        float blue = (Messages.SUIT_NUM_COLORS[i] & 255) / 255.0F;
+        RenderSystem.setShaderColor(red,green,blue,1.0F);
+        poseStack.pushPose();
+        poseStack.scale(0.5F,0.5F,1.0F);
+        blit(poseStack, (x + 3) * 2, (y + 3) * 2, 16 * i , 36 , 16  , 12 ,64,64);
+        RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
+        poseStack.popPose();
     }
 
     @Override
-    public void renderALl(int focus) {
-        int v = (int) (Alpha() * 2550);
+    public void renderALl(PoseStack poseStack, int focus) {
+        int v = (int) (Alpha() * 255);
         int stringColor = 0x00FFFFFF | v << 24;
-        matrixStack.pushPose();
-        renderBg();
+        poseStack.pushPose();
+        renderAllBg(poseStack);
         for (int i = 0; i < 4; i++) {
-            renderNum(i, i == focus);
+            renderAllNum(poseStack, i, i == focus);
         }
         EquipSuit equipSuit = ((IPlayerInterface) Minecraft.getInstance().player).getSuitStack().getEquipSuitList().get(focus);
-        renderMode();
-        matrixStack.popPose();
-        drawString(matrixStack, font,Component.translatable(equipSuit.getName()).withStyle(Style.EMPTY)  ,StartX() + 18 , StartY() + 4, stringColor);
+        renderMode(poseStack);
+        poseStack.popPose();
+        drawString(poseStack, font,Component.translatable(equipSuit.getName()).withStyle(Style.EMPTY)  ,StartX() + 18 , StartY() + 4, stringColor);
     }
 
-    public void renderBg(){
+    public void renderAllBg(PoseStack poseStack){
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0,I_GUI_LOCATION);
         RenderSystem.setShaderColor(1.0F,1.0F,1.0F,Alpha());
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        blit(matrixStack, StartX(), StartY(), 0 , 16 , 16, 16,64,64);
-        blit(matrixStack, StartX() + 15, StartY(), 0 , 0 , 64, 16,64,64);
+        blit(poseStack, StartX(), StartY(), 0 , 16 , 16, 16,64,64);
+        blit(poseStack, StartX() + 15, StartY(), 0 , 0 , 64, 16,64,64);
         RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
     }
 
-    public void renderNum(int i, boolean isFocus){
+    public void renderAllNum(PoseStack poseStack, int i, boolean isFocus){
         float red = (Messages.SUIT_NUM_COLORS[i] >> 16 & 255) / 255.0F;
-        float green =  (Messages.SUIT_NUM_COLORS[i] >> 8 & 255) / 255.0F;
-        float blue =  (Messages.SUIT_NUM_COLORS[i] & 255) / 255.0F;
+        float green = (Messages.SUIT_NUM_COLORS[i] >> 8 & 255) / 255.0F;
+        float blue = (Messages.SUIT_NUM_COLORS[i] & 255) / 255.0F;
         float alpha = 0.5F * Alpha();
         int startY = StartY() + 16;
         int textureStartY = 26;
         if(isFocus){
-            alpha =  Alpha();
+            alpha = Alpha();
             startY = StartY() + 15;
             textureStartY = 20;
             RenderSystem.disableDepthTest();
             RenderSystem.enableDepthTest();
         }
-        matrixStack.pushPose();
+        poseStack.pushPose();
         RenderSystem.setShaderColor(red,green,blue,alpha);
-        blit(matrixStack,(i + 1) * 15 + StartX() , startY ,16,textureStartY,16,32 - textureStartY,64,64);
+        blit(poseStack,(i + 1) * 15 + StartX() , startY ,16,textureStartY,16,32 - textureStartY,64,64);
         RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
-        matrixStack.popPose();
+        poseStack.popPose();
         if(!isFocus) return;
-        matrixStack.pushPose();
-        matrixStack.scale(0.625F,0.625F,1.0F);
+        poseStack.pushPose();
+        poseStack.scale(0.625F,0.625F,1.0F);
         RenderSystem.setShaderColor(1.0F,1.0F,1.0F,alpha);
-        blit(matrixStack, ((i + 1) * 15 + 3 + StartX()) * 8 / 5, (startY + 2) * 8 / 5 , 16 * i , textureStartY + 16 , 16  , 32 - textureStartY ,64,64);
+        blit(poseStack, ((i + 1) * 15 + 3 + StartX()) * 8 / 5, (startY + 2) * 8 / 5 , 16 * i , textureStartY + 16 , 16  , 32 - textureStartY ,64,64);
         RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
-        matrixStack.popPose();
+        poseStack.popPose();
     }
 
-    public void renderMode(){
-        matrixStack.pushPose();
+    public void renderMode(PoseStack poseStack){
+        poseStack.pushPose();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0 ,ChangeMod() == 0 ? ICON_SEQUENCE : ICON_QUICK_SELECT);
-        RenderSystem.setShaderColor(1.0F,1.0F,1.0F,Alpha() * 10);
+        RenderSystem.setShaderColor(1.0F,1.0F,1.0F,Alpha());
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        blit(matrixStack,StartX(),StartY() , 0, 0, 16, 16,16,16);
+        blit(poseStack,StartX(),StartY() , 0, 0, 16, 16,16,16);
         RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
-        matrixStack.popPose();
+        poseStack.popPose();
     }
 
     @Override
