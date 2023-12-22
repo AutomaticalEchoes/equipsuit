@@ -20,7 +20,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 
 
-version = '1.8.2-forge_1.18.0-38.0。17'
+version = '1.8.2-forge_1.18.0-38.0.17'
 group = 'com.automaticalechoes.equipsuit' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'equipsuit'
 
