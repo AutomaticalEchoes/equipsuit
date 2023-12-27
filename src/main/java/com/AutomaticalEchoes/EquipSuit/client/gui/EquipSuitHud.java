@@ -87,6 +87,7 @@ public class EquipSuitHud extends Screen implements Widget, EquipSuitHudInterfac
         blit(poseStack, x, y,48,16,16,16,64,64);
         this.setBlitOffset(j);
         RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
+        poseStack.popPose();
     }
 
     public void renderSimpleNum(PoseStack poseStack, int i,int x, int y){
