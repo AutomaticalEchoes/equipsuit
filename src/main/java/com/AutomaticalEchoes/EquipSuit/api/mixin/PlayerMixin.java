@@ -1,5 +1,6 @@
 package com.AutomaticalEchoes.EquipSuit.api.mixin;
 
+import com.AutomaticalEchoes.EquipSuit.EquipSuitChange;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.IPlayerInterface;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.SuitStack;
 import com.AutomaticalEchoes.EquipSuit.api.modInterfcae.player.SuitStackImpl;
@@ -29,7 +30,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerInterfa
     private SuitStack suitStack = new SuitStackImpl().defaultSet();
     private int focus;
     private static final EntityDataAccessor<Integer> FOCUS = SynchedEntityData.defineId(Player.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<SuitStack> SUIT_STACK = SynchedEntityData.defineId(Player.class , SerializerRegistry.SUIT_STACK.get());
+    private static final EntityDataAccessor<SuitStack> SUIT_STACK = SynchedEntityData.defineId(Player.class , EquipSuitChange.SUIT_STACK_SERIALIZER);
     protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
     }

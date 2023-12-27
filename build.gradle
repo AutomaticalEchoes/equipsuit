@@ -14,7 +14,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-version = '1.8.2-forge-1.19.4-45.1.0'
+version = '1.8.3-forge-1.19.4-45.1.0'
 group = 'com.automaticalechoes.equipsuit' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'equipsuit'
 
