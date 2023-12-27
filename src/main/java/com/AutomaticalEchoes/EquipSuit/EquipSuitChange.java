@@ -2,9 +2,11 @@ package com.AutomaticalEchoes.EquipSuit;
 
 import com.AutomaticalEchoes.EquipSuit.api.config.EquipSuitClientConfig;
 import com.AutomaticalEchoes.EquipSuit.api.utils.EquipSuitTemplate;
+import com.AutomaticalEchoes.EquipSuit.common.Serializer.SuitStackSerializer;
 import com.AutomaticalEchoes.EquipSuit.common.registry.ContainerRegister;
 import com.AutomaticalEchoes.EquipSuit.common.registry.SerializerRegistry;
 import com.mojang.logging.LogUtils;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
