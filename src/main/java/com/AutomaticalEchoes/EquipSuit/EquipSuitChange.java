@@ -23,13 +23,15 @@ public class EquipSuitChange
     public static final String MODID = "equipsuit";
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
+    public static final SuitStackSerializer SUIT_STACK_SERIALIZER = new SuitStackSerializer();
     // Create a Deferred Register to hold Blocks which will all be registered under the "examplemod" namespace
     public EquipSuitChange()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         // Register the commonSetup method for modloading
         ContainerRegister.REGISTRY.register(modEventBus);
-        SerializerRegistry.REGISTRY.register(modEventBus);
+//        SerializerRegistry.REGISTRY.register(modEventBus);
+        EntityDataSerializers.registerSerializer(SUIT_STACK_SERIALIZER);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
