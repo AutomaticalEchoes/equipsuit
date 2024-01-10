@@ -1,0 +1,16 @@
+[
+{
+  "modid": "equipsuit",
+  "name": "EquipSuit",
+  "description": "github:https://github.com/1121665965/EquipSuit",
+  "version": "1.8.3-d",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["AutomaticalEchoes"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
